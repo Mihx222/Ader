@@ -7,6 +7,8 @@ advertising.<br>
 Customer will benefit from business growth and profit gains resulting from the offering of
 high quality services and friendly UI that the users get to experience.
 
+One of the reasons i chose this project is because i have it as a project for my bachelor's degree at university. Another reason is the fact that i have never done anything like this. It involves many things that I'll be doing for the first time. The idea is also part of the advertising domain, which is a new one for me. I’m sure i’ll learn a lot out of all this. It should prove challenging, which is the point of this program.
+
 ### Table of contents:
 * [Project wiki](https://github.com/Mihx222/Ader/wiki)
 * [Functional requirements](https://github.com/Mihx222/Ader/wiki/Functional-requirements)
