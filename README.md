@@ -10,11 +10,12 @@ high quality services and friendly UI that the users get to experience.
 One of the reasons i chose this project is because i have it as a project for my bachelor's degree at university. Another reason is the fact that i have never done anything like this. It involves many things that I'll be doing for the first time. The idea is also part of the advertising domain, which is a new one for me. I’m sure i’ll learn a lot out of all this. It should prove challenging, which is the point of this program.
 
 ### Table of contents:
-* [Project wiki](https://github.com/Mihx222/Ader/wiki)
-* [Functional requirements](https://github.com/Mihx222/Ader/wiki/Functional-requirements)
-* [Non-functional requirements](https://github.com/Mihx222/Ader/wiki/Non-functional-Requirements)
-* [Progress board](https://github.com/Mihx222/Ader/projects/1)
-* [Advertisement life-cycle](https://github.com/Mihx222/Ader/wiki/Advertisement-life-cycle)
+* [Project wiki](https://github.com/VariableTalisman/Ader/wiki)
+* [Functional requirements](https://github.com/VariableTalisman/Ader/wiki/Functional-requirements)
+* [Non-functional requirements](https://github.com/VariableTalisman/Ader/wiki/Non-functional-Requirements)
+* [Interface specifications](https://github.com/VariableTalisman/Ader/wiki/Interface-Specifications)
+* [Progress board](https://github.com/VariableTalisman/Ader/projects/1)
+* [Viewpoints catalog](https://github.com/VariableTalisman/Ader/wiki/Viewpoints-Catalog)
 
 ### Current progress
 The project is just beginning. As of right now, i have a Maven project with 2 modules: Backend and Frontend. The Backend module is a Spring boot application and the Frontend module is an Angular application. The project builds and launches successfully.
