@@ -1,5 +1,6 @@
 package com.ader.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,8 +35,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
-    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60;
-    static final int REFRESH_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60;
+
+    @Value("${jwt.token.expired}")
+    private int ACCESS_TOKEN_VALIDITY_SECONDS;
+
+    @Value("${jwt.token.expired}")
+    private int REFRESH_TOKEN_VALIDITY_SECONDS;
 
     private final AuthenticationManager authenticationManager;
 

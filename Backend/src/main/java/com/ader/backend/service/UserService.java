@@ -13,7 +13,9 @@ public interface UserService {
 
     ResponseEntity<UserDto> getUserByUsername(String username);
 
-    void register(User user);
+    User getUserById(Long id);
+
+    User register(User user);
 
     UserDto updateUser(String username, User user);
 
@@ -22,4 +24,6 @@ public interface UserService {
     boolean isAuthenticated(String username);
 
     Authentication getAuthentication();
+
+    User getAuthenticatedUser();
 }

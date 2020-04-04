@@ -43,4 +43,8 @@ public class User extends BaseEntity {
             }
     )
     private List<Role> roles = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Offer> offers = new ArrayList<>();
 }

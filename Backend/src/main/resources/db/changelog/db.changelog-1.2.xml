@@ -1,0 +1,44 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="1.2.0" author="mcurchi">
+        <createSequence sequenceName="offer_seq" incrementBy="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="1.2.1" author="mcurchi">
+        <createTable tableName="offers">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="offer_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="VARCHAR(2048)"/>
+
+            <column name="author_id" type="BIGINT"/>
+
+            <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="offers"
+                                 baseColumnNames="author_id"
+                                 constraintName="fk_author"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>

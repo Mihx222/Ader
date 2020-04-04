@@ -1,6 +1,7 @@
 package com.ader.backend.service.impl;
 
 import com.ader.backend.entity.Role;
+import com.ader.backend.entity.Roles;
 import com.ader.backend.entity.Status;
 import com.ader.backend.entity.User;
 import com.ader.backend.entity.dto.UserDto;
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } else {
             User authenticatedUser = userRepository.findByUsername(getAuthentication().getName());
 
-            if (authenticatedUser.getRoles().contains(roleRepository.findByName("ROLE_ADMIN"))) {
+            if (authenticatedUser.getRoles().contains(roleRepository.findByName(Roles.ROLE_ADMIN.toString()))) {
                 return ResponseEntity.ok(Objects.requireNonNull(UserDto.toDto(user)));
             } else {
                 throw new AccessDeniedException(
@@ -98,13 +99,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void register(User user) {
+    public User getUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            log.error("User with id: [{}] not found!", id);
+            return null;
+        } else {
+            return user;
+        }
+    }
+
+    @Override
+    public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRoles().isEmpty()) {
-            user.getRoles().add(roleRepository.findByName("ROLE_USER"));
+            user.getRoles().add(roleRepository.findByName(Roles.ROLE_USER.toString()));
         }
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -112,7 +125,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User authenticatedUser = userRepository.findByUsername(getAuthentication().getName());
 
         if (isAuthenticated(username) ||
-                authenticatedUser.getRoles().contains(roleRepository.findByName("ROLE_ADMIN"))) {
+                authenticatedUser.getRoles().contains(roleRepository.findByName(Roles.ROLE_ADMIN.toString()))) {
             User updatedUser = null;
             try {
                 updatedUser = userRepository.findByUsername(username);
@@ -122,6 +135,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
             assert updatedUser != null;
             BeanUtils.copyProperties(user, updatedUser, BeanHelper.getNullPropertyNames(user, true));
+
             return UserDto.toDto(updatedUser);
         } else {
             throw new AccessDeniedException(
@@ -154,5 +168,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    @Override
+    public User getAuthenticatedUser() {
+        return userRepository.findByUsername(getAuthentication().getName());
     }
 }

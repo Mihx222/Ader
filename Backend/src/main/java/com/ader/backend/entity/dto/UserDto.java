@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 @Builder
 public class UserDto {
 
+    private Long id;
     private String username;
     private String firstname;
     private String lastname;
     private String email;
     private Status status;
     private List<RoleDto> roles;
+    private List<OfferDto> offers;
 
     public static List<UserDto> toDto(List<User> users) {
         return users.stream().map(UserDto::toDto).collect(Collectors.toList());
@@ -27,11 +29,13 @@ public class UserDto {
 
     public static UserDto toDto(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .firstname(user.getFirstName())
                 .lastname(user.getLastName())
                 .email(user.getEmail())
                 .roles(RoleDto.toDto(user.getRoles()))
+                .offers(OfferDto.toDto(user.getOffers()))
                 .status(user.getStatus())
                 .build();
     }
