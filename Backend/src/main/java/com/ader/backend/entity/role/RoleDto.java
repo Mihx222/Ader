@@ -1,6 +1,5 @@
-package com.ader.backend.entity.dto;
+package com.ader.backend.entity.role;
 
-import com.ader.backend.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;

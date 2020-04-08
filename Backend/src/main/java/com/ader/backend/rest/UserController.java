@@ -1,8 +1,8 @@
 package com.ader.backend.rest;
 
-import com.ader.backend.entity.User;
-import com.ader.backend.entity.dto.UserDto;
-import com.ader.backend.service.UserService;
+import com.ader.backend.entity.user.User;
+import com.ader.backend.entity.user.UserDto;
+import com.ader.backend.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +20,22 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<UserDto> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("{username}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    @GetMapping("{email}")
+    public ResponseEntity<UserDto> getUser(@PathVariable String email) {
+        return userService.getUserByEmail(email);
     }
 
-    @PutMapping("{username}")
-    public UserDto updateUser(@PathVariable String username, @RequestBody User user) {
-        return userService.updateUser(username, user);
+    @PutMapping("{email}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody User user) {
+        return userService.updateUser(email, user);
     }
 
-    @DeleteMapping("{username}")
-    public void deleteUser(@PathVariable String username) {
-        userService.deleteUser(username);
+    @DeleteMapping("{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        return userService.deleteUser(email);
     }
 }

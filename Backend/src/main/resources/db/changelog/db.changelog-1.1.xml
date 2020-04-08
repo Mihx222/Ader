@@ -4,10 +4,8 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <changeSet id="1.1.0" author="mcurchi">
         <insert tableName="users">
-            <column name="username" value="dev" />
             <column name="email" value="dev@developerland.com" />
-            <column name="first_name" value="Big" />
-            <column name="last_name" value="Lebovsky" />
+            <!-- Password: dev -->
             <column name="password" value="$2a$04$JyTVHsgcW.yCzMjTD7otDO30GcgyXofuXsbBoNRopB9VYYu2/3OAy" />
         </insert>
 

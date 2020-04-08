@@ -4,7 +4,10 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 @MappedSuperclass
@@ -20,7 +23,4 @@ public class BaseEntity {
 
     @UpdateTimestamp
     private Date updated;
-
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
 }

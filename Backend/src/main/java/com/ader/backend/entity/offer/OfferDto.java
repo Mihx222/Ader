@@ -1,6 +1,5 @@
-package com.ader.backend.entity.dto;
+package com.ader.backend.entity.offer;
 
-import com.ader.backend.entity.Offer;
 import com.ader.backend.entity.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
@@ -29,7 +28,7 @@ public class OfferDto {
                 .id(offer.getId())
                 .name(offer.getName())
                 .description(offer.getDescription())
-                .authorName(offer.getAuthor().getUsername())
+                .authorName(offer.getAuthor().getBrandName())
                 .status(offer.getStatus())
                 .build();
     }

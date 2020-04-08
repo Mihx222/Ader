@@ -1,7 +1,8 @@
-package com.ader.backend.entity.dto;
+package com.ader.backend.entity.user;
 
 import com.ader.backend.entity.Status;
-import com.ader.backend.entity.User;
+import com.ader.backend.entity.offer.OfferDto;
+import com.ader.backend.entity.role.RoleDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
@@ -15,13 +16,12 @@ import java.util.stream.Collectors;
 public class UserDto {
 
     private Long id;
-    private String username;
-    private String firstname;
-    private String lastname;
+    private String brandName;
+    private String brandWebsite;
     private String email;
     private Status status;
     private List<RoleDto> roles;
-    private List<OfferDto> offers;
+    private List<OfferDto> createdOffers;
 
     public static List<UserDto> toDto(List<User> users) {
         return users.stream().map(UserDto::toDto).collect(Collectors.toList());
@@ -30,12 +30,11 @@ public class UserDto {
     public static UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .username(user.getUsername())
-                .firstname(user.getFirstName())
-                .lastname(user.getLastName())
+                .brandName(user.getBrandName())
+                .brandWebsite(user.getBrandWebsite())
                 .email(user.getEmail())
                 .roles(RoleDto.toDto(user.getRoles()))
-                .offers(OfferDto.toDto(user.getOffers()))
+                .createdOffers(OfferDto.toDto(user.getCreatedOffers()))
                 .status(user.getStatus())
                 .build();
     }

@@ -1,5 +1,9 @@
-package com.ader.backend.entity;
+package com.ader.backend.entity.user;
 
+import com.ader.backend.entity.BaseEntity;
+import com.ader.backend.entity.Status;
+import com.ader.backend.entity.offer.Offer;
+import com.ader.backend.entity.role.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,19 +20,16 @@ import java.util.List;
 @SequenceGenerator(name = "generic_gen", sequenceName = "user_seq", allocationSize = 1)
 public class User extends BaseEntity {
 
-    @Column
-    private String username;
+    @Column(unique = true)
+    private String brandName;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(unique = true)
+    private String brandWebsite;
 
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Builder.Default
@@ -46,5 +47,9 @@ public class User extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Offer> offers = new ArrayList<>();
+    private List<Offer> createdOffers = new ArrayList<>();
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 }

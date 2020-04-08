@@ -1,8 +1,9 @@
 package com.ader.backend.rest;
 
-import com.ader.backend.entity.Offer;
-import com.ader.backend.entity.dto.OfferDto;
-import com.ader.backend.service.OfferService;
+import com.ader.backend.entity.offer.Offer;
+import com.ader.backend.entity.offer.OfferDto;
+import com.ader.backend.service.offer.OfferService;
+import liquibase.exception.DatabaseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class OfferController {
     }
 
     @GetMapping
-    public List<OfferDto> getOffers() {
+    public ResponseEntity<List<OfferDto>> getOffers() {
         return offerService.getAllOffers();
     }
 
@@ -29,7 +30,7 @@ public class OfferController {
     }
 
     @PostMapping("add")
-    public OfferDto createOffer(@RequestBody Offer offer) {
+    public ResponseEntity<OfferDto> createOffer(@RequestBody Offer offer) throws DatabaseException {
         return offerService.createOffer(offer);
     }
 
@@ -39,7 +40,7 @@ public class OfferController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
+    public ResponseEntity<String> deleteOffer(@PathVariable Long id) throws DatabaseException {
         return offerService.deleteOffer(id);
     }
 }

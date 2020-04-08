@@ -1,5 +1,8 @@
-package com.ader.backend.entity;
+package com.ader.backend.entity.offer;
 
+import com.ader.backend.entity.BaseEntity;
+import com.ader.backend.entity.Status;
+import com.ader.backend.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,4 +26,8 @@ public class Offer extends BaseEntity {
     @ManyToOne
     @JoinColumn
     private User author;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 }

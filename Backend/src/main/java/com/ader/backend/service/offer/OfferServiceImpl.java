@@ -1,24 +1,26 @@
-package com.ader.backend.service.impl;
+package com.ader.backend.service.offer;
 
-import com.ader.backend.entity.Offer;
-import com.ader.backend.entity.Roles;
 import com.ader.backend.entity.Status;
-import com.ader.backend.entity.User;
-import com.ader.backend.entity.dto.OfferDto;
+import com.ader.backend.entity.offer.Offer;
+import com.ader.backend.entity.offer.OfferDto;
+import com.ader.backend.entity.role.Roles;
+import com.ader.backend.entity.user.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferRepository;
 import com.ader.backend.repository.RoleRepository;
-import com.ader.backend.service.OfferService;
-import com.ader.backend.service.UserService;
+import com.ader.backend.service.user.UserService;
+import com.ader.backend.service.user.UserServiceImpl;
+import liquibase.exception.DatabaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Transactional
 @Service
@@ -36,8 +38,8 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<OfferDto> getAllOffers() {
-        return OfferDto.toDto(offerRepository.findAll());
+    public ResponseEntity<List<OfferDto>> getAllOffers() {
+        return ResponseEntity.ok(OfferDto.toDto(offerRepository.findAll()));
     }
 
     @Override
@@ -45,74 +47,80 @@ public class OfferServiceImpl implements OfferService {
         Offer fetchedOffer = offerRepository.findById(id).orElse(null);
 
         if (fetchedOffer == null) {
-            log.error("No offer found for id: [{}]", id);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            String errorMessage = "No offer found for id: [" + id + "]";
+            log.error(errorMessage);
+            throw new NoSuchElementException(errorMessage);
         } else {
             return ResponseEntity.ok(OfferDto.toDto(fetchedOffer));
         }
     }
 
     @Override
-    public OfferDto createOffer(Offer offer) {
+    public ResponseEntity<OfferDto> createOffer(Offer offer) throws DatabaseException {
+        Offer newOffer;
+
         if (offer.getStatus() == null) {
             offer.setStatus(Status.ACTIVE);
         }
 
         try {
-            offerRepository.save(offer);
+            newOffer = offerRepository.save(offer);
         } catch (Exception ex) {
             ex.printStackTrace();
+            throw new DatabaseException(ex);
         }
 
-        log.info("Created new offer: {}", offer.toString());
-//        return OfferDto.toDto(Objects.requireNonNull(offerRepository.findById(offer.getId()).orElse(null)));
-        return OfferDto.toDto(offer);
+        log.info("Created new offer: {}", newOffer.toString());
+        return ResponseEntity.ok(OfferDto.toDto(newOffer));
     }
 
     @Override
     public ResponseEntity<OfferDto> updateOffer(Long id, Offer offer) {
         User authenticatedUser = userService.getAuthenticatedUser();
         Offer offerToUpdate = offerRepository.findById(id).orElse(null);
+        String errorMessage;
 
         if (offerToUpdate == null) {
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            errorMessage = "Offer with id [" + id + "] not found!";
+            log.error(errorMessage);
+            throw new NoSuchElementException(errorMessage);
         } else {
-            if (authenticatedUser.getOffers().contains(offerToUpdate) ||
+            if (authenticatedUser.getCreatedOffers().contains(offerToUpdate) ||
                     authenticatedUser.getRoles().contains(roleRepository.findByName(Roles.ROLE_ADMIN.toString()))) {
                 BeanUtils.copyProperties(
                         offer,
                         offerToUpdate,
                         BeanHelper.getNullPropertyNames(offer, true)
                 );
+
+                log.info("Updated offer with id: [{}]", id);
+                return ResponseEntity.ok(OfferDto.toDto(offerToUpdate));
             } else {
-                return new ResponseEntity<>(OfferDto.toDto(offer), HttpStatus.FORBIDDEN);
+                errorMessage = "You do not have rights to update offer with id: [" + id + "]!";
+                log.error(errorMessage);
+                throw new AccessDeniedException(errorMessage);
             }
         }
-
-        log.info("Updated offer with id: [{}]", id);
-        return ResponseEntity.ok(OfferDto.toDto(offerToUpdate));
     }
 
     @Override
-    public ResponseEntity<String> deleteOffer(Long id) {
+    public ResponseEntity<String> deleteOffer(Long id) throws DatabaseException {
         Offer offerToDelete = offerRepository.findById(id).orElse(null);
 
         if (offerToDelete == null) {
-            log.error("Offer with id: [{}] not found!", id);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            String errorMessage = "Offer with id: [" + id + "] not found!";
+            log.error(errorMessage);
+            throw new NoSuchElementException(errorMessage);
         }
 
         try {
             offerRepository.deleteById(id);
-            log.info("Deleted offer with id: [{}]", id);
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>(
-                    "An error occurred when deleting entity with id: [" + id + "]",
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
+            throw new DatabaseException(ex);
         }
 
-        return ResponseEntity.ok("Removed offer with id: [" + id + "]");
+        log.info("Deleted offer with id: [{}]", id);
+        return ResponseEntity.ok("Deleted offer with id: [" + id + "]");
     }
 }
