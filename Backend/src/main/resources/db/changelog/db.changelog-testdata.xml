@@ -1,0 +1,308 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="testdata-1" author="mcurchi">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ROLE_ADVERTISER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-2" author="mcurchi">
+        <!-- ADMIN -->
+        <insert tableName="users">
+            <column name="brand_name" value="dev"/>
+            <column name="brand_website" value="dev"/>
+            <column name="email" value="dev@dev.com"/>
+            <!-- Password: dev -->
+            <column name="password" value="$2a$04$JyTVHsgcW.yCzMjTD7otDO30GcgyXofuXsbBoNRopB9VYYu2/3OAy"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" valueSequenceCurrent="user_seq"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_USER')"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" valueSequenceCurrent="user_seq"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_ADMIN')"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" valueSequenceCurrent="user_seq"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_ADVERTISER')"/>
+        </insert>
+
+        <!-- USER -->
+        <insert tableName="users">
+            <column name="email" value="user@user.com"/>
+            <!-- Password: user -->
+            <column name="password" value="$2a$04$o5f6hffiYb4/56EnMsiylu6VB8tNhiZGg7x4yus1HibmQ/e4YVSA."/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" valueSequenceCurrent="user_seq"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_USER')"/>
+        </insert>
+
+        <!-- ADVERTISER -->
+        <insert tableName="users">
+            <column name="brand_name" value="Dummy brand"/>
+            <column name="brand_website" value="Dummybrand@nothing.com"/>
+            <column name="email" value="ad@ad.com"/>
+            <!-- Password: ad -->
+            <column name="password" value="$2a$04$jvZJAWXG7XJbtOadd.Spwe6u8QCuj4vT5oHVIdxzRN5/tmjtwdat6"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" valueSequenceCurrent="user_seq"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name = 'ROLE_ADVERTISER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-3" author="mcurchi">
+        <insert tableName="categories">
+            <column name="name" value="Technology"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Fashion"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Lifestyle"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Travel"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Marketing"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Reviews"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Photography"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Finance &amp; Money"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Fitness &amp; Health"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Arts &amp; Culture"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Food &amp; Cooking"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Beauty"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Family &amp; Parenting"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Home decor"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Design"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Man's fashion"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Women's fashion"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Sports"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Video"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Street style"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="name" value="Coupon &amp; Saving"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-4" author="mcurchi">
+        <!-- FIRST TEST OFFER -->
+        <insert tableName="offers">
+            <column name="name" value="Dummy offer: Offering free testing"/>
+            <column name="description" value="Very interesting description of a very well defined product"/>
+            <column name="expire_date" valueComputed="current_timestamp"/>
+            <column name="author_id" valueSequenceCurrent="user_seq"/>
+            <column name="assignee_id" value="1"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Technology%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Lifestyle%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Marketing%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Reviews%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Design%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Video%')"/>
+        </insert>
+
+        <!-- SECOND TEST OFFER -->
+        <insert tableName="offers">
+            <column name="name" value="Testing offer: Because why not"/>
+            <column name="description" value="Very interesting description of a not very well defined product"/>
+            <column name="expire_date" valueComputed="current_timestamp"/>
+            <column name="author_id" valueSequenceCurrent="user_seq"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Technology%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Lifestyle%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Marketing%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Reviews%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Design%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Video%')"/>
+        </insert>
+
+        <!-- THIRD TEST OFFER -->
+        <insert tableName="offers">
+            <column name="name" value="Another offer for a full collection"/>
+            <column name="description" value="This description is not very interesting"/>
+            <column name="expire_date" valueComputed="current_timestamp"/>
+            <column name="author_id" valueSequenceCurrent="user_seq"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Technology%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Lifestyle%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Marketing%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Reviews%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Design%')"/>
+        </insert>
+
+        <insert tableName="offer_category">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Video%')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-5" author="mcurchi">
+        <insert tableName="personas">
+            <column name="user_id" value="1"/>
+            <column name="activity" value="Development"/>
+            <column name="audience" value="Nobody"/>
+            <column name="selling_orientation" value="I sell problems"/>
+            <column name="values" value="I'm good"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-6" author="mcurchi">
+        <insert tableName="bids">
+            <column name="user_id" value="1"/>
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-7" author="mcurchi">
+        <insert tableName="offermedia">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="path" value="This will be an image someday"/>
+        </insert>
+
+        <insert tableName="offermedia">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="path" value="This will also be an image someday"/>
+        </insert>
+
+        <insert tableName="offermedia">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="path" value="This will never be an image"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

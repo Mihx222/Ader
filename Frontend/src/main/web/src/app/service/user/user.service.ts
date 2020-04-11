@@ -8,18 +8,18 @@ import {User} from '../../model/user/user';
 })
 export class UserService {
 
-  userURL = this.apiService.baseURL + '/';
+  userURL = this.apiService.BASE_URL + '/';
 
   constructor(private apiService: ApiService, private http: HttpClient) {
   }
 
   getUsers() {
     return this.http.get<User[]>(this.userURL + 'user?access_token=' +
-      JSON.parse(localStorage.getItem('token')).access_token);
+        JSON.parse(localStorage.getItem('token')).access_token);
   }
 
-  getUser(username: string) {
-    return this.http.get<User>(this.userURL + 'user/' + username + '?access_token=' +
-      JSON.parse(localStorage.getItem('token')).access_token);
+  getUser(email: string) {
+    return this.http.get<User>(this.userURL + 'user/' + email + '?access_token=' +
+        JSON.parse(localStorage.getItem('token')).access_token);
   }
 }

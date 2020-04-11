@@ -18,32 +18,36 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {HttpClientModule} from "@angular/common/http";
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {MatMenuModule} from "@angular/material/menu";
+import {ProfileComponent} from './components/profile/profile.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    LoginComponent,
-    NavbarComponent,
-    RegisterComponent
-  ],
-  imports: [
-    BrowserModule,
-    FlexLayoutModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatRippleModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    HttpClientModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        LoginComponent,
+        NavbarComponent,
+        RegisterComponent,
+        ProfileComponent
+    ],
+    imports: [
+        BrowserModule,
+        FlexLayoutModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatRippleModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        HttpClientModule,
+        MatMenuModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

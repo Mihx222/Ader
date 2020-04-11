@@ -14,7 +14,7 @@ import {UserSharedDataService} from '../../service/user/user-shared-data.service
 })
 export class LoginComponent implements OnInit {
   matcher = new CustomErrorStateMatcher();
-  usernameFormControl = new FormControl('', [Validators.required]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required]);
   returnUrl: string;
 
@@ -33,30 +33,35 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.emailFormControl.hasError('required') ||
+      this.emailFormControl.hasError('email') ||
+      this.passwordFormControl.hasError('required')) {
+      return;
+    }
+
     // reset login status
     this.apiService.logout();
 
     const body = new HttpParams()
-      .set('username', this.usernameFormControl.value)
+      .set('username', this.emailFormControl.value)
       .set('password', this.passwordFormControl.value)
       .set('grant_type', 'password');
 
     this.apiService.login(body).subscribe(
       data => {
         localStorage.setItem('token', JSON.stringify(data));
-        console.log(localStorage.getItem('token'));
 
-        this.userService.getUser(this.usernameFormControl.value).subscribe(
+        this.userService.getUser(this.emailFormControl.value).subscribe(
           user => {
-            this.userSharedDataService.setUser(user);
             user.token = JSON.parse(localStorage.getItem('token')).access_token;
             user.refresh_token = JSON.parse(localStorage.getItem('token')).refresh_token;
+            user.token_expiration = JSON.parse(localStorage.getItem('token')).expires_in;
 
+            this.userSharedDataService.setAuthenticatedUser(user);
             localStorage.setItem('current_user', JSON.stringify(user));
-            console.log(JSON.parse(localStorage.getItem('current_user')));
           },
           error => {
-            alert('Login failed!');
+            alert(error.error.error_description);
           }
         );
         this.router.navigate(['/']);

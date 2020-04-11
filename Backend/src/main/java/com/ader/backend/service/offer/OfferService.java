@@ -17,5 +17,5 @@ public interface OfferService {
 
     ResponseEntity<OfferDto> updateOffer(Long id, Offer offer);
 
-    ResponseEntity<String> deleteOffer(Long id) throws DatabaseException;
+    ResponseEntity<String> deleteOffer(Long id);
 }

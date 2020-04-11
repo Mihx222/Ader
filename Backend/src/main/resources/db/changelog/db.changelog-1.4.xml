@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.4.0" author="mcurchi">
+        <createSequence sequenceName="persona_seq" incrementBy="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="1.4.1" author="mcurchi">
+        <createTable tableName="personas">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="persona_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="BIGINT">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="activity" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="audience" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="selling_orientation" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="values" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="personas"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>

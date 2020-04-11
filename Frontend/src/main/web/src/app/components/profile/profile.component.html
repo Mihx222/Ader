@@ -1,0 +1,9 @@
+<app-navbar></app-navbar>
+<p>{{authenticatedUser.brandName === null ? '' : authenticatedUser.brandName}}</p>
+<p>{{authenticatedUser.brandWebsite === null ? '' : authenticatedUser.brandWebsite}}</p>
+<p>Email: {{authenticatedUser.email}}</p>
+<div>
+  <p>Roles:</p>
+  <p *ngFor="let role of authenticatedUser.roles">{{role.name}}</p>
+</div>
+<p>Status: {{authenticatedUser.status}}</p>

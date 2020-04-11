@@ -1,6 +1,5 @@
 package com.ader.backend.entity.role;
 
-import com.ader.backend.entity.Status;
 import com.ader.backend.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +32,4 @@ public class Role {
     @Builder.Default
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
-
-    @Builder.Default
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
 }

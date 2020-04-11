@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Transactional
 @Service
@@ -71,7 +72,9 @@ public class OfferServiceImpl implements OfferService {
         }
 
         log.info("Created new offer: {}", newOffer.toString());
-        return ResponseEntity.ok(OfferDto.toDto(newOffer));
+        return ResponseEntity.ok(
+                OfferDto.toDto(Objects.requireNonNull(offerRepository.findById(newOffer.getId()).orElse(null)))
+        );
     }
 
     @Override
@@ -85,7 +88,8 @@ public class OfferServiceImpl implements OfferService {
             log.error(errorMessage);
             throw new NoSuchElementException(errorMessage);
         } else {
-            if (authenticatedUser.getCreatedOffers().contains(offerToUpdate) ||
+            if ((!authenticatedUser.getCreatedOffers().isEmpty() &&
+                    authenticatedUser.getCreatedOffers().contains(offerToUpdate)) ||
                     authenticatedUser.getRoles().contains(roleRepository.findByName(Roles.ROLE_ADMIN.toString()))) {
                 BeanUtils.copyProperties(
                         offer,
@@ -104,7 +108,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public ResponseEntity<String> deleteOffer(Long id) throws DatabaseException {
+    public ResponseEntity<String> deleteOffer(Long id) {
         Offer offerToDelete = offerRepository.findById(id).orElse(null);
 
         if (offerToDelete == null) {
@@ -113,12 +117,7 @@ public class OfferServiceImpl implements OfferService {
             throw new NoSuchElementException(errorMessage);
         }
 
-        try {
-            offerRepository.deleteById(id);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new DatabaseException(ex);
-        }
+        offerToDelete.setStatus(Status.DELETED);
 
         log.info("Deleted offer with id: [{}]", id);
         return ResponseEntity.ok("Deleted offer with id: [" + id + "]");

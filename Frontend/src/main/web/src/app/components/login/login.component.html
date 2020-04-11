@@ -10,13 +10,14 @@
         <mat-form-field class="full-width" style="margin-top: 5px;">
           <input
             [errorStateMatcher]="matcher"
-            [formControl]="usernameFormControl"
+            [formControl]="emailFormControl"
             matInput
-            placeholder="Username"
+            placeholder="Email"
             required
           >
           <mat-hint></mat-hint>
-          <mat-error *ngIf="usernameFormControl.hasError('required')">Username is <strong>required!</strong></mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">Email is <strong>required!</strong></mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('email')">Email is <strong>invalid!</strong></mat-error>
         </mat-form-field>
 
         <mat-form-field class="full-width" style="margin-top: 5px;">
@@ -36,7 +37,8 @@
 
       <a
         (click)="onSubmit()"
-        [disabled]="usernameFormControl.hasError('required') ||
+        [disabled]="emailFormControl.hasError('required') ||
+        emailFormControl.hasError('email') ||
         passwordFormControl.hasError('required')"
         class="btn-block"
         color="accent"

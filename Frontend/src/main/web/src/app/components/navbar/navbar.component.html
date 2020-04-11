@@ -4,8 +4,20 @@
   <!-- This fills the remaining space of the current row -->
   <span class="fill-remaining-space"></span>
 
-  <span class="nav-tool-items">
-    <a mat-button routerLink="login" routerLinkActive="active" style="margin-right: 10px;">Log in</a>
-    <a mat-button mat-raised-button routerLink="register" routerLinkActive="active">Register</a>
-  </span>
+  <div *ngIf="!authenticatedUser">
+    <span class="nav-tool-items">
+      <a mat-button routerLink="login" routerLinkActive="active" style="margin-right: 10px;">Log in</a>
+      <a mat-button mat-raised-button routerLink="register" routerLinkActive="active">Register</a>
+    </span>
+  </div>
+
+  <div *ngIf="authenticatedUser">
+    <span class="nav-tool-items">
+      <button [matMenuTriggerFor]="menu" mat-button>{{authenticatedUser.email}}</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="profile" routerLinkActive="active">Profile</button>
+        <button (click)="apiService.logout()" mat-menu-item routerLink="" routerLinkActive="active">Log out</button>
+      </mat-menu>
+    </span>
+  </div>
 </mat-toolbar>

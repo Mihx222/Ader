@@ -40,7 +40,7 @@ public class OfferController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteOffer(@PathVariable Long id) throws DatabaseException {
+    public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
         return offerService.deleteOffer(id);
     }
 }

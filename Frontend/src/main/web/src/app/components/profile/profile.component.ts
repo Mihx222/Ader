@@ -1,24 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {UserSharedDataService} from "../../service/user/user-shared-data.service";
 import {UserViewModel} from "../../model/user/user-view-model";
-import {ApiService} from "../../service/api/api.service";
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class ProfileComponent implements OnInit {
   authenticatedUser: UserViewModel;
 
-  constructor(
-    userSharedDataService: UserSharedDataService,
-    public apiService: ApiService
-  ) {
+  constructor(userSharedDataService: UserSharedDataService) {
     userSharedDataService.getAuthenticatedUser().subscribe(
       result => {
         this.authenticatedUser = result;
-        console.log(result);
       },
       error => {
         alert(error.error.error_description);

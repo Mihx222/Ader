@@ -1,7 +1,9 @@
 package com.ader.backend.entity.user;
 
 import com.ader.backend.entity.Status;
+import com.ader.backend.entity.bid.BidDto;
 import com.ader.backend.entity.offer.OfferDto;
+import com.ader.backend.entity.persona.PersonaDto;
 import com.ader.backend.entity.role.RoleDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
@@ -22,6 +24,9 @@ public class UserDto {
     private Status status;
     private List<RoleDto> roles;
     private List<OfferDto> createdOffers;
+    private List<OfferDto> acceptedOffers;
+    private List<BidDto> bids;
+    private List<PersonaDto> personas;
 
     public static List<UserDto> toDto(List<User> users) {
         return users.stream().map(UserDto::toDto).collect(Collectors.toList());
@@ -35,6 +40,9 @@ public class UserDto {
                 .email(user.getEmail())
                 .roles(RoleDto.toDto(user.getRoles()))
                 .createdOffers(OfferDto.toDto(user.getCreatedOffers()))
+                .acceptedOffers(OfferDto.toDto(user.getAssignedOffers()))
+                .bids(BidDto.toDto(user.getBids()))
+                .personas(PersonaDto.toDto(user.getPersonas()))
                 .status(user.getStatus())
                 .build();
     }

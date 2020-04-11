@@ -2,7 +2,9 @@ package com.ader.backend.entity.user;
 
 import com.ader.backend.entity.BaseEntity;
 import com.ader.backend.entity.Status;
+import com.ader.backend.entity.bid.Bid;
 import com.ader.backend.entity.offer.Offer;
+import com.ader.backend.entity.persona.Persona;
 import com.ader.backend.entity.role.Role;
 import lombok.*;
 
@@ -33,9 +35,9 @@ public class User extends BaseEntity {
     private String password;
 
     @Builder.Default
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
-            name = "user_roles",
+            name = "user_role",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id"),
             },
@@ -48,6 +50,18 @@ public class User extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Offer> createdOffers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    private List<Offer> assignedOffers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Persona> personas = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Bid> bids = new ArrayList<>();
 
     @Builder.Default
     @Enumerated(EnumType.STRING)

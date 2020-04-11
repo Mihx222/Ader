@@ -3,12 +3,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="sequences" author="mcurchi">
+    <changeSet id="1.0.0" author="mcurchi">
         <createSequence incrementBy="1" sequenceName="user_seq" startValue="1"/>
         <createSequence incrementBy="1" sequenceName="role_seq" startValue="1"/>
     </changeSet>
 
-    <changeSet id="1.0.0" author="mcurchi">
+    <changeSet id="1.0.1" author="mcurchi">
         <createTable tableName="users">
             <column name="id" type="BIGINT" defaultValueSequenceNext="user_seq">
                 <constraints primaryKey="true" nullable="false"/>
@@ -44,7 +44,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="1.0.1" author="mcurchi">
+    <changeSet id="1.0.2" author="mcurchi">
         <createTable tableName="roles">
             <column name="id" type="BIGINT" defaultValueSequenceNext="role_seq">
                 <constraints primaryKey="true" nullable="false"/>
@@ -53,25 +53,21 @@
             <column name="name" type="VARCHAR(50)">
                 <constraints nullable="false" unique="true"/>
             </column>
-
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="1.0.2" author="mcurchi">
-        <createTable tableName="user_roles">
+    <changeSet id="1.0.3" author="mcurchi">
+        <createTable tableName="user_role">
             <column name="user_id" type="BIGINT"/>
 
             <column name="role_id" type="BIGINT"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="1.0.3" author="mcurchi">
-        <addForeignKeyConstraint baseTableName="user_roles"
+    <changeSet id="1.0.4" author="mcurchi">
+        <addForeignKeyConstraint baseTableName="user_role"
                                  baseColumnNames="user_id"
-                                 constraintName="fk_user_roles_user"
+                                 constraintName="fk_user_role_user"
                                  referencedTableName="users"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
@@ -79,28 +75,14 @@
         />
     </changeSet>
 
-    <changeSet id="1.0.4" author="mcurchi">
-        <addForeignKeyConstraint baseTableName="user_roles"
+    <changeSet id="1.0.5" author="mcurchi">
+        <addForeignKeyConstraint baseTableName="user_role"
                                  baseColumnNames="role_id"
-                                 constraintName="fk_user_roles_roles"
+                                 constraintName="fk_user_role_role"
                                  referencedTableName="roles"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
         />
-    </changeSet>
-
-    <changeSet id="1.0.5" author="mcurchi">
-        <insert tableName="roles">
-            <column name="name" value="ROLE_USER"/>
-        </insert>
-
-        <insert tableName="roles">
-            <column name="name" value="ROLE_ADMIN"/>
-        </insert>
-
-        <insert tableName="roles">
-            <column name="name" value="ROLE_ADVERTISER"/>
-        </insert>
     </changeSet>
 </databaseChangeLog>

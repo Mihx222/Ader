@@ -7,13 +7,19 @@ import {User} from '../../model/user/user';
 })
 export class UserSharedDataService {
 
-  userData: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  userObservable: Observable<User> = this.userData.asObservable();
+  userData: BehaviorSubject<User>;
+  userObservable: Observable<User>;
 
   constructor() {
+    this.userData = new BehaviorSubject<User>(JSON.parse(localStorage.getItem("current_user")));
+    this.userObservable = this.userData.asObservable();
   }
 
-  setUser(user: User) {
+  setAuthenticatedUser(user: User) {
     this.userData.next(user);
+  }
+
+  getAuthenticatedUser(): Observable<User> {
+    return this.userObservable;
   }
 }
