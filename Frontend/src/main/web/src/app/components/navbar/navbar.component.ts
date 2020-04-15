@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserSharedDataService} from "../../service/user/user-shared-data.service";
 import {UserViewModel} from "../../model/user/user-view-model";
-import {ApiService} from "../../service/api/api.service";
+import {AuthService} from "../../service/auth/auth.service";
 
 @Component({
   selector: 'app-navbar',
@@ -12,8 +12,8 @@ export class NavbarComponent implements OnInit {
   authenticatedUser: UserViewModel;
 
   constructor(
-    userSharedDataService: UserSharedDataService,
-    public apiService: ApiService
+      userSharedDataService: UserSharedDataService,
+      public authService: AuthService
   ) {
     userSharedDataService.getAuthenticatedUser().subscribe(
       result => {

@@ -20,6 +20,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatMenuModule} from "@angular/material/menu";
 import {ProfileComponent} from './components/profile/profile.component';
+import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 
 @NgModule({
     declarations: [
@@ -31,23 +32,26 @@ import {ProfileComponent} from './components/profile/profile.component';
         ProfileComponent
     ],
     imports: [
-        BrowserModule,
-        FlexLayoutModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatRippleModule,
-        MatButtonModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        HttpClientModule,
-        MatMenuModule
+      BrowserModule,
+      FlexLayoutModule,
+      AppRoutingModule,
+      BrowserAnimationsModule,
+      MatToolbarModule,
+      MatRippleModule,
+      MatButtonModule,
+      MatCardModule,
+      MatFormFieldModule,
+      MatInputModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatSelectModule,
+      HttpClientModule,
+      MatMenuModule
     ],
-    providers: [],
-    bootstrap: [AppComponent]
+  providers: [
+    {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
+    JwtHelperService
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

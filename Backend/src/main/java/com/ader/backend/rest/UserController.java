@@ -4,6 +4,7 @@ import com.ader.backend.entity.user.User;
 import com.ader.backend.entity.user.UserDto;
 import com.ader.backend.service.user.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +26,19 @@ public class UserController {
     }
 
     @GetMapping("{email}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String email) {
-        return userService.getUserByEmail(email);
+    public ResponseEntity<Object> getUser(@PathVariable String email) {
+        return userService.getUser(email);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("{email}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@PathVariable String email, @RequestBody User user) {
         return userService.updateUser(email, user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{email}")
-    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+    public ResponseEntity<Object> deleteUser(@PathVariable String email) {
         return userService.deleteUser(email);
     }
 }

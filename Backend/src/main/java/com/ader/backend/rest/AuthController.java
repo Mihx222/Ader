@@ -1,9 +1,7 @@
 package com.ader.backend.rest;
 
 import com.ader.backend.entity.user.User;
-import com.ader.backend.entity.user.UserDto;
 import com.ader.backend.service.user.UserService;
-import liquibase.exception.DatabaseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserDto> register(@RequestBody User user) throws DatabaseException {
+    public ResponseEntity<Object> register(@RequestBody User user) {
         return userService.register(user);
     }
 }

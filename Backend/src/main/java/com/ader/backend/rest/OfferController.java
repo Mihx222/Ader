@@ -3,8 +3,8 @@ package com.ader.backend.rest;
 import com.ader.backend.entity.offer.Offer;
 import com.ader.backend.entity.offer.OfferDto;
 import com.ader.backend.service.offer.OfferService;
-import liquibase.exception.DatabaseException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,22 +25,25 @@ public class OfferController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<OfferDto> getOffer(@PathVariable Long id) {
+    public ResponseEntity<Object> getOffer(@PathVariable Long id) {
         return offerService.getOffer(id);
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @PostMapping("add")
-    public ResponseEntity<OfferDto> createOffer(@RequestBody Offer offer) throws DatabaseException {
+    public ResponseEntity<Object> createOffer(@RequestBody Offer offer) {
         return offerService.createOffer(offer);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("{id}")
-    public ResponseEntity<OfferDto> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
+    public ResponseEntity<Object> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
         return offerService.updateOffer(id, offer);
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteOffer(@PathVariable Long id) {
         return offerService.deleteOffer(id);
     }
 }

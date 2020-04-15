@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Builder
 public class OfferMediaDto {
 
+    private Long id;
     private Long offerId;
     private String path;
 
@@ -21,6 +22,7 @@ public class OfferMediaDto {
 
     public static OfferMediaDto toDto(OfferMedia offerMedia) {
         return OfferMediaDto.builder()
+                .id(offerMedia.getId())
                 .offerId(offerMedia.getOffer().getId())
                 .path(offerMedia.getPath())
                 .build();

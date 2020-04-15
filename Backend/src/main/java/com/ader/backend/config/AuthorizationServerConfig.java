@@ -21,7 +21,7 @@ import org.springframework.web.filter.CorsFilter;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     // Client ID used in Basic Auth for token generation
-    static final String CLIENT_ID = "networktap_api";
+    static final String CLIENT_ID = "ader_api";
 
     // Unencrypted secret: licenta2020
     // Encrypted using Bcrypt with 4 iterations
@@ -73,7 +73,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
                 .tokenStore(tokenStore())
                 .authenticationManager(authenticationManager)
@@ -85,7 +85,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * @throws Exception
      */
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.applyPermitDefaultValues();

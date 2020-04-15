@@ -2,7 +2,6 @@ package com.ader.backend.service.user;
 
 import com.ader.backend.entity.user.User;
 import com.ader.backend.entity.user.UserDto;
-import liquibase.exception.DatabaseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -12,15 +11,15 @@ public interface UserService {
 
     ResponseEntity<List<UserDto>> getAllUsers();
 
-    ResponseEntity<UserDto> getUserByEmail(String email);
+    ResponseEntity<Object> getUser(String email);
 
-    ResponseEntity<User> getUserById(Long id);
+    ResponseEntity<Object> getUser(Long id);
 
-    ResponseEntity<UserDto> register(User user) throws DatabaseException;
+    ResponseEntity<Object> register(User user);
 
-    ResponseEntity<UserDto> updateUser(String email, User user);
+    ResponseEntity<Object> updateUser(String email, User user);
 
-    ResponseEntity<String> deleteUser(String email);
+    ResponseEntity<Object> deleteUser(String email);
 
     boolean isAuthenticated(String email, Authentication authentication);
 

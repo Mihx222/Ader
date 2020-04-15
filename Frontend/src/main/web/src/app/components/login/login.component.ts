@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {CustomErrorStateMatcher} from '../../helpers/custom-error-state-matcher';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ApiService} from '../../service/api/api.service';
 import {HttpParams} from '@angular/common/http';
 import {UserService} from '../../service/user/user.service';
 import {UserSharedDataService} from '../../service/user/user-shared-data.service';
+import {AuthService} from "../../service/auth/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   constructor(
     public router: Router,
     public route: ActivatedRoute,
-    public apiService: ApiService,
+    public authService: AuthService,
     public userService: UserService,
     public userSharedDataService: UserSharedDataService
   ) {
@@ -40,14 +40,14 @@ export class LoginComponent implements OnInit {
     }
 
     // reset login status
-    this.apiService.logout();
+    this.authService.logout();
 
     const body = new HttpParams()
       .set('username', this.emailFormControl.value)
       .set('password', this.passwordFormControl.value)
       .set('grant_type', 'password');
 
-    this.apiService.login(body).subscribe(
+    this.authService.login(body).subscribe(
       data => {
         localStorage.setItem('token', JSON.stringify(data));
 

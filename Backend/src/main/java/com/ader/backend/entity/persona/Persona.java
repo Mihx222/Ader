@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class Persona extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private User user;
 
     @Column(nullable = false)

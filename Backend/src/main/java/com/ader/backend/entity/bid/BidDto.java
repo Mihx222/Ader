@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Builder
 public class BidDto {
 
+    private Long id;
     private Long offerId;
     private String userEmail;
 
@@ -21,6 +22,7 @@ public class BidDto {
 
     public static BidDto toDto(Bid bid) {
         return BidDto.builder()
+                .id(bid.getId())
                 .offerId(bid.getOffer().getId())
                 .userEmail(bid.getUser().getEmail())
                 .build();

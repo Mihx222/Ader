@@ -33,6 +33,10 @@ public class UserDto {
     }
 
     public static UserDto toDto(User user) {
+        if (user == null) {
+            return null;
+        }
+
         return UserDto.builder()
                 .id(user.getId())
                 .brandName(user.getBrandName())

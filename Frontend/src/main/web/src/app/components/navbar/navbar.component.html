@@ -1,22 +1,26 @@
-<mat-toolbar class="app-header" color="primary">
-  <div><a class="no-decoration-text" routerLink="">Network Tap</a></div>
+<mat-toolbar class="app-header">
+  <div><a class="no-decoration-text" routerLink="">Ader</a></div>
 
   <!-- This fills the remaining space of the current row -->
   <span class="fill-remaining-space"></span>
 
   <div *ngIf="!authenticatedUser">
     <span class="nav-tool-items">
-      <a mat-button routerLink="login" routerLinkActive="active" style="margin-right: 10px;">Log in</a>
-      <a mat-button mat-raised-button routerLink="register" routerLinkActive="active">Register</a>
+      <a class="login-button" mat-button routerLink="login" routerLinkActive="active">Log in</a>
+      <a class="register-button" mat-button mat-raised-button routerLink="register" routerLinkActive="active">
+        Register
+      </a>
     </span>
   </div>
 
   <div *ngIf="authenticatedUser">
     <span class="nav-tool-items">
-      <button [matMenuTriggerFor]="menu" mat-button>{{authenticatedUser.email}}</button>
+      <button [matMenuTriggerFor]="menu" mat-button style="color: white">
+        {{authenticatedUser.email}}
+      </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="profile" routerLinkActive="active">Profile</button>
-        <button (click)="apiService.logout()" mat-menu-item routerLink="" routerLinkActive="active">Log out</button>
+        <button (click)="authService.logout()" mat-menu-item routerLink="" routerLinkActive="active">Log out</button>
       </mat-menu>
     </span>
   </div>

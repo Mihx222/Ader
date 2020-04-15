@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Builder
 public class PersonaDto {
 
+    private Long id;
     private String activity;
     private String audience;
     private String sellingOrientation;
@@ -23,6 +24,7 @@ public class PersonaDto {
 
     public static PersonaDto toDto(Persona persona) {
         return PersonaDto.builder()
+                .id(persona.getId())
                 .activity(persona.getActivity())
                 .audience(persona.getAudience())
                 .sellingOrientation(persona.getSellingOrientation())

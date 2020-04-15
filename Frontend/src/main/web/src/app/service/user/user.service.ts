@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {ApiService} from '../api/api.service';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../model/user/user';
+import {AuthService} from "../auth/auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  userURL = this.apiService.BASE_URL + '/';
+  userURL = this.authService.BASE_URL + '/';
 
-  constructor(private apiService: ApiService, private http: HttpClient) {
+  constructor(private authService: AuthService, private http: HttpClient) {
   }
 
   getUsers() {
