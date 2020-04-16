@@ -1,4 +1,4 @@
-package com.ader.backend.config;
+package com.ader.backend.config.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

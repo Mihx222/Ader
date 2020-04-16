@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <variable name="LOG_HOME" value="../Ader-logs}"/>
+
+    <appender name="REQUESTS_FOR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/requests/incoming_requests.log</file>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} [%X{username}] %-5level %class{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOG_HOME}/requests/archived_requests/incoming_requests_%d{dd-MM-yyyy}_%i.log
+            </fileNamePattern>
+            <maxFileSize>250MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILES-CONTROLLERS" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>controller</key>
+            <defaultValue>defaultController</defaultValue>
+        </discriminator>
+
+        <sift>
+            <appender name="CONTROLLER-${controller}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_HOME}/controllers/${controller}.log</file>
+
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>
+                        %d{dd-MM-yyyy HH:mm:ss.SSS} [%X{username}] %-5level %class{36}.%M - %msg%n
+                    </Pattern>
+                </encoder>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <fileNamePattern>
+                        ${LOG_HOME}/controller/archived_controller_logs/${controller}_%d{dd-MM-yyyy}_%i.log
+                    </fileNamePattern>
+                    <maxFileSize>250MB</maxFileSize>
+                    <maxHistory>14</maxHistory>
+                    <totalSizeCap>3GB</totalSizeCap>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="com.ader.backend.config.logging.AderRequestResponseLoggingFilter" additivity="false" level="debug">
+        <appender-ref ref="REQUESTS_FOR_FILE"/>
+    </logger>
+
+    <logger name="com.ader.backend.rest" additivity="false" level="info">
+        <appender-ref ref="FILES-CONTROLLERS"/>
+    </logger>
+
+    <logger name="org.springframework.boot.SpringApplication" level="INFO" additivity="false">
+        <appender-ref ref="REQUESTS_FOR_FILE"/>
+        <appender-ref ref="FILES-CONTROLLERS"/>
+    </logger>
+</configuration>

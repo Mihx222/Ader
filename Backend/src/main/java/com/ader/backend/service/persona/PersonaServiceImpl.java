@@ -6,8 +6,7 @@ import com.ader.backend.entity.user.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.PersonaRepository;
 import com.ader.backend.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,9 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class PersonaServiceImpl implements PersonaService {
 
-    private static final Logger log = LoggerFactory.getLogger(PersonaServiceImpl.class);
     private final PersonaRepository personaRepository;
     private final UserService userService;
 
