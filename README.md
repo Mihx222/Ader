@@ -13,10 +13,9 @@ One of the reasons i chose this project is because i have it as a project for my
 * [Project wiki](https://github.com/VariableTalisman/Ader/wiki)
 * [Functional requirements](https://github.com/VariableTalisman/Ader/wiki/Functional-requirements)
 * [Non-functional requirements](https://github.com/VariableTalisman/Ader/wiki/Non-functional-Requirements)
-* [Interface specifications](https://github.com/VariableTalisman/Ader/wiki/Interface-Specifications)
+* [Interface specifications](https://htmlpreview.github.io/?https://raw.githubusercontent.com/wiki/VariableTalisman/Ader/Ader-interface-specs.html)
 * [Progress board](https://github.com/VariableTalisman/Ader/projects/1)
 * [Viewpoints catalog](https://github.com/VariableTalisman/Ader/wiki/Viewpoints-Catalog)
-* [Interface specifications](https://htmlpreview.github.io/?https://raw.githubusercontent.com/wiki/VariableTalisman/Ader/Ader_interface_specifications.html)
 
 ### Current progress
 The project is just beginning. As of right now, i have a Maven project with 2 modules: Backend and Frontend. The Backend module is a Spring boot application and the Frontend module is an Angular application. The project builds and launches successfully.
