@@ -7,8 +7,7 @@ import com.ader.backend.entity.user.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferRepository;
 import com.ader.backend.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +18,14 @@ import java.util.List;
 
 @Transactional
 @Service
+@Slf4j
 public class OfferServiceImpl implements OfferService {
 
-    private static final Logger log = LoggerFactory.getLogger(OfferServiceImpl.class);
     private final OfferRepository offerRepository;
     private final UserService userService;
 
     public OfferServiceImpl(OfferRepository offerRepository,
-                            UserService userService
-    ) {
+                            UserService userService) {
         this.offerRepository = offerRepository;
         this.userService = userService;
     }

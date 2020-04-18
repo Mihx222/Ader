@@ -4,8 +4,7 @@ import com.ader.backend.entity.offermedia.OfferMedia;
 import com.ader.backend.entity.offermedia.OfferMediaDto;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferMediaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,9 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class OfferMediaServiceImpl implements OfferMediaService {
 
-    private static final Logger log = LoggerFactory.getLogger(OfferMediaServiceImpl.class);
     private final OfferMediaRepository offerMediaRepository;
 
     public OfferMediaServiceImpl(OfferMediaRepository offerMediaRepository) {

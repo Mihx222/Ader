@@ -28,38 +28,42 @@ public class PersonaController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<PersonaDto>> getAll() {
+        log.info("All personas requested");
         return personaService.getAllPersonas();
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("{id}")
     public ResponseEntity<Object> getPersona(@PathVariable Long id) {
-        log.info("User: [{}] requested persona with id: [{}]",
-                userService.getAuthenticatedUser().getEmail(), id);
+        log.info("Requested persona with id: [{}]", id);
         return personaService.getPersonaById(id);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")
     @GetMapping("user/{userEmail}")
     public ResponseEntity<List<PersonaDto>> getAllByUser(@PathVariable String userEmail) {
+        log.info("Requested persona from user with email: [{}]", userEmail);
         return personaService.getAllPersonasByUser(userEmail);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")
     @PostMapping("add")
     public ResponseEntity<Object> createPersona(@RequestBody Persona persona) {
+        log.info("Requested creation of new persona with payload: [{}]", persona);
         return personaService.createPersona(persona);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<Object> updatePersona(@PathVariable Long id, @RequestBody Persona persona) {
+        log.info("Requested updating persona with id: [{}], with new persona: [{}]", id, persona);
         return personaService.updatePersona(id, persona);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deletePersona(@PathVariable Long id) {
+        log.info("Requested deleting persona with id: [{}]", id);
         return personaService.deletePersona(id);
     }
 }

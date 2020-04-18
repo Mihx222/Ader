@@ -17,6 +17,7 @@
     </parent>
 
     <modules>
+        <module>Admin</module>
         <module>Backend</module>
         <module>Frontend</module>
     </modules>

@@ -2,14 +2,14 @@ package com.ader.backend.rest;
 
 import com.ader.backend.entity.user.User;
 import com.ader.backend.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("rest/auth")
+@Slf4j
 public class AuthController {
 
     private final UserService userService;
@@ -20,6 +20,7 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<Object> register(@RequestBody User user) {
+        log.info("New registration request with email: [{}]", user.getEmail());
         return userService.register(user);
     }
 }

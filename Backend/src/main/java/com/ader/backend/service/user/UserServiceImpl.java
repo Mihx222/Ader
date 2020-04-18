@@ -8,9 +8,8 @@ import com.ader.backend.entity.user.UserDto;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.RoleRepository;
 import com.ader.backend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +29,8 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service(value = "userService")
+@Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
-
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private static final String NO_ROLE_WITH_NAME_MESSAGE = "No role with name: [";
     private static final String WAS_FOUND_MESSAGE = "] was found";
@@ -44,8 +42,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserServiceImpl(
             UserRepository userRepository,
             RoleRepository roleRepository,
-            BCryptPasswordEncoder passwordEncoder
-    ) {
+            BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -247,7 +244,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     protected Pair<User, String> handlePasswordAndEmail(@NonNull User user) {
-        String errorMessage = null;
+        String errorMessage;
 
         if (user.getPassword() == null || user.getEmail() == null) {
             errorMessage = "Received user has no email or password set!";
@@ -257,11 +254,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        return Pair.of(user, errorMessage);
+        return Pair.of(user, null);
     }
 
     protected Pair<User, String> handleRoles(@NonNull User user) {
-        String errorMessage = null;
+        String errorMessage;
         List<Role> userRoles = user.getRoles();
         boolean checkRoleNamesFromList = checkRoleNamesFromList(userRoles);
         boolean checkRoleIdsFromList = checkRoleIdsFromList(userRoles);
@@ -308,6 +305,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 return Pair.of(null, errorMessage);
             }
         }
-        return Pair.of(user, errorMessage);
+        return Pair.of(user, null);
     }
 }

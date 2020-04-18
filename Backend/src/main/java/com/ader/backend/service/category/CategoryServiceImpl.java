@@ -4,8 +4,7 @@ import com.ader.backend.entity.category.Category;
 import com.ader.backend.entity.category.CategoryDto;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.CategoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,8 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
-
-    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     private static final String CATEGORY_WITH_ID = "Category with id: [";
     private static final String CATEGORY_WITH_NAME = "Category with name: [";
