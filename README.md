@@ -11,14 +11,15 @@ One of the reasons i chose this project is because i have it as a project for my
 
 ### Table of contents:
 * [Project wiki](https://github.com/VariableTalisman/Ader/wiki)
+* [Getting started](https://github.com/VariableTalisman/Ader/wiki/Getting-started)
 * [Functional requirements](https://github.com/VariableTalisman/Ader/wiki/Functional-requirements)
 * [Non-functional requirements](https://github.com/VariableTalisman/Ader/wiki/Non-functional-Requirements)
-* [Interface specifications](https://github.com/VariableTalisman/Ader/wiki/Interface-Specifications)
+* [Interface specifications](https://htmlpreview.github.io/?https://raw.githubusercontent.com/wiki/VariableTalisman/Ader/Ader-interface-specs.html)
 * [Progress board](https://github.com/VariableTalisman/Ader/projects/1)
 * [Viewpoints catalog](https://github.com/VariableTalisman/Ader/wiki/Viewpoints-Catalog)
 
 ### Current progress
-The project is just beginning. As of right now, i have a Maven project with 2 modules: Backend and Frontend. The Backend module is a Spring boot application and the Frontend module is an Angular application. The project builds and launches successfully.
+The project currently has 3 modules: Backend, Frontend and Admin. The Backend module has most of it's entity schema complete. It has logging (Logback), database migration (Liquibase) and Security (OAuth2). The Frontend module only has the home page and the Log in page (which works). The Admin module is used for monitoring the Backend application and allows us to change the loglevel at runtime, as well as give us a lot of other useful information.
 
 ### Future plans
-First of all, i have to implement the user groups: User, Advertiser and Administrator, and make an authentication system. User logs in with Facebook, Advertiser has to register directly on the site and Administrator has full control.
+Further develop the Backend application: add the proper bussiness logic for offer creation, bid creation, and advertising status handling. Also, further Frontend module work is required. Will try to make it look as close to the prototype as possible.
