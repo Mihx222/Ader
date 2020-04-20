@@ -1,9 +1,44 @@
 <app-navbar></app-navbar>
-<p>{{authenticatedUser.brandName === null ? '' : authenticatedUser.brandName}}</p>
-<p>{{authenticatedUser.brandWebsite === null ? '' : authenticatedUser.brandWebsite}}</p>
-<p>Email: {{authenticatedUser.email}}</p>
-<div>
-  <p>Roles:</p>
-  <p *ngFor="let role of authenticatedUser.roles">{{role.name}}</p>
+
+<h1>Profile:</h1>
+
+<div *ngIf="authenticatedUser.brandName != null">
+  <h3>Brand name:</h3>
+  <span>{{authenticatedUser.brandName}}</span>
 </div>
-<p>Status: {{authenticatedUser.status}}</p>
+
+<div *ngIf="authenticatedUser.brandWebsite != null">
+  <h3>Brand website:</h3>
+  <span>{{authenticatedUser.brandWebsite}}</span>
+</div>
+
+<div>
+  <h3>Email:</h3>
+  <p>{{authenticatedUser.email}}</p>
+</div>
+
+<div *ngIf="authenticatedUser.createdOffers.length != 0">
+  <h3>Created offers:</h3>
+  <ul>
+    <li *ngFor="let offer of authenticatedUser.createdOffers">{{offer.name}}</li>
+  </ul>
+</div>
+
+<div *ngIf="authenticatedUser.acceptedOffers.length != 0">
+  <h3>Accepted offers:</h3>
+  <ul>
+    <li *ngFor="let offer of authenticatedUser.acceptedOffers">{{offer.name}}</li>
+  </ul>
+</div>
+
+<div *ngIf="authenticatedUser.bids.length != 0">
+  <h3>Bids:</h3>
+  <ul>
+    <li *ngFor="let bid of authenticatedUser.bids">Offer id: {{bid.offerId}}</li>
+  </ul>
+</div>
+
+<div>
+  <h3>Status:</h3>
+  <p>{{authenticatedUser.status}}</p>
+</div>

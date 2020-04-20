@@ -1,13 +1,30 @@
 <mat-toolbar class="app-header">
-  <div><a class="no-decoration-text" routerLink="">Ader</a></div>
+  <div><a class="no-decoration-text" routerLink="/">Ader</a></div>
+
+  <div style="margin-left: 100px; font-size: 16px;">
+    <a class="no-decoration-text" routerLink="/offers">Browse offers</a>
+  </div>
+
+  <div style="margin-left: 50px; font-size: 16px;">
+    <a class="no-decoration-text" routerLink="/influencers">Browse influencers</a>
+  </div>
 
   <!-- This fills the remaining space of the current row -->
   <span class="fill-remaining-space"></span>
 
+  <div *ngIf="isAdvertiser()">
+    <span class="nav-tool-items">
+      <a class="register-button" mat-button mat-raised-button routerLink="/offers/new" routerLinkActive="active"
+         style="margin-right: 10px;">
+        New offer
+      </a>
+    </span>
+  </div>
+
   <div *ngIf="!authenticatedUser">
     <span class="nav-tool-items">
-      <a class="login-button" mat-button routerLink="login" routerLinkActive="active">Log in</a>
-      <a class="register-button" mat-button mat-raised-button routerLink="register" routerLinkActive="active">
+      <a class="login-button" mat-button routerLink="/login" routerLinkActive="active">Log in</a>
+      <a class="register-button" mat-button mat-raised-button routerLink="/register" routerLinkActive="active">
         Register
       </a>
     </span>
@@ -15,12 +32,12 @@
 
   <div *ngIf="authenticatedUser">
     <span class="nav-tool-items">
-      <button [matMenuTriggerFor]="menu" mat-button style="color: white">
+      <button [matMenuTriggerFor]="menu" class="login-button" mat-flat-button>
         {{authenticatedUser.email}}
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="profile" routerLinkActive="active">Profile</button>
-        <button (click)="authService.logout()" mat-menu-item routerLink="" routerLinkActive="active">Log out</button>
+        <button mat-menu-item routerLink="/profile" routerLinkActive="active">Profile</button>
+        <button (click)="authService.logout()" mat-menu-item routerLink="/" routerLinkActive="active">Log out</button>
       </mat-menu>
     </span>
   </div>

@@ -1,12 +1,13 @@
 import {Status} from "../status/status.enum";
 import {OfferViewModel} from "../offer/offer-view-model";
-import {Role} from "../role/role.enum";
+import {BidViewModel} from "../bid/bid-view-model";
 
 export interface UserViewModel {
   brandName: string;
   brandWebsite: string;
   email: string;
-  roles: Role[];
   createdOffers: OfferViewModel[];
+  acceptedOffers: OfferViewModel[];
+  bids: BidViewModel[];
   status: Status;
 }

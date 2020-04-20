@@ -3,6 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable} from 'rxjs';
 import decode from 'jwt-decode';
 import {AuthService} from "../../service/auth/auth.service";
+import {Role} from "../../model/role/role.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,11 @@ export class RoleGuard implements CanActivate {
   }
 
   canActivate(
-    route: ActivatedRouteSnapshot, state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+    Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     // this will be passed from the route config on the data property
-    const expectedRole = route.data.expectedRole;
+    let requiredRoles: Role[] = route.data.requiredRoles;
+    let containsRole: boolean = false;
     const rawToken = localStorage.getItem('token');
     let token: string;
 
@@ -32,8 +34,15 @@ export class RoleGuard implements CanActivate {
     // decode the token to get its payload
     const tokenPayload = decode(token);
 
-    if (!this.auth.isAuthenticated() || tokenPayload.role !== expectedRole) {
-      this.router.navigate(['login']);
+    // Check if user has required roles
+    requiredRoles.forEach(requiredRole => {
+      tokenPayload.authorities.forEach(actualRole => {
+        if (requiredRole === actualRole) containsRole = true;
+      });
+    });
+
+    if (!this.auth.isAuthenticated() || !containsRole) {
+      this.router.navigate(['/']);
       return false;
     }
 

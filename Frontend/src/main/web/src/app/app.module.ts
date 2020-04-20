@@ -21,37 +21,44 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatMenuModule} from "@angular/material/menu";
 import {ProfileComponent} from './components/profile/profile.component';
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
+import {BrowseOffersComponent} from './components/browse-offers/browse-offers.component';
+import {BrowseInfluencersComponent} from './components/browse-influencers/browse-influencers.component';
+import {NewOfferComponent} from './components/new-offer/new-offer.component';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,
-        NavbarComponent,
-        RegisterComponent,
-        ProfileComponent
-    ],
-    imports: [
-      BrowserModule,
-      FlexLayoutModule,
-      AppRoutingModule,
-      BrowserAnimationsModule,
-      MatToolbarModule,
-      MatRippleModule,
-      MatButtonModule,
-      MatCardModule,
-      MatFormFieldModule,
-      MatInputModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatSelectModule,
-      HttpClientModule,
-      MatMenuModule
-    ],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    NavbarComponent,
+    RegisterComponent,
+    ProfileComponent,
+    BrowseOffersComponent,
+    BrowseInfluencersComponent,
+    NewOfferComponent
+  ],
+  imports: [
+    BrowserModule,
+    FlexLayoutModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatRippleModule,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    HttpClientModule,
+    MatMenuModule
+  ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
     JwtHelperService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
