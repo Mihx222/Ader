@@ -1,0 +1,66 @@
+.container {
+  margin: 0 auto;
+  max-width: 84rem;
+  width: 90%;
+}
+
+table {
+  width: 100%;
+}
+
+.details-button {
+  margin-top: 5px;
+  line-height: 28px;
+  padding: 0 36px;
+  background-color: #fd4b59;
+  color: white;
+}
+
+.status-chip {
+  padding: 7px 50px;
+  box-sizing: inherit;
+  color: #2cd248;
+  font-size: 18px;
+  background-color: #f1fcf3;
+  transform: inherit;
+  border-style: solid;
+  border-width: thin;
+  min-height: 15px;
+}
+
+.status-chip::after {
+  background: inherit;
+}
+
+.category-chips {
+  background-color: white;
+  color: #7f7f7f;
+  border-style: solid;
+  border-width: thin;
+  border-radius: 8px;
+  padding: 3px;
+  min-height: 30px;
+}
+
+a {
+  color: #888888;
+  text-decoration: none;
+}
+
+.author-name {
+  color: #888888;
+}
+
+/* Use these settings to adjust the padding of the table cells */
+.mat-row {
+  height: auto;
+}
+
+.mat-cell {
+  padding: 8px 8px 8px 0;
+}
+
+.inline-chips {
+  display: inline-block;
+  padding: 2px;
+}

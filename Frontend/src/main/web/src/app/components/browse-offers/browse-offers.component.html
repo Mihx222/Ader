@@ -1,2 +1,63 @@
 <app-navbar></app-navbar>
-ASDASD
+
+<div class="container" style="margin-top: 25px;">
+  <h1>Offers</h1>
+</div>
+
+<!-- Filter -->
+<div class="container">
+  <mat-form-field style="width: 300px;">
+    <mat-label>Search...</mat-label>
+    <input (keyup)="applyFilters($event)" matInput placeholder="Ex. offer">
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8 container">
+  <table [dataSource]="dataSource" mat-table matSort>
+    <ng-container matColumnDef="name">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+      <td *matCellDef="let offer" mat-cell>
+        <p>{{offer.name}}<br><br></p>
+        <p><span>By: </span><span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span></p>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Description</th>
+      <td *matCellDef="let offer" mat-cell> {{offer.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="categories">
+      <th *matHeaderCellDef mat-header-cell>Categories</th>
+      <td *matCellDef="let offer" mat-cell>
+        <span *ngFor="let category of offer.categories">
+          <mat-chip-list [multiple]="true" aria-label="Categories"
+                         class="inline-chips">
+            <mat-chip class="category-chips">{{category.name}}</mat-chip>
+          </mat-chip-list>
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th *matHeaderCellDef mat-header-cell>Status</th>
+      <td *matCellDef="let offer" mat-cell>
+        <mat-chip class="status-chip" disableRipple>
+          {{offer.offerStatus}}
+        </mat-chip>
+
+        <div>
+          <button class="details-button" mat-flat-button routerLink=".">View details</button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+    <tr *matRowDef="let offerData; columns: columnsToDisplay" mat-row></tr>
+  </table>
+
+  <mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                 showFirstLastButtons></mat-paginator>
+
+  <app-scroll-up-button></app-scroll-up-button>
+</div>

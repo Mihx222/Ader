@@ -1,28 +1,32 @@
 .fill-remaining-space {
-    /* This fills the remaining space, by using flexbox.
-     Every toolbar row uses a flexbox row layout. */
-    flex: 1 1 auto;
+  /* This fills the remaining space, by using flexbox.
+   Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
 }
 
 .no-decoration-text {
-    text-decoration: none;
-    color: #ffffff;
+  text-decoration: none;
+  color: #ffffff;
 }
 
 mat-toolbar {
-    background: #444444;
-    padding-left: 60px;
-    padding-right: 60px;
+  background: #444444;
+  padding-left: 60px;
+  padding-right: 60px;
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
 
 .register-button {
-    background: #fd4b59;
-    color: white;
+  background: #fd4b59;
+  color: white;
 }
 
 .login-button {
-    margin-right: 10px;
-    background: #5e5e5e;
-    color: white;
-    border: solid 1px white;
+  margin-right: 10px;
+  background: #5e5e5e;
+  color: white;
+  border: solid 1px white;
 }

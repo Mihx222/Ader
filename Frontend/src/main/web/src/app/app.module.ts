@@ -24,6 +24,13 @@ import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 import {BrowseOffersComponent} from './components/browse-offers/browse-offers.component';
 import {BrowseInfluencersComponent} from './components/browse-influencers/browse-influencers.component';
 import {NewOfferComponent} from './components/new-offer/new-offer.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import {ScrollUpButtonComponent} from './components/scroll-up-button/scroll-up-button.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatIconModule} from "@angular/material/icon";
+import {LoadingBarRouterModule} from "@ngx-loading-bar/router";
 
 @NgModule({
   declarations: [
@@ -35,7 +42,8 @@ import {NewOfferComponent} from './components/new-offer/new-offer.component';
     ProfileComponent,
     BrowseOffersComponent,
     BrowseInfluencersComponent,
-    NewOfferComponent
+    NewOfferComponent,
+    ScrollUpButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +60,13 @@ import {NewOfferComponent} from './components/new-offer/new-offer.component';
     ReactiveFormsModule,
     MatSelectModule,
     HttpClientModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatChipsModule,
+    MatIconModule,
+    LoadingBarRouterModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

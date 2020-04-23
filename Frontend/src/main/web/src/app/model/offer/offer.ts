@@ -1,4 +1,3 @@
-import {UserViewModel} from "../user/user-view-model";
 import {Status} from "../status/status.enum";
 import {BidViewModel} from "../bid/bid-view-model";
 import {CategoryViewModel} from "../category/category-view-model";
@@ -10,8 +9,8 @@ export interface Offer {
   id: number;
   name: string;
   description: string;
-  author: UserViewModel;
-  assignee: UserViewModel;
+  authorName: string;
+  assigneeName: string;
   bids: BidViewModel[];
   categories: CategoryViewModel[];
   offerMedia: OfferMediaViewModel[];
