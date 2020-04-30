@@ -1,22 +1,20 @@
 package com.ader.backend.service.bid;
 
-import com.ader.backend.entity.bid.Bid;
-import com.ader.backend.entity.bid.BidDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.Bid;
 
 import java.util.List;
 
 public interface BidService {
 
-    ResponseEntity<List<BidDto>> getBids();
+    List<Bid> getBids();
 
-    ResponseEntity<List<BidDto>> getBidsByUser(String userEmail);
+    List<Bid> getBidsByUser(String userEmail);
 
-    ResponseEntity<List<BidDto>> getBidsByOffer(Long offerId);
+    List<Bid> getBidsByOffer(Long offerId);
 
-    ResponseEntity<Object> createBid(Bid bid);
+    Bid createBid(Bid bid);
 
-    ResponseEntity<Object> updateBid(Long id, Bid bid);
+    Bid updateBid(Long id, Bid bid);
 
-    ResponseEntity<Object> deleteBid(Long id);
+    String deleteBid(Long id);
 }

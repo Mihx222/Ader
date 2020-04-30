@@ -1,40 +1,38 @@
 package com.ader.backend.service.offermedia;
 
-import com.ader.backend.entity.offermedia.OfferMedia;
-import com.ader.backend.entity.offermedia.OfferMediaDto;
+import com.ader.backend.entity.OfferMedia;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferMediaRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class OfferMediaServiceImpl implements OfferMediaService {
 
     private final OfferMediaRepository offerMediaRepository;
 
-    public OfferMediaServiceImpl(OfferMediaRepository offerMediaRepository) {
-        this.offerMediaRepository = offerMediaRepository;
+    @Override
+    public List<OfferMedia> getAllOfferMedia() {
+        return offerMediaRepository.findAll();
     }
 
     @Override
-    public ResponseEntity<List<OfferMediaDto>> getAllOfferMedia() {
-        return ResponseEntity.ok(OfferMediaDto.toDto(offerMediaRepository.findAll()));
+    public List<OfferMedia> getAllOfferMediaForOffer(Long offerId) {
+        return offerMediaRepository.findAllByOfferId(offerId);
     }
 
     @Override
-    public ResponseEntity<List<OfferMediaDto>> getAllOfferMediaForOffer(Long offerId) {
-        return ResponseEntity.ok(OfferMediaDto.toDto(offerMediaRepository.findAllByOfferId(offerId)));
-    }
-
-    @Override
-    public ResponseEntity<Object> createOfferMedia(OfferMedia offerMedia) {
+    public OfferMedia createOfferMedia(OfferMedia offerMedia) {
         String errorMessage;
 
         try {
@@ -42,22 +40,22 @@ public class OfferMediaServiceImpl implements OfferMediaService {
         } catch (Exception e) {
             errorMessage = e.getMessage();
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
         log.info("Successfully created offer media: [{}]", offerMedia);
-        return ResponseEntity.ok(OfferMediaDto.toDto(offerMedia));
+        return offerMedia;
     }
 
     @Override
-    public ResponseEntity<Object> updateOfferMedia(Long id, OfferMedia offerMedia) {
+    public OfferMedia updateOfferMedia(Long id, OfferMedia offerMedia) {
         String errorMessage;
         OfferMedia offerMediaToUpdate = offerMediaRepository.findById(id).orElse(null);
 
         if (offerMediaToUpdate == null) {
             errorMessage = "Offer media with id: [" + id + "] does not exist!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
             try {
                 BeanUtils.copyProperties(
@@ -68,16 +66,19 @@ public class OfferMediaServiceImpl implements OfferMediaService {
             } catch (Exception e) {
                 errorMessage = e.getMessage();
                 log.error(errorMessage);
-                return ResponseEntity.badRequest().body(errorMessage);
+                throw new ResponseStatusException(
+                        HttpStatus.UNPROCESSABLE_ENTITY,
+                        errorMessage
+                );
             }
         }
 
         log.info("Successfully updated offer media. New offer media: [{}]", offerMediaToUpdate);
-        return ResponseEntity.ok(OfferMediaDto.toDto(offerMediaToUpdate));
+        return offerMediaToUpdate;
     }
 
     @Override
-    public ResponseEntity<Object> deleteOfferMedia(Long id) {
+    public String deleteOfferMedia(Long id) {
         String errorMessage;
         String successMessage;
 
@@ -86,11 +87,11 @@ public class OfferMediaServiceImpl implements OfferMediaService {
         } catch (Exception e) {
             errorMessage = e.getMessage();
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
         successMessage = "Successfully deleted offer media with id: [" + id + "]";
         log.info(successMessage);
-        return ResponseEntity.ok(successMessage);
+        return successMessage;
     }
 }

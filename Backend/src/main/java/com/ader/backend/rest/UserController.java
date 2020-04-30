@@ -1,8 +1,9 @@
 package com.ader.backend.rest;
 
-import com.ader.backend.entity.user.User;
-import com.ader.backend.entity.user.UserDto;
+import com.ader.backend.entity.User;
+import com.ader.backend.rest.dto.UserDto;
 import com.ader.backend.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,37 +15,34 @@ import java.util.List;
 @RestController
 @RequestMapping("rest/user")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
         log.info("Requested all users");
-        return userService.getAllUsers();
+        return ResponseEntity.ok(UserDto.toDto(userService.getAllUsers()));
     }
 
     @GetMapping("{email}")
-    public ResponseEntity<Object> getUser(@PathVariable String email) {
+    public ResponseEntity<UserDto> getUser(@PathVariable String email) {
         log.info("Requested user with email: [{}]", email);
-        return userService.getUser(email);
+        return ResponseEntity.ok(UserDto.toDto(userService.getUser(email)));
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("{email}")
-    public ResponseEntity<Object> updateUser(@PathVariable String email, @RequestBody User user) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody User user) {
         log.info("Requested updating user with email: [{}]", email);
-        return userService.updateUser(email, user);
+        return ResponseEntity.ok(UserDto.toDto(userService.updateUser(email, user)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{email}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String email) {
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
         log.info("Requested deleting user with email: [{}]", email);
-        return userService.deleteUser(email);
+        return ResponseEntity.ok(userService.deleteUser(email));
     }
 }

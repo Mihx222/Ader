@@ -1,18 +1,18 @@
 package com.ader.backend.service.user;
 
+import com.ader.backend.entity.Role;
+import com.ader.backend.entity.Roles;
 import com.ader.backend.entity.Status;
-import com.ader.backend.entity.role.Role;
-import com.ader.backend.entity.role.Roles;
-import com.ader.backend.entity.user.User;
-import com.ader.backend.entity.user.UserDto;
+import com.ader.backend.entity.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.RoleRepository;
 import com.ader.backend.repository.UserRepository;
+import com.ader.backend.rest.dto.UserDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Service(value = "userService")
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private static final String NO_ROLE_WITH_NAME_MESSAGE = "No role with name: [";
@@ -38,15 +40,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(
-            UserRepository userRepository,
-            RoleRepository roleRepository,
-            BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -76,38 +69,38 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(UserDto.toDto(userRepository.findAll()));
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public ResponseEntity<Object> getUser(String email) {
+    public User getUser(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
 
         if (user == null) {
             String errorMessage = "User with email: [" + email + "] not found!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
-            return ResponseEntity.ok(UserDto.toDto(user));
+            return user;
         }
     }
 
     @Override
-    public ResponseEntity<Object> getUser(Long id) {
+    public User getUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
             String errorMessage = "User with id: [" + id + "] not found!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
-            return ResponseEntity.ok(user);
+            return user;
         }
     }
 
     @Override
-    public ResponseEntity<Object> register(User user) {
+    public User register(User user) {
         String errorMessage;
 
         // Handle password and email
@@ -116,7 +109,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user = handledUserByPassAndEmail.getLeft();
         } else {
             log.error(handledUserByPassAndEmail.getRight());
-            return ResponseEntity.badRequest().body(handledUserByPassAndEmail.getRight());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, handledUserByPassAndEmail.getRight());
         }
 
         // Handle roles
@@ -125,7 +118,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user = handledUserByRoles.getLeft();
         } else {
             log.error(handledUserByRoles.getRight());
-            return ResponseEntity.badRequest().body(handledUserByRoles.getRight());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, handledUserByRoles.getRight());
         }
 
         // Save new user
@@ -134,16 +127,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } catch (Exception e) {
             errorMessage = e.getMessage();
             log.error(errorMessage);
-            return ResponseEntity.unprocessableEntity().body(errorMessage);
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    errorMessage
+            );
         }
 
-        UserDto newUser = UserDto.toDto(user);
-        log.info("User [{}] created successfully!", newUser);
-        return ResponseEntity.ok(newUser);
+        log.info("User [{}] created successfully!", UserDto.toDto(user));
+        return user;
     }
 
     @Override
-    public ResponseEntity<Object> updateUser(String email, User user) {
+    public User updateUser(String email, User user) {
         Authentication currentAuthentication = getAuthentication();
         User authenticatedUser = userRepository.findByEmail(currentAuthentication.getName()).orElse(null);
         User userToUpdate = userRepository.findByEmail(email).orElse(null);
@@ -153,18 +148,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (userToUpdate == null) {
             errorMessage = "User [" + email + "] does not exist!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else if (authenticatedUser == null) {
             errorMessage = "Authenticated user [" + currentAuthentication.getName() + "] was not found! " +
                     "This means that the user credentials have changed.";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else if (authenticatedUser.getRoles().contains(roleAdmin) ||
                 userToUpdate.getEmail().equals(authenticatedUser.getEmail())) {
             if (!authenticatedUser.getRoles().contains(roleAdmin) && !user.getRoles().isEmpty()) {
                 errorMessage = "You do not have the rights to change roles of user: [" + userToUpdate.getEmail() + "]";
                 log.error(errorMessage);
-                return ResponseEntity.badRequest().body(errorMessage);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
             } else {
                 // Copy properties to new user
                 BeanUtils.copyProperties(
@@ -173,30 +168,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         BeanHelper.getNullPropertyNames(user, true)
                 );
             }
-            return ResponseEntity.ok(UserDto.toDto(userToUpdate));
+            return userToUpdate;
         } else {
             errorMessage = "You do not have the rights to update user with email [" + email + "]!";
             log.error(errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, errorMessage);
         }
     }
 
     @Override
-    public ResponseEntity<Object> deleteUser(String email) {
+    public String deleteUser(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         String errorMessage;
 
         if (user == null) {
             errorMessage = "Could not find user with email [" + email + "]!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else if (isAuthenticated(email, null)) {
             errorMessage = "You cannot delete the account you're currently logged in with!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
             user.setStatus(Status.DELETED);
-            return ResponseEntity.ok("Deleted user with email: [" + email + "]");
+            return "Deleted user with email: [" + email + "]";
         }
     }
 

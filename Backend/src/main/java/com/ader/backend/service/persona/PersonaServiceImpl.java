@@ -1,66 +1,63 @@
 package com.ader.backend.service.persona;
 
-import com.ader.backend.entity.persona.Persona;
-import com.ader.backend.entity.persona.PersonaDto;
-import com.ader.backend.entity.user.User;
+import com.ader.backend.entity.Persona;
+import com.ader.backend.entity.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.PersonaRepository;
 import com.ader.backend.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class PersonaServiceImpl implements PersonaService {
 
     private final PersonaRepository personaRepository;
     private final UserService userService;
 
-    public PersonaServiceImpl(PersonaRepository personaRepository, UserService userService) {
-        this.personaRepository = personaRepository;
-        this.userService = userService;
+    @Override
+    public List<Persona> getAllPersonas() {
+        return personaRepository.findAll();
     }
 
     @Override
-    public ResponseEntity<List<PersonaDto>> getAllPersonas() {
-        return ResponseEntity.ok(PersonaDto.toDto(personaRepository.findAll()));
-    }
-
-    @Override
-    public ResponseEntity<List<PersonaDto>> getAllPersonasByUser(String userEmail) {
+    public List<Persona> getAllPersonasByUser(String userEmail) {
         User authenticatedUser = userService.getAuthenticatedUser();
 
         if (!authenticatedUser.getEmail().equals(userEmail)) {
             String errorMessage = "You do not have the rights to retrieve the personas for user: [" +
                     userEmail + "]";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(null);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
-        return ResponseEntity.ok(PersonaDto.toDto(personaRepository.findAllByUserEmail(userEmail)));
+        return personaRepository.findAllByUserEmail(userEmail);
     }
 
     @Override
-    public ResponseEntity<Object> getPersonaById(Long id) {
+    public Persona getPersonaById(Long id) {
         Persona persona = personaRepository.findById(id).orElse(null);
 
         if (persona == null) {
             String errorMessage = "Persona with id: [" + id + "] not found!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
-        return ResponseEntity.ok(PersonaDto.toDto(persona));
+        return persona;
     }
 
     @Override
-    public ResponseEntity<Object> createPersona(Persona persona) {
+    public Persona createPersona(Persona persona) {
         String errorMessage;
 
         try {
@@ -68,22 +65,22 @@ public class PersonaServiceImpl implements PersonaService {
         } catch (Exception e) {
             errorMessage = e.getMessage();
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
         log.info("Successfully created persona: [{}]", persona);
-        return ResponseEntity.ok(PersonaDto.toDto(persona));
+        return persona;
     }
 
     @Override
-    public ResponseEntity<Object> updatePersona(Long id, Persona persona) {
+    public Persona updatePersona(Long id, Persona persona) {
         String errorMessage;
         Persona personaToUpdate = personaRepository.findById(id).orElse(null);
 
         if (personaToUpdate == null) {
             errorMessage = "Persona with id: [" + id + "] not found!";
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
             try {
                 BeanUtils.copyProperties(
@@ -94,16 +91,19 @@ public class PersonaServiceImpl implements PersonaService {
             } catch (Exception e) {
                 errorMessage = e.getMessage();
                 log.error(errorMessage);
-                return ResponseEntity.badRequest().body(errorMessage);
+                throw new ResponseStatusException(
+                        HttpStatus.UNPROCESSABLE_ENTITY,
+                        errorMessage
+                );
             }
         }
 
         log.info("Successfully updated persona. New persona: [{}]", personaToUpdate);
-        return ResponseEntity.ok(PersonaDto.toDto(personaToUpdate));
+        return personaToUpdate;
     }
 
     @Override
-    public ResponseEntity<Object> deletePersona(Long id) {
+    public String deletePersona(Long id) {
         String errorMessage;
         String successMessage;
 
@@ -112,11 +112,11 @@ public class PersonaServiceImpl implements PersonaService {
         } catch (Exception e) {
             errorMessage = e.getMessage();
             log.error(errorMessage);
-            return ResponseEntity.badRequest().body(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
         successMessage = "Successfully deleted persona with id: [" + id + "]";
         log.info(successMessage);
-        return ResponseEntity.ok(successMessage);
+        return successMessage;
     }
 }

@@ -20,14 +20,6 @@ import org.springframework.web.filter.CorsFilter;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    // Client ID used in Basic Auth for token generation
-    static final String CLIENT_ID = "ader_api";
-
-    // Unencrypted secret: licenta2020
-    // Encrypted using Bcrypt with 4 iterations
-    // https://www.devglan.com/online-tools/bcrypt-hash-generator
-    static final String CLIENT_SECRET = "$2a$04$/.KX5oDdgOzbqPgJBehv5.dqmlQnm3.yxzlJCEvCB.9we0mQErsZK";
-
     static final String GRANT_TYPE_PASSWORD = "password";
     static final String AUTHORIZATION_CODE = "authorization_code";
     static final String REFRESH_TOKEN = "refresh_token";
@@ -35,14 +27,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
+    private final AuthenticationManager authenticationManager;
+
+    @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-id}")
+    private String CLIENT_ID;
+
+    @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-secret}")
+    private String CLIENT_SECRET;
 
     @Value("${jwt.token.expired}")
     private int ACCESS_TOKEN_VALIDITY_SECONDS;
 
     @Value("${jwt.token.expired}")
     private int REFRESH_TOKEN_VALIDITY_SECONDS;
-
-    private final AuthenticationManager authenticationManager;
 
     public AuthorizationServerConfig(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;

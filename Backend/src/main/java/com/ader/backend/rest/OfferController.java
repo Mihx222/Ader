@@ -1,8 +1,9 @@
 package com.ader.backend.rest;
 
-import com.ader.backend.entity.offer.Offer;
-import com.ader.backend.entity.offer.OfferDto;
+import com.ader.backend.entity.Offer;
+import com.ader.backend.rest.dto.OfferDto;
 import com.ader.backend.service.offer.OfferService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,44 +15,41 @@ import java.util.List;
 @RestController
 @RequestMapping("rest/offer")
 @Slf4j
+@RequiredArgsConstructor
 public class OfferController {
 
     private final OfferService offerService;
 
-    public OfferController(OfferService offerService) {
-        this.offerService = offerService;
-    }
-
     @GetMapping
     public ResponseEntity<List<OfferDto>> getOffers() {
         log.info("Requested all offers");
-        return offerService.getAllOffers();
+        return ResponseEntity.ok(OfferDto.toDto(offerService.getAllOffers()));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Object> getOffer(@PathVariable Long id) {
+    public ResponseEntity<OfferDto> getOffer(@PathVariable Long id) {
         log.info("Requested offer with id: [{}]", id);
-        return offerService.getOffer(id);
+        return ResponseEntity.ok(OfferDto.toDto(offerService.getOffer(id)));
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @PostMapping("add")
-    public ResponseEntity<Object> createOffer(@RequestBody Offer offer) {
+    public ResponseEntity<OfferDto> createOffer(@RequestBody Offer offer) {
         log.info("Requested creating new offer with payload: [{}]", offer);
-        return offerService.createOffer(offer);
+        return ResponseEntity.ok(OfferDto.toDto(offerService.createOffer(offer)));
     }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
+    public ResponseEntity<OfferDto> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
         log.info("Requested updating offer with id: [{}], new payload: [{}]", id, offer);
-        return offerService.updateOffer(id, offer);
+        return ResponseEntity.ok(OfferDto.toDto(offerService.updateOffer(id, offer)));
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteOffer(@PathVariable Long id) {
+    public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
         log.info("Requested deleting offer with id: [{}]", id);
-        return offerService.deleteOffer(id);
+        return ResponseEntity.ok(offerService.deleteOffer(id));
     }
 }

@@ -1,7 +1,5 @@
-package com.ader.backend.entity.category;
+package com.ader.backend.entity;
 
-import com.ader.backend.entity.BaseEntity;
-import com.ader.backend.entity.offer.Offer;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,6 +1,6 @@
 package com.ader.backend.repository;
 
-import com.ader.backend.entity.offermedia.OfferMedia;
+import com.ader.backend.entity.OfferMedia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

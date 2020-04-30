@@ -1,19 +1,15 @@
-package com.ader.backend.entity.user;
+package com.ader.backend.rest.dto;
 
 import com.ader.backend.entity.Status;
-import com.ader.backend.entity.bid.BidDto;
-import com.ader.backend.entity.offer.OfferDto;
-import com.ader.backend.entity.persona.PersonaDto;
-import com.ader.backend.entity.role.RoleDto;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ader.backend.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class UserDto {
 
@@ -32,11 +28,7 @@ public class UserDto {
         return users.stream().map(UserDto::toDto).collect(Collectors.toList());
     }
 
-    public static UserDto toDto(User user) {
-        if (user == null) {
-            return null;
-        }
-
+    public static UserDto toDto(@NotNull User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .brandName(user.getBrandName())

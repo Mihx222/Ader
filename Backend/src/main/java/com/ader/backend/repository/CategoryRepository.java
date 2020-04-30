@@ -1,6 +1,6 @@
 package com.ader.backend.repository;
 
-import com.ader.backend.entity.category.Category;
+import com.ader.backend.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

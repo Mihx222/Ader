@@ -1,6 +1,6 @@
 package com.ader.backend.repository;
 
-import com.ader.backend.entity.user.User;
+import com.ader.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

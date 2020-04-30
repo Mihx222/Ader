@@ -1,6 +1,6 @@
-package com.ader.backend.entity.persona;
+package com.ader.backend.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ader.backend.entity.Persona;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class PersonaDto {
 

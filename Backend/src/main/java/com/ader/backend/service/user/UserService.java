@@ -1,25 +1,23 @@
 package com.ader.backend.service.user;
 
-import com.ader.backend.entity.user.User;
-import com.ader.backend.entity.user.UserDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.User;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<List<UserDto>> getAllUsers();
+    List<User> getAllUsers();
 
-    ResponseEntity<Object> getUser(String email);
+    User getUser(String email);
 
-    ResponseEntity<Object> getUser(Long id);
+    User getUser(Long id);
 
-    ResponseEntity<Object> register(User user);
+    User register(User user);
 
-    ResponseEntity<Object> updateUser(String email, User user);
+    User updateUser(String email, User user);
 
-    ResponseEntity<Object> deleteUser(String email);
+    String deleteUser(String email);
 
     boolean isAuthenticated(String email, Authentication authentication);
 

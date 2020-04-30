@@ -1,26 +1,24 @@
 package com.ader.backend.service.category;
 
-import com.ader.backend.entity.category.Category;
-import com.ader.backend.entity.category.CategoryDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.Category;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    ResponseEntity<List<CategoryDto>> getAllCategories();
+    List<Category> getAllCategories();
 
-    ResponseEntity<Object> getCategory(Long id);
+    Category getCategory(Long id);
 
-    ResponseEntity<Object> getCategory(String name);
+    Category getCategory(String name);
 
-    ResponseEntity<Object> createCategory(Category category);
+    Category createCategory(Category category);
 
-    ResponseEntity<Object> updateCategory(Long id, Category category);
+    Category updateCategory(Long id, Category category);
 
-    ResponseEntity<Object> updateCategory(String name, Category category);
+    Category updateCategory(String name, Category category);
 
-    ResponseEntity<Object> deleteCategory(Long id);
+    String deleteCategory(Long id);
 
-    ResponseEntity<Object> deleteCategory(String name);
+    String deleteCategory(String name);
 }

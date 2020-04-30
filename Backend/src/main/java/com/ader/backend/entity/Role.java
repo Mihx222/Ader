@@ -1,6 +1,6 @@
-package com.ader.backend.entity.role;
+package com.ader.backend.entity;
 
-import com.ader.backend.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,10 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class Role {
+public class Role implements Serializable {
+
+    @JsonIgnore
+    private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 1)

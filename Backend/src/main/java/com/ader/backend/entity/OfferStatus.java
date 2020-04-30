@@ -1,4 +1,4 @@
-package com.ader.backend.entity.offer;
+package com.ader.backend.entity;
 
 public enum OfferStatus {
     OPEN("OPEN"),

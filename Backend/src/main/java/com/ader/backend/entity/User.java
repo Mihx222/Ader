@@ -1,11 +1,5 @@
-package com.ader.backend.entity.user;
+package com.ader.backend.entity;
 
-import com.ader.backend.entity.BaseEntity;
-import com.ader.backend.entity.Status;
-import com.ader.backend.entity.bid.Bid;
-import com.ader.backend.entity.offer.Offer;
-import com.ader.backend.entity.persona.Persona;
-import com.ader.backend.entity.role.Role;
 import lombok.*;
 
 import javax.persistence.*;

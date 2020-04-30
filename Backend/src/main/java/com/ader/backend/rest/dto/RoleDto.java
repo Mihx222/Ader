@@ -1,7 +1,8 @@
-package com.ader.backend.entity.role;
+package com.ader.backend.rest.dto;
 
+import com.ader.backend.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
+@AllArgsConstructor
 public class RoleDto {
 
     private String name;
@@ -19,8 +20,6 @@ public class RoleDto {
     }
 
     public static RoleDto toDto(Role role) {
-        return RoleDto.builder()
-                .name(role.getName())
-                .build();
+        return new RoleDto(role.getName());
     }
 }

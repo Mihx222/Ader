@@ -1,15 +1,14 @@
-package com.ader.backend.entity.offermedia;
+package com.ader.backend.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
+import com.ader.backend.entity.OfferMedia;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
+@AllArgsConstructor
 public class OfferMediaDto {
 
     private Long id;
@@ -21,10 +20,10 @@ public class OfferMediaDto {
     }
 
     public static OfferMediaDto toDto(OfferMedia offerMedia) {
-        return OfferMediaDto.builder()
-                .id(offerMedia.getId())
-                .offerId(offerMedia.getOffer().getId())
-                .path(offerMedia.getPath())
-                .build();
+        return new OfferMediaDto(
+                offerMedia.getId(),
+                offerMedia.getOffer().getId(),
+                offerMedia.getPath()
+        );
     }
 }

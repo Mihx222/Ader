@@ -1,20 +1,18 @@
 package com.ader.backend.service.offermedia;
 
-import com.ader.backend.entity.offermedia.OfferMedia;
-import com.ader.backend.entity.offermedia.OfferMediaDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.OfferMedia;
 
 import java.util.List;
 
 public interface OfferMediaService {
 
-    ResponseEntity<List<OfferMediaDto>> getAllOfferMedia();
+    List<OfferMedia> getAllOfferMedia();
 
-    ResponseEntity<List<OfferMediaDto>> getAllOfferMediaForOffer(Long offerId);
+    List<OfferMedia> getAllOfferMediaForOffer(Long offerId);
 
-    ResponseEntity<Object> createOfferMedia(OfferMedia offerMedia);
+    OfferMedia createOfferMedia(OfferMedia offerMedia);
 
-    ResponseEntity<Object> updateOfferMedia(Long id, OfferMedia offerMedia);
+    OfferMedia updateOfferMedia(Long id, OfferMedia offerMedia);
 
-    ResponseEntity<Object> deleteOfferMedia(Long id);
+    String deleteOfferMedia(Long id);
 }

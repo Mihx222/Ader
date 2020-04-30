@@ -1,6 +1,6 @@
 package com.ader.backend.repository;
 
-import com.ader.backend.entity.persona.Persona;
+import com.ader.backend.entity.Persona;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

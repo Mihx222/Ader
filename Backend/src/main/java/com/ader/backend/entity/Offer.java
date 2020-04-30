@@ -1,11 +1,5 @@
-package com.ader.backend.entity.offer;
+package com.ader.backend.entity;
 
-import com.ader.backend.entity.BaseEntity;
-import com.ader.backend.entity.Status;
-import com.ader.backend.entity.bid.Bid;
-import com.ader.backend.entity.category.Category;
-import com.ader.backend.entity.offermedia.OfferMedia;
-import com.ader.backend.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;

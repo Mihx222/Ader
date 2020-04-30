@@ -1,20 +1,18 @@
 package com.ader.backend.service.offer;
 
-import com.ader.backend.entity.offer.Offer;
-import com.ader.backend.entity.offer.OfferDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.Offer;
 
 import java.util.List;
 
 public interface OfferService {
 
-    ResponseEntity<List<OfferDto>> getAllOffers();
+    List<Offer> getAllOffers();
 
-    ResponseEntity<Object> getOffer(Long id);
+    Offer getOffer(Long id);
 
-    ResponseEntity<Object> createOffer(Offer offer);
+    Offer createOffer(Offer offer);
 
-    ResponseEntity<Object> updateOffer(Long id, Offer offer);
+    Offer updateOffer(Long id, Offer offer);
 
-    ResponseEntity<Object> deleteOffer(Long id);
+    String deleteOffer(Long id);
 }

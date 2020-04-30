@@ -1,22 +1,20 @@
 package com.ader.backend.service.persona;
 
-import com.ader.backend.entity.persona.Persona;
-import com.ader.backend.entity.persona.PersonaDto;
-import org.springframework.http.ResponseEntity;
+import com.ader.backend.entity.Persona;
 
 import java.util.List;
 
 public interface PersonaService {
 
-    ResponseEntity<List<PersonaDto>> getAllPersonas();
+    List<Persona> getAllPersonas();
 
-    ResponseEntity<List<PersonaDto>> getAllPersonasByUser(String userEmail);
+    List<Persona> getAllPersonasByUser(String userEmail);
 
-    ResponseEntity<Object> getPersonaById(Long id);
+    Persona getPersonaById(Long id);
 
-    ResponseEntity<Object> createPersona(Persona persona);
+    Persona createPersona(Persona persona);
 
-    ResponseEntity<Object> updatePersona(Long id, Persona persona);
+    Persona updatePersona(Long id, Persona persona);
 
-    ResponseEntity<Object> deletePersona(Long id);
+    String deletePersona(Long id);
 }
