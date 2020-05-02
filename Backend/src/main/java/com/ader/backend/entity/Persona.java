@@ -1,17 +1,17 @@
 package com.ader.backend.entity;
 
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "personas")
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-@Builder
+@NoArgsConstructor
 @SequenceGenerator(name = "generic_gen", sequenceName = "persona_seq", allocationSize = 1)
 public class Persona extends BaseEntity {
 

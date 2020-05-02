@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <variable name="LOG_HOME" value="../Ader-logs}"/>
+    <variable name="LOG_HOME" value="./Logs}"/>
 
     <appender name="REQUESTS_FOR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/requests/incoming_requests.log</file>

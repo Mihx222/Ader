@@ -4,22 +4,26 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="1.6.0" author="mcurchi">
-        <createSequence sequenceName="offermedia_seq" incrementBy="1" startValue="1"/>
+        <createSequence sequenceName="offerimage_seq" incrementBy="1" startValue="1"/>
     </changeSet>
 
     <changeSet id="1.6.1" author="mcurchi">
-        <createTable tableName="offermedia">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="offermedia_seq">
+        <createTable tableName="offerimage">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="offerimage_seq">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="offer_id" type="BIGINT">
+            <column name="offer_id" type="BIGINT"/>
+
+            <column name="name" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="path" type="VARCHAR(512)">
-                <constraints unique="true" nullable="false"/>
+            <column name="type" type="VARCHAR(16)">
+                <constraints nullable="false"/>
             </column>
+
+            <column name="pic_byte" type="bytea"/>
 
             <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
                 <constraints nullable="false"/>
@@ -30,9 +34,9 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="offermedia"
+        <addForeignKeyConstraint baseTableName="offerimage"
                                  baseColumnNames="offer_id"
-                                 constraintName="fk_offermedia_offer"
+                                 constraintName="fk_offerimage_offer"
                                  referencedTableName="offers"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"

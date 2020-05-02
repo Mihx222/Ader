@@ -31,6 +31,8 @@ import {ScrollUpButtonComponent} from './components/scroll-up-button/scroll-up-b
 import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
 import {LoadingBarRouterModule} from "@ngx-loading-bar/router";
+import {MaterialFileUploadComponent} from './components/materialfileupload/material-file-upload.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import {LoadingBarRouterModule} from "@ngx-loading-bar/router";
     BrowseOffersComponent,
     BrowseInfluencersComponent,
     NewOfferComponent,
-    ScrollUpButtonComponent
+    ScrollUpButtonComponent,
+    MaterialFileUploadComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +69,8 @@ import {LoadingBarRouterModule} from "@ngx-loading-bar/router";
     MatSortModule,
     MatChipsModule,
     MatIconModule,
-    LoadingBarRouterModule
+    LoadingBarRouterModule,
+    MatProgressBarModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

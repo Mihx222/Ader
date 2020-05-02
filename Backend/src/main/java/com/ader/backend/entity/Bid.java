@@ -2,6 +2,7 @@ package com.ader.backend.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "bids")
 @Data
+@NoArgsConstructor
 @SequenceGenerator(name = "generic_gen", sequenceName = "bid_seq", allocationSize = 1)
 public class Bid extends BaseEntity {
 

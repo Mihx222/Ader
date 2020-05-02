@@ -1,8 +1,6 @@
 package com.ader.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
@@ -16,10 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-@Builder
+@NoArgsConstructor
 public class Role implements Serializable {
 
     @JsonIgnore
@@ -33,7 +29,6 @@ public class Role implements Serializable {
     @Column
     private String name;
 
-    @Builder.Default
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 }

@@ -288,21 +288,4 @@
             <column name="offer_id" valueSequenceCurrent="offer_seq"/>
         </insert>
     </changeSet>
-
-    <changeSet id="testdata-7" author="mcurchi">
-        <insert tableName="offermedia">
-            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
-            <column name="path" value="This will be an image someday"/>
-        </insert>
-
-        <insert tableName="offermedia">
-            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
-            <column name="path" value="This will also be an image someday"/>
-        </insert>
-
-        <insert tableName="offermedia">
-            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
-            <column name="path" value="This will never be an image"/>
-        </insert>
-    </changeSet>
 </databaseChangeLog>

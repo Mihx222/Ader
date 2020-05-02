@@ -1,6 +1,8 @@
 package com.ader.backend.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,10 +12,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "offers")
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-@Builder
+@NoArgsConstructor
 @SequenceGenerator(name = "generic_gen", sequenceName = "offer_seq", allocationSize = 1)
 public class Offer extends BaseEntity {
 
@@ -34,11 +34,9 @@ public class Offer extends BaseEntity {
     @JoinColumn
     private User assignee;
 
-    @Builder.Default
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
     private List<Bid> bids = new ArrayList<>();
 
-    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "offer_category",
@@ -51,15 +49,12 @@ public class Offer extends BaseEntity {
     )
     private List<Category> categories = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
-    private List<OfferMedia> offerMedia = new ArrayList<>();
+    private List<OfferImage> offerImages = new ArrayList<>();
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     private OfferStatus offerStatus = OfferStatus.OPEN;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
 }
