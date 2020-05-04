@@ -3,6 +3,7 @@ package com.ader.backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -29,6 +30,7 @@ public class Role implements Serializable {
     @Column
     private String name;
 
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 }

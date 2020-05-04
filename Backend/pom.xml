@@ -192,7 +192,7 @@
                             <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/Frontend/src/main/web/dist/ader-frontend/
+                                    <directory>${project.parent.basedir}/Frontend/src/dist/ader-frontend/
                                     </directory>
                                 </resource>
                             </resources>
@@ -202,5 +202,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

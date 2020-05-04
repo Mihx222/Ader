@@ -91,3 +91,6 @@ modules.xml
 
 /Frontend/target/
 /Logs/
+/Frontend/src/node_modules
+/Frontend/src/dist
+/Frontend/src/node

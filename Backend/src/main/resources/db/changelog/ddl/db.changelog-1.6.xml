@@ -4,26 +4,34 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="1.6.0" author="mcurchi">
-        <createSequence sequenceName="offerimage_seq" incrementBy="1" startValue="1"/>
+        <createSequence sequenceName="files_seq" incrementBy="1" startValue="1"/>
     </changeSet>
 
     <changeSet id="1.6.1" author="mcurchi">
-        <createTable tableName="offerimage">
-            <column name="id" type="BIGINT" defaultValueSequenceNext="offerimage_seq">
+        <createTable tableName="files">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="files_seq">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
+            <column name="uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="offer_id" type="BIGINT"/>
+
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="name" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="type" type="VARCHAR(16)">
+            <column name="type" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="pic_byte" type="bytea"/>
+            <column name="bytes" type="bytea"/>
 
             <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
                 <constraints nullable="false"/>
@@ -34,9 +42,18 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="offerimage"
+        <addForeignKeyConstraint baseTableName="files"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_file_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint baseTableName="files"
                                  baseColumnNames="offer_id"
-                                 constraintName="fk_offerimage_offer"
+                                 constraintName="fk_file_offer"
                                  referencedTableName="offers"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"
