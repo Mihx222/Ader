@@ -21,7 +21,7 @@ public class OfferDto {
     private String authorName;
     private String assigneeName;
     private List<CategoryDto> categories;
-    private List<OfferImageDto> offerMedia;
+    private List<FileDto> files;
     private List<BidDto> bids;
     private OfferStatus offerStatus;
     private Status status;
@@ -41,7 +41,7 @@ public class OfferDto {
                 .authorName(offer.getAuthor().getBrandName())
                 .assigneeName(offer.getAssignee() != null ? offer.getAssignee().getEmail() : null)
                 .categories(CategoryDto.toDto(offer.getCategories()))
-                .offerMedia(OfferImageDto.toDto(offer.getOfferImages()))
+                .files(FileDto.toDto(offer.getFiles()))
                 .bids(BidDto.toDto(offer.getBids()))
                 .offerStatus(offer.getOfferStatus())
                 .status(offer.getStatus())

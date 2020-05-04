@@ -1,0 +1,60 @@
+.container {
+  margin: 0 auto;
+  max-width: 69rem;
+}
+
+.additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+.close-button {
+  float: left;
+  padding-right: 10px;
+  margin-top: -5px;
+}
+
+.file-name {
+  overflow: hidden;
+  display: block;
+}
+
+.image {
+  margin: 0 5px;
+  width: 320px;
+  height: auto;
+}
+
+::ng-deep #categories-selector.mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 12px 0 12px 0;
+}
+
+.mat-card > .mat-card-actions:last-child {
+  margin-bottom: 0;
+}
+
+.mat-card-header .mat-card-title {
+  margin-top: 12px;
+}
+
+#image-card.mat-card {
+  padding: 10px 0 0 0;
+}
+
+.mat-card {
+  margin: 15px 0;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+}
+
+#cancel-button {
+  border: solid 1px black;
+}
+
+.mat-card-content {
+  margin-top: 16px;
+}
+
+#create-button {
+  background-color: #fd4b59;
+  color: white;
+}

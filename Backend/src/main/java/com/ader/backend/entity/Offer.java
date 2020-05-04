@@ -3,6 +3,7 @@ package com.ader.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,10 +29,12 @@ public class Offer extends BaseEntity {
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User author;
 
     @ManyToOne
     @JoinColumn
+    @ToString.Exclude
     private User assignee;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
@@ -49,8 +52,9 @@ public class Offer extends BaseEntity {
     )
     private List<Category> categories = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
-    private List<OfferImage> offerImages = new ArrayList<>();
+    private List<File> files = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private OfferStatus offerStatus = OfferStatus.OPEN;

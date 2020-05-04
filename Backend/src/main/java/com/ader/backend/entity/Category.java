@@ -3,6 +3,7 @@ package com.ader.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,5 +21,6 @@ public class Category extends BaseEntity {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
+    @ToString.Exclude
     private List<Offer> offers = new ArrayList<>();
 }
