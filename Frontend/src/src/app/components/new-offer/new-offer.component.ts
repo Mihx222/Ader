@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {CategoryService} from "../../service/category/category.service";
 import {CategoryViewModel} from "../../model/category/category-view-model";
-import {FormControl} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {FileService} from "../../service/file/file.service";
 import {Offer} from "../../model/offer/offer";
 import {OfferService} from "../../service/offer/offer.service";
 import {Router} from "@angular/router";
+import {CustomErrorStateMatcher} from "../../helpers/custom-error-state-matcher";
 
 @Component({
   selector: 'app-new-offer',
@@ -14,11 +15,13 @@ import {Router} from "@angular/router";
   styleUrls: ['./new-offer.component.css']
 })
 export class NewOfferComponent implements OnInit {
+
+  matcher = new CustomErrorStateMatcher();
   uploadedFiles: any[] = [];
   selectedCategories = new FormControl();
-  offerName = new FormControl();
-  offerExpiryDate = new FormControl();
-  offerDescription = new FormControl();
+  offerName = new FormControl('', [Validators.required]);
+  offerExpiryDate = new FormControl('', [Validators.required]);
+  offerDescription = new FormControl('', [Validators.required]);
   categories: Observable<CategoryViewModel[]>;
 
   newOffer: Offer;

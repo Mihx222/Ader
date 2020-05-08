@@ -30,11 +30,17 @@ public class OfferServiceImpl implements OfferService {
     private final FileService fileService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Offer> getAllOffers() {
-        return offerRepository.findAll();
+        List<Offer> offers = offerRepository.findAll();
+
+        offers.forEach(offer -> offer.setFiles(fileService.decompressFile(offer.getFiles())));
+
+        return offers;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Offer getOffer(Long id) {
         Offer fetchedOffer = offerRepository.findById(id).orElse(null);
 
@@ -43,6 +49,7 @@ public class OfferServiceImpl implements OfferService {
             log.error(errorMessage);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         } else {
+            fetchedOffer.setFiles(fileService.decompressFile(fetchedOffer.getFiles()));
             return fetchedOffer;
         }
     }

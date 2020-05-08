@@ -13,16 +13,14 @@ import {MatPaginator} from "@angular/material/paginator";
 export class BrowseOffersComponent implements OnInit {
   dataSource: MatTableDataSource<OfferViewModel>;
   offers: OfferViewModel[] = [];
+  searchValue: string;
 
-  columnsToDisplay = ['name', 'description', 'categories', 'status'];
+  columnsToDisplay = ['image', 'name', 'description', 'categories', 'status'];
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(public offerService: OfferService) {
-  }
-
-  ngOnInit() {
     this.offerService.getOffers().subscribe(
         result => {
           this.dataSource = new MatTableDataSource(result);
@@ -37,8 +35,25 @@ export class BrowseOffersComponent implements OnInit {
     );
   }
 
+  ngOnInit() {
+  }
+
   applyFilters(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  addFilter(filter: string) {
+    this.searchValue = filter + " ";
+    this.dataSource.filter = filter.trim().toLowerCase();
+  }
+
+  clearFilter() {
+    this.searchValue = '';
+    this.dataSource.filter = '';
+  }
+
+  getImageUrl(image: any): any {
+    return 'data:' + image.type + ';base64,' + image.bytes;
   }
 }

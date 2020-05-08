@@ -11,6 +11,12 @@ table {
   width: 100%;
 }
 
+.image {
+  width: 200px;
+  height: auto;
+  margin: 0 5px;
+}
+
 .details-button {
   margin-top: 5px;
   line-height: 28px;

@@ -9,6 +9,18 @@ import java.util.UUID;
 
 public interface FileService {
 
+    byte[] compressBytes(byte[] data);
+
+    byte[] decompressBytes(byte[] data);
+
+    File compressFile(File file);
+
+    List<File> compressFile(List<File> files);
+
+    File decompressFile(File file);
+
+    List<File> decompressFile(List<File> files);
+
     List<File> getAllFiles();
 
     File findByUuid(UUID uuid);

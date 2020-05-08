@@ -6,18 +6,31 @@
 
 <!-- Filter -->
 <div class="container">
-  <mat-form-field style="width: 300px;">
+  <mat-form-field appearance="standard" style="width: 300px;">
     <mat-label>Search...</mat-label>
-    <input (keyup)="applyFilters($event)" matInput placeholder="Ex. offer">
+    <input (keyup)="applyFilters($event)" [(ngModel)]="searchValue" matInput placeholder="Ex. offer">
+    <button (click)="clearFilter()" *ngIf="searchValue" aria-label="Clear" mat-button mat-icon-button matSuffix>
+      <mat-icon>close</mat-icon>
+    </button>
   </mat-form-field>
 </div>
 
+<!-- Table -->
 <div class="mat-elevation-z8 container">
   <table [dataSource]="dataSource" mat-table matSort>
+    <ng-container matColumnDef="image">
+      <th *matHeaderCellDef mat-header-cell></th>
+      <td *matCellDef="let offer" mat-cell>
+        <img *ngIf="offer.files.length > 0" [alt]="offer.files[0].name" [src]="getImageUrl(offer.files[0])"
+             class="image">
+        <p *ngIf="offer.files.length === 0">No image</p>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="name">
       <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
       <td *matCellDef="let offer" mat-cell>
-        <p>{{offer.name}}<br><br></p>
+        <p style="font-size: 18px;">{{offer.name}}<br><br></p>
         <p><span>By: </span><span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span></p>
       </td>
     </ng-container>
@@ -33,7 +46,7 @@
         <span *ngFor="let category of offer.categories">
           <mat-chip-list [multiple]="true" aria-label="Categories"
                          class="inline-chips">
-            <mat-chip class="category-chips">{{category.name}}</mat-chip>
+            <mat-chip (click)="addFilter(category.name)" class="category-chips">{{category.name}}</mat-chip>
           </mat-chip-list>
         </span>
       </td>
@@ -56,8 +69,10 @@
     <tr *matRowDef="let offerData; columns: columnsToDisplay" mat-row></tr>
   </table>
 
+  <!-- Paginator -->
   <mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
                  showFirstLastButtons></mat-paginator>
 
+  <!-- Scroll up button -->
   <app-scroll-up-button></app-scroll-up-button>
 </div>

@@ -3,6 +3,7 @@ package com.ader.backend.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class User extends BaseEntity {
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
     private List<File> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,9 +52,11 @@ public class User extends BaseEntity {
     private List<Offer> assignedOffers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Persona> personas = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Bid> bids = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

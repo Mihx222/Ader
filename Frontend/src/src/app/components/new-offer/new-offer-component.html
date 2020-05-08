@@ -13,16 +13,22 @@
           <td>
             <mat-form-field appearance="outline" style="width: 100%;">
               <mat-label>Name</mat-label>
-              <input [formControl]="offerName" matInput>
+              <input [errorStateMatcher]="matcher" [formControl]="offerName" matInput required>
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="offerName.hasError('required')">Name is <strong>required!</strong></mat-error>
             </mat-form-field>
           </td>
           <!-- Date picker -->
           <td>
             <mat-form-field appearance="outline" id="date-picker" style="width: 100%;">
               <mat-label>Choose the offer expiration date</mat-label>
-              <input [formControl]="offerExpiryDate" [matDatepicker]="picker" matInput>
+              <input [errorStateMatcher]="matcher" [formControl]="offerExpiryDate" [matDatepicker]="picker" matInput
+                     required>
               <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
               <mat-datepicker #picker touchUi></mat-datepicker>
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="offerExpiryDate.hasError('required')">Expiry date is <strong>required!</strong>
+              </mat-error>
             </mat-form-field>
           </td>
           <!-- Categories dropdown -->
@@ -46,7 +52,11 @@
         <!-- Description textarea -->
         <mat-form-field appearance="outline" id="description" style="width: 100%">
           <mat-label>Description</mat-label>
-          <textarea [formControl]="offerDescription" matInput></textarea>
+          <textarea [errorStateMatcher]="matcher" [formControl]="offerDescription" matInput required></textarea>
+          <mat-hint></mat-hint>
+          <mat-error *ngIf="offerDescription.hasError('required')">Provide at least a minimal
+            <strong>description</strong> of your offer!
+          </mat-error>
         </mat-form-field>
 
         <!-- Upload area -->
@@ -82,7 +92,15 @@
     <mat-card-actions>
       <div fxFlex></div>
       <button (click)="cancel()" id="cancel-button" mat-button>Cancel</button>
-      <button (click)="createOffer()" id="create-button" mat-button>Create</button>
+      <button
+              (click)="createOffer()"
+              [disabled]="offerName.hasError('required') ||
+                          offerExpiryDate.hasError('required') ||
+                          offerDescription.hasError('required')"
+              id="create-button"
+              mat-button
+      >Create
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>

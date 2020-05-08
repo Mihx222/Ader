@@ -38,6 +38,7 @@ public class Offer extends BaseEntity {
     private User assignee;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Bid> bids = new ArrayList<>();
 
     @ManyToMany

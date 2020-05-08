@@ -29,32 +29,47 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
     private final UserService userService;
 
-    // Compress the image bytes before storing it in the database
-    public static byte[] compressBytes(byte[] data) {
-        log.debug("Original Image Byte Size - {}", data.length);
-        Deflater deflater = new Deflater();
-        deflater.setInput(data);
-        deflater.finish();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
+    @Override
+    public List<File> decompressFile(List<File> files) {
+        List<File> decompressedImages = new ArrayList<>();
+        files.forEach(image -> decompressedImages.add(decompressFile(image)));
 
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer);
-            outputStream.write(buffer, 0, count);
-        }
+        return decompressedImages;
+    }
 
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+    @Override
+    public File decompressFile(File file) {
+        return new File(
+                file.getUuid(),
+                file.getName(),
+                file.getType(),
+                decompressBytes(file.getBytes()),
+                file.getUser()
+        );
+    }
 
-        log.debug("Compressed Image Byte Size - {}", outputStream.toByteArray().length);
-        return outputStream.toByteArray();
+    @Override
+    public List<File> compressFile(List<File> files) {
+        List<File> compressedImages = new ArrayList<>();
+        files.forEach(image -> compressedImages.add(compressFile(image)));
+
+        return compressedImages;
+    }
+
+    @Override
+    public File compressFile(File file) {
+        return new File(
+                file.getUuid(),
+                file.getName(),
+                file.getType(),
+                compressBytes(file.getBytes()),
+                file.getUser()
+        );
     }
 
     // Uncompress the image bytes
-    public static byte[] decompressBytes(byte[] data) {
+    @Override
+    public byte[] decompressBytes(byte[] data) {
         log.debug("Compressed Image Byte Size - {}", data.length);
         Inflater inflater = new Inflater();
         inflater.setInput(data);
@@ -75,38 +90,29 @@ public class FileServiceImpl implements FileService {
         return outputStream.toByteArray();
     }
 
-    public static File compressFile(File file) {
-        return new File(
-                file.getUuid(),
-                file.getName(),
-                file.getType(),
-                compressBytes(file.getBytes()),
-                file.getUser()
-        );
-    }
+    // Compress the image bytes before storing it in the database
+    @Override
+    public byte[] compressBytes(byte[] data) {
+        log.debug("Original Image Byte Size - {}", data.length);
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
 
-    public static List<File> compressFile(List<File> files) {
-        List<File> compressedImages = new ArrayList<>();
-        files.forEach(image -> compressedImages.add(compressFile(image)));
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
 
-        return compressedImages;
-    }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
 
-    public static File decompressFile(File file) {
-        return new File(
-                file.getUuid(),
-                file.getName(),
-                file.getType(),
-                decompressBytes(file.getBytes()),
-                file.getUser()
-        );
-    }
-
-    public static List<File> decompressFile(List<File> files) {
-        List<File> decompressedImages = new ArrayList<>();
-        files.forEach(image -> decompressedImages.add(decompressFile(image)));
-
-        return decompressedImages;
+        log.debug("Compressed Image Byte Size - {}", outputStream.toByteArray().length);
+        return outputStream.toByteArray();
     }
 
     @Override
