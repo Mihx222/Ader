@@ -6,6 +6,7 @@ import {OfferStatus} from "../offerstatus/offer-status.enum";
 import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface OfferViewModel {
+  id: number;
   name: string;
   description: string;
   authorName?: string;

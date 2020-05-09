@@ -34,7 +34,6 @@ table {
   transform: inherit;
   border-style: solid;
   border-width: thin;
-  min-height: 15px;
 }
 
 .status-chip::after {

@@ -34,6 +34,9 @@ import {LoadingBarRouterModule} from "@ngx-loading-bar/router";
 import {MaterialFileUploadComponent} from './components/materialfileupload/material-file-upload.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {OfferPageComponent} from './components/offer-page/offer-page.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {GalleriaModule} from "primeng";
 
 @NgModule({
   declarations: [
@@ -47,7 +50,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     BrowseInfluencersComponent,
     NewOfferComponent,
     ScrollUpButtonComponent,
-    MaterialFileUploadComponent
+    MaterialFileUploadComponent,
+    OfferPageComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +77,9 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     LoadingBarRouterModule,
     MatProgressBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTabsModule,
+    GalleriaModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

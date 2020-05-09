@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {OfferService} from "../../service/offer/offer.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {OfferViewModel} from "../../model/offer/offer-view-model";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-browse-offers',
@@ -20,22 +20,16 @@ export class BrowseOffersComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  constructor(public offerService: OfferService) {
-    this.offerService.getOffers().subscribe(
-        result => {
-          this.dataSource = new MatTableDataSource(result);
-          this.offers = result;
-
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        },
-        error => {
-          alert("Could not retrieve offers!");
-        }
-    );
+  constructor(
+      public activatedRoute: ActivatedRoute
+  ) {
+    this.offers = this.activatedRoute.snapshot.data['offers'];
   }
 
   ngOnInit() {
+    this.dataSource = new MatTableDataSource(this.offers);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   applyFilters(event: Event) {

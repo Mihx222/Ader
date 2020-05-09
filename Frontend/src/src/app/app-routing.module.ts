@@ -10,6 +10,9 @@ import {AuthGuard} from "./guards/auth guard/auth.guard";
 import {NewOfferComponent} from "./components/new-offer/new-offer.component";
 import {RoleGuard} from "./guards/role guard/role.guard";
 import {Role} from "./model/role/role.enum";
+import {OfferPageComponent} from "./components/offer-page/offer-page.component";
+import {OfferResolver} from "./resolvers/offer-resolver.service";
+import {OffersResolver} from "./resolvers/offers-resolver.service";
 
 const routes: Routes = [
   {
@@ -31,7 +34,10 @@ const routes: Routes = [
   },
   {
     path: 'offers',
-    component: BrowseOffersComponent
+    component: BrowseOffersComponent,
+    resolve: {
+      offers: OffersResolver
+    }
   },
   {
     path: 'influencers',
@@ -43,6 +49,13 @@ const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: {
       requiredRoles: [Role.ROLE_ADVERTISER]
+    }
+  },
+  {
+    path: 'offers/:id',
+    component: OfferPageComponent,
+    resolve: {
+      offer: OfferResolver
     }
   }
 ];

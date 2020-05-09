@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <div style="font-size: 28px; margin: 30px 0 20px 0">
+    {{offer.name}}
+  </div>
+
+  <div class="shadow">
+    <mat-tab-group dynamicHeight style="background-color: #444444;">
+      <mat-tab label="Details">
+        <div class="box">
+          <p><strong>Offer details:</strong></p>
+          <p>{{offer.description}}</p>
+        </div>
+
+        <p-galleria
+                *ngIf="offerImages.length > 0"
+                [images]="offerImages"
+                [showCaption]="false"
+                frameHeight="100"
+                frameWidth="100%"
+                panelHeight="700"
+                panelWidth="100%"
+        ></p-galleria>
+      </mat-tab>
+
+      <mat-tab label="Bid">
+        <div class="box">
+          Bid
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<app-scroll-up-button></app-scroll-up-button>

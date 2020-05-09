@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {Offer} from "../../model/offer/offer";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,11 @@ export class OfferService {
   userURL = this.authService.BASE_URL + '/';
 
   constructor(private authService: AuthService, private http: HttpClient) {
+  }
+
+  getOffer(id: number): Observable<Offer> {
+    return this.http.get<Offer>(this.userURL + 'offer/' + id + '?access_token=' +
+        JSON.parse(localStorage.getItem('token')).access_token);
   }
 
   getOffers() {

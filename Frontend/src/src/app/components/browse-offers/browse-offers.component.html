@@ -60,7 +60,9 @@
         </mat-chip>
 
         <div>
-          <button class="details-button" mat-flat-button routerLink=".">View details</button>
+          <button [routerLink]="offer.id" class="details-button" mat-flat-button routerLinkActive="active">
+            View details
+          </button>
         </div>
       </td>
     </ng-container>
