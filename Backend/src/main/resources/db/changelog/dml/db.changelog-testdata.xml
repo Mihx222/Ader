@@ -156,6 +156,33 @@
     </changeSet>
 
     <changeSet id="testdata-4" author="mcurchi">
+        <!-- Insert new advertising formats -->
+        <insert tableName="adv_format">
+            <column name="name" value="Image"/>
+        </insert>
+
+        <insert tableName="adv_format">
+            <column name="name" value="Video"/>
+        </insert>
+
+        <insert tableName="adv_format">
+            <column name="name" value="Article"/>
+        </insert>
+
+        <insert tableName="adv_format">
+            <column name="name" value="Blog post"/>
+        </insert>
+
+        <insert tableName="adv_format">
+            <column name="name" value="Vlog"/>
+        </insert>
+
+        <insert tableName="adv_format">
+            <column name="name" value="Social media post"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="testdata-5" author="mcurchi">
         <!-- FIRST TEST OFFER -->
         <insert tableName="offers">
             <column name="name" value="Dummy offer: Offering free testing"/>
@@ -163,6 +190,7 @@
             <column name="expire_date" valueComputed="current_timestamp"/>
             <column name="author_id" valueSequenceCurrent="user_seq"/>
             <column name="assignee_id" value="1"/>
+            <column name="compensation" value="$30 per post"/>
         </insert>
 
         <insert tableName="offer_category">
@@ -190,9 +218,30 @@
             <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Design%')"/>
         </insert>
 
-        <insert tableName="offer_category">
+        <insert tableName="offer_adv_format">
             <column name="offer_id" valueSequenceCurrent="offer_seq"/>
-            <column name="category_id" valueComputed="(SELECT id FROM categories WHERE name LIKE '%Video%')"/>
+            <column name="adv_format_id" valueComputed="(SELECT id FROM adv_format WHERE name LIKE '%Video%')"/>
+        </insert>
+
+        <insert tableName="offer_adv_format">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="adv_format_id" valueComputed="(SELECT id FROM adv_format WHERE name LIKE '%Image%')"/>
+        </insert>
+
+        <insert tableName="offer_adv_format">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="adv_format_id" valueComputed="(SELECT id FROM adv_format WHERE name LIKE '%Blog post%')"/>
+        </insert>
+
+        <insert tableName="offer_adv_format">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="adv_format_id" valueComputed="(SELECT id FROM adv_format WHERE name LIKE '%Article%')"/>
+        </insert>
+
+        <insert tableName="offer_adv_format">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="adv_format_id"
+                    valueComputed="(SELECT id FROM adv_format WHERE name LIKE '%Social media post%')"/>
         </insert>
 
         <!-- SECOND TEST OFFER -->
@@ -201,6 +250,8 @@
             <column name="description" value="Very interesting description of a not very well defined product"/>
             <column name="expire_date" valueComputed="current_timestamp"/>
             <column name="author_id" valueSequenceCurrent="user_seq"/>
+            <column name="compensation" value="$35 per post"/>
+            <column name="free_product_sample" value="true"/>
         </insert>
 
         <insert tableName="offer_category">
@@ -239,6 +290,8 @@
             <column name="description" value="This description is not very interesting"/>
             <column name="expire_date" valueComputed="current_timestamp"/>
             <column name="author_id" valueSequenceCurrent="user_seq"/>
+            <column name="compensation" value="$29 per post"/>
+            <column name="advertisement_review" value="false"/>
         </insert>
 
         <insert tableName="offer_category">
@@ -272,7 +325,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="testdata-5" author="mcurchi">
+    <changeSet id="testdata-6" author="mcurchi">
         <insert tableName="personas">
             <column name="user_id" value="1"/>
             <column name="activity" value="Development"/>
@@ -282,7 +335,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="testdata-6" author="mcurchi">
+    <changeSet id="testdata-7" author="mcurchi">
         <insert tableName="bids">
             <column name="user_id" value="1"/>
             <column name="offer_id" valueSequenceCurrent="offer_seq"/>

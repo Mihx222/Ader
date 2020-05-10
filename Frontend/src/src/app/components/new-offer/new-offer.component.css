@@ -29,8 +29,16 @@
   padding: 12px 0 12px 0;
 }
 
+::ng-deep #advertisement-format-selector.mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 12px 0 12px 0;
+}
+
 .mat-card > .mat-card-actions:last-child {
   margin-bottom: 0;
+}
+
+.slider {
+  margin-left: 10px;
 }
 
 .mat-card-header .mat-card-title {
@@ -57,4 +65,14 @@
 #create-button {
   background-color: #fd4b59;
   color: white;
+}
+
+.create-button-active {
+  background-color: #fd4b59;
+  color: white;
+}
+
+.create-button-disabled {
+  background-color: #999999;
+  color: black;
 }

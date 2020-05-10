@@ -3,6 +3,7 @@ package com.ader.backend.service.offer;
 import com.ader.backend.entity.*;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferRepository;
+import com.ader.backend.service.advertisementformat.AdvertisementFormatService;
 import com.ader.backend.service.category.CategoryService;
 import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.user.UserService;
@@ -28,6 +29,7 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final CategoryService categoryService;
     private final FileService fileService;
+    private final AdvertisementFormatService advertisementFormatService;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,6 +63,10 @@ public class OfferServiceImpl implements OfferService {
         List<Category> categories = new ArrayList<>();
         offer.getCategories().forEach(category -> categories.add(categoryService.getCategory(category.getName())));
         offer.setCategories(categories);
+
+        List<AdvertisementFormat> formats = new ArrayList<>();
+        offer.getAdvertisementFormats().forEach(format -> formats.add(advertisementFormatService.getAdvertisementFormat(format.getName())));
+        offer.setAdvertisementFormats(formats);
 
         List<File> files = new ArrayList<>();
         offer.getFiles().forEach(file -> files.add(Objects.requireNonNull(fileService.findByUuid(file.getUuid()))));

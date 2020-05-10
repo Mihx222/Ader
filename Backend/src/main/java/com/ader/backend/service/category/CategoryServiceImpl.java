@@ -3,6 +3,7 @@ package com.ader.backend.service.category;
 import com.ader.backend.entity.Category;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private static final String CATEGORY_WITH_ID = "Category with id: [";
@@ -22,10 +24,6 @@ public class CategoryServiceImpl implements CategoryService {
     private static final String NOT_FOUND_ERROR_MESSAGE = "] not found";
 
     private final CategoryRepository categoryRepository;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     @Override
     public List<Category> getAllCategories() {

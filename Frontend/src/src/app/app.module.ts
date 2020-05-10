@@ -37,6 +37,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {OfferPageComponent} from './components/offer-page/offer-page.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {GalleriaModule} from "primeng";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -79,7 +81,9 @@ import {GalleriaModule} from "primeng";
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
-    GalleriaModule
+    GalleriaModule,
+    MatSlideToggleModule,
+    MatDividerModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

@@ -1,35 +1,104 @@
 <app-navbar></app-navbar>
 
 <div class="container">
-  <div style="font-size: 28px; margin: 30px 0 20px 0">
+  <div style="font-size: 28px; margin: 30px 0 20px 0; order: 0">
     {{offer.name}}
   </div>
 
-  <div class="shadow">
-    <mat-tab-group dynamicHeight style="background-color: #444444;">
-      <mat-tab label="Details">
-        <div class="box">
-          <p><strong>Offer details:</strong></p>
-          <p>{{offer.description}}</p>
-        </div>
+  <div class="flex-row" style="justify-content: space-between">
+    <div class="flex-column" style="flex-grow: 5">
+      <div class="shadow" style="width: 98%;">
+        <mat-tab-group dynamicHeight style="background-color: #444444;">
+          <mat-tab label="Details">
+            <div class="box">
+              <div><strong>Details about the offer:</strong></div>
+              <div>{{offer.description}}</div>
+              <p></p>
+              <span>
+            <strong>Brand: </strong>
+            <a class="author-name" routerLink=".">{{offer.authorName}}</a>
+          </span>
+              <p></p>
+              <span>
+            <strong>Categories: </strong>
+            <span *ngFor="let category of offer.categories">
+              <mat-chip-list [multiple]="true" aria-label="Categories"
+                             class="inline-chips">
+                <mat-chip class="category-chips" disableRipple>{{category.name}}</mat-chip>
+              </mat-chip-list>
+            </span>
+          </span>
+              <div></div>
+              <span>
+            <strong>Formats: </strong>
+            <span *ngFor="let format of offer.advertisementFormats">
+              <mat-chip-list [multiple]="true" aria-label="Formats"
+                             class="inline-chips">
+                <mat-chip class="category-chips" disableRipple>{{format.name}}</mat-chip>
+              </mat-chip-list>
+            </span>
+          </span>
+              <p></p>
+              <span>
+            <strong>Free product sample: </strong>
+                {{offer.freeProductSample === true ? 'Yes' : 'No'}}
+          </span>
+              <p></p>
+              <span>
+            <strong>Advertisement review required: </strong>
+                {{offer.advertisementReview === true ? 'Yes' : 'No'}}
+          </span>
+              <p></p>
+              <span>
+            <strong>Compensation: </strong>
+                {{offer.compensation}}
+          </span>
+            </div>
 
-        <p-galleria
-                *ngIf="offerImages.length > 0"
-                [images]="offerImages"
-                [showCaption]="false"
-                frameHeight="100"
-                frameWidth="100%"
-                panelHeight="700"
-                panelWidth="100%"
-        ></p-galleria>
-      </mat-tab>
+            <p-galleria
+                    *ngIf="offerImages.length > 0"
+                    [images]="offerImages"
+                    [showCaption]="false"
+                    frameHeight="100"
+                    frameWidth="100%"
+                    panelHeight="700"
+                    panelWidth="100%"
+            ></p-galleria>
+          </mat-tab>
 
-      <mat-tab label="Bid">
-        <div class="box">
-          Bid
-        </div>
-      </mat-tab>
-    </mat-tab-group>
+          <mat-tab label="Bid">
+            <div class="box">
+              Bid
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <div class="flex-column">
+      <mat-card class="shadow">
+        <mat-card-header>
+          <mat-card-title>Status</mat-card-title>
+          <mat-card-subtitle>
+            <mat-chip class="status-chip" disableRipple>
+              {{offer.offerStatus}}
+            </mat-chip>
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-card class="shadow" style="margin-top: 20px;">
+        <mat-card-header>
+          <mat-card-title>
+            Offer expiration
+          </mat-card-title>
+          <mat-card-subtitle>
+            <mat-chip disableRipple>
+              {{offer.expireDate}}
+            </mat-chip>
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
   </div>
 </div>
 

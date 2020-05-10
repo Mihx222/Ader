@@ -57,6 +57,28 @@ public class Offer extends BaseEntity {
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "offer_adv_format",
+            joinColumns = {
+                    @JoinColumn(name = "offer_id", referencedColumnName = "id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "adv_format_id", referencedColumnName = "id")
+            }
+    )
+    private List<AdvertisementFormat> advertisementFormats = new ArrayList<>();
+
+    @Column
+    private Boolean freeProductSample;
+
+    @Column
+    private Boolean advertisementReview;
+
+    @Column
+    private String compensation;
+
     @Enumerated(EnumType.STRING)
     private OfferStatus offerStatus = OfferStatus.OPEN;
 

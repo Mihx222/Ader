@@ -3,6 +3,7 @@ package com.ader.backend.rest;
 import com.ader.backend.entity.Category;
 import com.ader.backend.rest.dto.CategoryDto;
 import com.ader.backend.service.category.CategoryService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,13 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("rest/category")
 @Slf4j
+@RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCategories() {

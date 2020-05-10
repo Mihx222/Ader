@@ -49,6 +49,37 @@
             </mat-form-field>
           </td>
         </table>
+
+        <table style="width: 100%;">
+          <!-- Compensation input -->
+          <td>
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Compensation</mat-label>
+              <input [errorStateMatcher]="matcher" [formControl]="compensation" matInput required>
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="compensation.hasError('required')">Compensation is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
+          </td>
+          <!-- Advertisement format selector -->
+          <td>
+            <mat-form-field appearance="outline" id="advertisement-format-selector" style="width: 100%;">
+              <mat-label>Advertisement formats</mat-label>
+              <mat-select [formControl]="selectedAdvertisementFormats" multiple>
+                <mat-select-trigger>
+                  {{selectedAdvertisementFormats.value ? selectedAdvertisementFormats.value[0] : ''}}
+                  <span *ngIf="selectedAdvertisementFormats.value?.length > 1" class="additional-selection">
+                    (+{{selectedAdvertisementFormats.value.length - 1}} {{selectedAdvertisementFormats.value?.length === 2 ? 'other' : 'others'}}
+                    )
+                  </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let advertisementFormat of advertisementFormats | async"
+                            [value]="advertisementFormat.name">{{advertisementFormat.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </table>
+
         <!-- Description textarea -->
         <mat-form-field appearance="outline" id="description" style="width: 100%">
           <mat-label>Description</mat-label>
@@ -90,14 +121,16 @@
     </mat-card-content>
 
     <mat-card-actions>
+      <mat-slide-toggle [(ngModel)]="freeProductSample" class="slider">Free product sample</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="advertisementReview" style="margin-left: 20px;">Advertisement review
+      </mat-slide-toggle>
       <div fxFlex></div>
       <button (click)="cancel()" id="cancel-button" mat-button>Cancel</button>
       <button
               (click)="createOffer()"
-              [disabled]="offerName.hasError('required') ||
-                          offerExpiryDate.hasError('required') ||
-                          offerDescription.hasError('required')"
-              id="create-button"
+              [class.create-button-disabled]="checkForErrors()"
+              [disabled]="checkForErrors()"
+              class="create-button-active"
               mat-button
       >Create
       </button>

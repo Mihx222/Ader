@@ -41,13 +41,33 @@
     </ng-container>
 
     <ng-container matColumnDef="categories">
-      <th *matHeaderCellDef mat-header-cell>Categories</th>
+      <th *matHeaderCellDef mat-header-cell>Categories/Formats</th>
       <td *matCellDef="let offer" mat-cell>
-        <span *ngFor="let category of offer.categories">
-          <mat-chip-list [multiple]="true" aria-label="Categories"
-                         class="inline-chips">
-            <mat-chip (click)="addFilter(category.name)" class="category-chips">{{category.name}}</mat-chip>
-          </mat-chip-list>
+        <span><strong>Formats: </strong></span>
+        <span *ngIf="offer.advertisementFormats.length > 0">
+          <span *ngFor="let format of offer.advertisementFormats">
+            <mat-chip-list [multiple]="true" aria-label="Formats"
+                           class="inline-chips">
+              <mat-chip (click)="addFilter(format.name)" class="category-chips">{{format.name}}</mat-chip>
+            </mat-chip-list>
+          </span>
+        </span>
+        <span *ngIf="offer.advertisementFormats.length === 0">
+          No formats.
+        </span>
+        <div></div>
+        <mat-divider style="margin: 10px 0"></mat-divider>
+        <span><strong>Categories: </strong></span>
+        <span *ngIf="offer.categories.length > 0">
+          <span *ngFor="let category of offer.categories">
+            <mat-chip-list [multiple]="true" aria-label="Categories"
+                           class="inline-chips">
+              <mat-chip (click)="addFilter(category.name)" class="category-chips">{{category.name}}</mat-chip>
+            </mat-chip-list>
+          </span>
+        </span>
+        <span *ngIf="offer.categories.length === 0">
+          No categories.
         </span>
       </td>
     </ng-container>

@@ -1,0 +1,61 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.7.0" author="mcurchi">
+        <createSequence sequenceName="adv_format_seq" incrementBy="1" startValue="1"/>
+    </changeSet>
+
+    <changeSet id="1.7.1" author="mcurchi">
+        <createTable tableName="adv_format">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="adv_format_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="timestamp with time zone" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.7.2" author="mcurchi">
+        <createTable tableName="offer_adv_format">
+            <column name="offer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="adv_format_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.7.3" author="mcurchi">
+        <addForeignKeyConstraint baseTableName="offer_adv_format"
+                                 baseColumnNames="offer_id"
+                                 constraintName="fk_offer_adv_format_offer"
+                                 referencedTableName="offers"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint baseTableName="offer_adv_format"
+                                 baseColumnNames="adv_format_id"
+                                 constraintName="fk_offer_adv_format_adv_format"
+                                 referencedTableName="adv_format"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>

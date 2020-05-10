@@ -21,8 +21,68 @@
   max-width: 69rem;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 :host ::ng-deep .ui-panel-images {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.author-name {
+  color: #888888;
+}
+
+.category-chips {
+  background-color: white;
+  color: #7f7f7f;
+  border-style: solid;
+  border-width: thin;
+  border-radius: 8px;
+  padding: 3px;
+  min-height: 30px;
+}
+
+.inline-chips {
+  display: inline-block;
+  padding: 2px;
+}
+
+.status-chip {
+  padding: 7px 80px;
+  box-sizing: inherit;
+  color: #2cd248;
+  font-size: 18px;
+  background-color: #f1fcf3;
+  transform: inherit;
+  border-style: solid;
+  border-width: thin;
+}
+
+::ng-deep .mat-card-header .mat-card-subtitle:not(:first-child) {
+  margin: 0;
+}
+
+::ng-deep .mat-card-header .mat-card-subtitle:not(:first-child) {
+  margin: 0;
+}
+
+:host ::ng-deep .mat-card-header .mat-card-title {
+  margin-bottom: 20px;
+}
+
+:host ::ng-deep .mat-card-header-text {
+  margin: 0;
+}
+
+:host ::ng-deep .mat-chip.mat-standard-chip:not(.mat-chip-disabled):active {
+  width: 100%;
 }

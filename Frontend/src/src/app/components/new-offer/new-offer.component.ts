@@ -8,6 +8,8 @@ import {Offer} from "../../model/offer/offer";
 import {OfferService} from "../../service/offer/offer.service";
 import {Router} from "@angular/router";
 import {CustomErrorStateMatcher} from "../../helpers/custom-error-state-matcher";
+import {AdvertisementFormatViewModel} from "../../model/advertisementformat/advertisement-format-view-model";
+import {AdvertisementFormatService} from "../../service/advertisementformat/advertisement-format.service";
 
 @Component({
   selector: 'app-new-offer',
@@ -19,20 +21,27 @@ export class NewOfferComponent implements OnInit {
   matcher = new CustomErrorStateMatcher();
   uploadedFiles: any[] = [];
   selectedCategories = new FormControl();
+  selectedAdvertisementFormats = new FormControl();
   offerName = new FormControl('', [Validators.required]);
+  compensation = new FormControl('', [Validators.required]);
   offerExpiryDate = new FormControl('', [Validators.required]);
   offerDescription = new FormControl('', [Validators.required]);
   categories: Observable<CategoryViewModel[]>;
+  advertisementFormats: Observable<AdvertisementFormatViewModel[]>;
+  freeProductSample: boolean = false;
+  advertisementReview: boolean = true;
 
   newOffer: Offer;
 
   constructor(
       categoryService: CategoryService,
+      advertisementFormatService: AdvertisementFormatService,
       public fileService: FileService,
       public offerService: OfferService,
       public router: Router
   ) {
     this.categories = categoryService.getCategories();
+    this.advertisementFormats = advertisementFormatService.getAdvertisementFormats();
 
     this.fileService.getFilesForUser(true).subscribe(
         result => {
@@ -103,6 +112,12 @@ export class NewOfferComponent implements OnInit {
       categories: this.selectedCategories.value.map(category => {
         return {name: category}
       }),
+      advertisementFormats: this.selectedAdvertisementFormats.value.map(advertisementFormat => {
+        return {name: advertisementFormat}
+      }),
+      freeProductSample: this.freeProductSample,
+      advertisementReview: this.advertisementReview,
+      compensation: this.compensation.value,
       description: this.offerDescription.value,
       expireDate: this.offerExpiryDate.value,
       files: images
@@ -116,6 +131,13 @@ export class NewOfferComponent implements OnInit {
           console.log(error);
         }
     );
+  }
+
+  checkForErrors() {
+    return this.offerName.hasError('required') ||
+        this.offerExpiryDate.hasError('required') ||
+        this.offerDescription.hasError('required') ||
+        this.compensation.hasError('required');
   }
 
   cancel() {

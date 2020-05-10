@@ -27,6 +27,16 @@
 
             <column name="assignee_id" type="BIGINT"/>
 
+            <column name="free_product_sample" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="advertisement_review" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="compensation" type="VARCHAR(64)"/>
+
             <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
                 <constraints nullable="false"/>
             </column>

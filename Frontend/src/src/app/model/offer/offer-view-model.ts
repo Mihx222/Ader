@@ -3,6 +3,7 @@ import {BidViewModel} from "../bid/bid-view-model";
 import {CategoryViewModel} from "../category/category-view-model";
 import {FileViewModel} from "../offermedia/file-view-model";
 import {OfferStatus} from "../offerstatus/offer-status.enum";
+import {AdvertisementFormatViewModel} from "../advertisementformat/advertisement-format-view-model";
 import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface OfferViewModel {
@@ -15,6 +16,10 @@ export interface OfferViewModel {
   categories: CategoryViewModel[];
   files: FileViewModel[];
   expireDate: DateTimeFormat;
+  advertisementFormats: AdvertisementFormatViewModel[];
+  freeProductSample: boolean;
+  advertisementReview: boolean;
+  compensation: string;
   offerStatus?: OfferStatus;
   created?: DateTimeFormat;
   updated?: DateTimeFormat;
