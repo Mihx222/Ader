@@ -75,7 +75,7 @@
     <ng-container matColumnDef="status">
       <th *matHeaderCellDef mat-header-cell>Status</th>
       <td *matCellDef="let offer" mat-cell>
-        <mat-chip class="status-chip" disableRipple>
+        <mat-chip [class.red-chip]="isExpired(offer)" class="status-chip" disableRipple>
           {{offer.offerStatus}}
         </mat-chip>
 

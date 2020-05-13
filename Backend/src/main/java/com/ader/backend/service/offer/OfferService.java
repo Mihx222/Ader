@@ -15,4 +15,6 @@ public interface OfferService {
     Offer updateOffer(Long id, Offer offer);
 
     String deleteOffer(Long id);
+
+    void checkAndUpdateExpiredOffers();
 }

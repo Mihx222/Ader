@@ -67,6 +67,17 @@
   border-width: thin;
 }
 
+.red-chip {
+  padding: 7px 70px;
+  box-sizing: inherit;
+  color: red;
+  font-size: 18px;
+  background-color: whitesmoke;
+  transform: inherit;
+  border-style: solid;
+  border-width: thin;
+}
+
 ::ng-deep .mat-card-header .mat-card-subtitle:not(:first-child) {
   margin: 0;
 }
@@ -85,4 +96,31 @@
 
 :host ::ng-deep .mat-chip.mat-standard-chip:not(.mat-chip-disabled):active {
   width: 100%;
+}
+
+.hours-chip {
+  padding: 8px 75px;
+}
+
+.time-chip {
+  padding: 8px 20px;
+}
+
+#create-button {
+  background-color: #fd4b59;
+  color: white;
+}
+
+.create-button-active {
+  background-color: #fd4b59;
+  color: white;
+}
+
+.create-button-disabled {
+  background-color: #999999;
+  color: black;
+}
+
+.slider {
+  margin-left: 10px;
 }

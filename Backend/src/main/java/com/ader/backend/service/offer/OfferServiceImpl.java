@@ -135,4 +135,16 @@ public class OfferServiceImpl implements OfferService {
         log.info(successMessage);
         return successMessage;
     }
+
+    @Override
+    public void checkAndUpdateExpiredOffers() {
+        List<Offer> expiredOffers = offerRepository.findAllByExpireDateAndOfferStatus(OfferStatus.EXPIRED.name());
+
+        if (!expiredOffers.isEmpty()) {
+            log.info("Found " + expiredOffers.size() + " expired offers. Changing their status to EXPIRED...");
+            expiredOffers.forEach(offer -> offer.setOfferStatus(OfferStatus.EXPIRED));
+        } else {
+            log.debug("No expired offers found.");
+        }
+    }
 }

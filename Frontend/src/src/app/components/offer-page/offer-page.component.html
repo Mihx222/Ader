@@ -68,7 +68,74 @@
 
           <mat-tab label="Bid">
             <div class="box">
-              Bid
+              <form style="width: 100%">
+                <table style="width: 100%">
+                  <td>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>What do you do?</mat-label>
+                      <input [errorStateMatcher]="matcher" [formControl]="whatDoYouDo" matInput required>
+                      <mat-hint></mat-hint>
+                      <mat-error *ngIf="whatDoYouDo.hasError('required')"><strong>Required!</strong></mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Who is your audience?</mat-label>
+                      <input [errorStateMatcher]="matcher" [formControl]="whoIsYourAudience" matInput required>
+                      <mat-hint></mat-hint>
+                      <mat-error *ngIf="whoIsYourAudience.hasError('required')"><strong>Required!</strong></mat-error>
+                    </mat-form-field>
+                  </td>
+                </table>
+                <table style="width: 100%">
+                  <td>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>What are you selling?</mat-label>
+                      <input [errorStateMatcher]="matcher" [formControl]="whatAreYouSelling" matInput required>
+                      <mat-hint></mat-hint>
+                      <mat-error *ngIf="whatAreYouSelling.hasError('required')"><strong>Required!</strong></mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>What is the personality of your brand?</mat-label>
+                      <input [errorStateMatcher]="matcher" [formControl]="personalityOfYourBrand" matInput required>
+                      <mat-hint></mat-hint>
+                      <mat-error *ngIf="personalityOfYourBrand.hasError('required')"><strong>Required!</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                </table>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>What are you core values?</mat-label>
+                  <input [errorStateMatcher]="matcher" [formControl]="coreValues" matInput required>
+                  <mat-hint></mat-hint>
+                  <mat-error *ngIf="coreValues.hasError('required')"><strong>Required!</strong>
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Compensation</mat-label>
+                  <input [attr.disabled]="requirementsAccepted" [errorStateMatcher]="matcher"
+                         [formControl]="compensation"
+                         matInput required>
+                  <mat-hint></mat-hint>
+                  <mat-error *ngIf="compensation.hasError('required')"><strong>Required!</strong>
+                  </mat-error>
+                </mat-form-field>
+              </form>
+
+              <!-- Actions -->
+              <div class="flex-row">
+                <mat-slide-toggle [(ngModel)]="requirementsAccepted">Accept initial requirements</mat-slide-toggle>
+                <mat-slide-toggle [disabled]="requirementsAccepted" class="slider">Free product sample
+                </mat-slide-toggle>
+                <div fxFlex></div>
+                <button
+                        class="create-button-active"
+                        mat-button
+                >Place bid
+                </button>
+              </div>
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -80,7 +147,7 @@
         <mat-card-header>
           <mat-card-title>Status</mat-card-title>
           <mat-card-subtitle>
-            <mat-chip class="status-chip" disableRipple>
+            <mat-chip [class.red-chip]="offerExpired" class="status-chip" disableRipple>
               {{offer.offerStatus}}
             </mat-chip>
           </mat-card-subtitle>
@@ -89,11 +156,16 @@
       <mat-card class="shadow" style="margin-top: 20px;">
         <mat-card-header>
           <mat-card-title>
-            Offer expiration
+            Offer expiration date
           </mat-card-title>
           <mat-card-subtitle>
-            <mat-chip disableRipple>
-              {{offer.expireDate}}
+            <mat-chip class="time-chip" disableRipple>
+              {{offer.expireDate | date: 'medium'}}
+            </mat-chip>
+            <div style="margin: 10px 0;"></div>
+            <mat-divider></mat-divider>
+            <mat-chip class="hours-chip" disableRipple style="margin-top: 10px;">
+              {{timeToDisplay}} hours
             </mat-chip>
           </mat-card-subtitle>
         </mat-card-header>

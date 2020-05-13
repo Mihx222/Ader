@@ -15,7 +15,7 @@ export interface Offer {
   bids: BidViewModel[];
   categories: CategoryViewModel[];
   files: FileViewModel[];
-  expireDate: DateTimeFormat;
+  expireDate: Date;
   advertisementFormats: AdvertisementFormatViewModel[];
   freeProductSample: boolean;
   advertisementReview: boolean;

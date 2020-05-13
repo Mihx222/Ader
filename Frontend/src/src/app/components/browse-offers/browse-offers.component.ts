@@ -50,4 +50,15 @@ export class BrowseOffersComponent implements OnInit {
   getImageUrl(image: any): any {
     return 'data:' + image.type + ';base64,' + image.bytes;
   }
+
+  isExpired(offer: any): boolean {
+    let currentDate = new Date(Date.now());
+    let offerExpirationDate = new Date(offer.expireDate);
+    let expired: boolean = false;
+
+    if (currentDate > offerExpirationDate) {
+      expired = true;
+    }
+    return expired;
+  }
 }
