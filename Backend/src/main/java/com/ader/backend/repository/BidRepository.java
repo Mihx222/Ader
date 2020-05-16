@@ -19,4 +19,6 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
             "JOIN Offer offer ON offer = bid.offer " +
             "WHERE offer.id = ?1")
     List<Bid> findAllByOfferId(Long offerId);
+
+    Bid findByUser_EmailAndOffer_Id(String userEmail, Long offerId);
 }

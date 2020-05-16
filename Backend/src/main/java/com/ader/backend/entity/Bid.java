@@ -21,4 +21,16 @@ public class Bid extends BaseEntity {
     @ManyToOne
     @JoinColumn
     private Offer offer;
+
+    @OneToOne
+    private Persona persona;
+
+    @Column
+    private Boolean acceptInitialRequirements;
+
+    @Column
+    private Boolean freeProductSample;
+
+    @Column
+    private String compensation;
 }

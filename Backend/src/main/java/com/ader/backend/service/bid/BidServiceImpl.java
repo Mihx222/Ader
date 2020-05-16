@@ -1,8 +1,15 @@
 package com.ader.backend.service.bid;
 
 import com.ader.backend.entity.Bid;
+import com.ader.backend.entity.Offer;
+import com.ader.backend.entity.Persona;
+import com.ader.backend.entity.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.BidRepository;
+import com.ader.backend.rest.dto.BidDto;
+import com.ader.backend.service.offer.OfferService;
+import com.ader.backend.service.persona.PersonaService;
+import com.ader.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +27,9 @@ import java.util.List;
 public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepository;
+    private final OfferService offerService;
+    private final UserService userService;
+    private final PersonaService personaService;
 
     @Override
     public List<Bid> getBids() {
@@ -37,10 +47,41 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public Bid createBid(Bid bid) {
+    public Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId) {
+        return bidRepository.findByUser_EmailAndOffer_Id(userEmail, offerId);
+    }
+
+    @Override
+    public Bid createBid(BidDto bidDto) {
         String errorMessage;
 
+        Bid bid = new Bid();
+        Offer bidOffer = offerService.getOffer(bidDto.getOfferId());
+        User bidUser = userService.getAuthenticatedUser();
+        Boolean initialRequirementsAccepted = bidDto.getAcceptInitialRequirements();
+
+        Persona bidPersona = new Persona();
+        bidPersona.setUser(bidUser);
+        bidPersona.setActivity(bidDto.getPersona().getActivity());
+        bidPersona.setAudience(bidDto.getPersona().getAudience());
+        bidPersona.setSellingOrientation(bidDto.getPersona().getSellingOrientation());
+        bidPersona.setValues(bidDto.getPersona().getValues());
+
+        if (initialRequirementsAccepted) {
+            bid.setCompensation(bidOffer.getCompensation());
+            bid.setFreeProductSample(bidOffer.getFreeProductSample());
+        } else {
+            bid.setFreeProductSample(bidDto.getFreeProductSample());
+            bid.setCompensation(bidDto.getCompensation());
+        }
+
+        bid.setAcceptInitialRequirements(initialRequirementsAccepted);
+        bid.setOffer(bidOffer);
+        bid.setPersona(bidPersona);
+        bid.setUser(bidUser);
+
         try {
+            personaService.createPersona(bidPersona);
             bidRepository.save(bid);
         } catch (Exception e) {
             errorMessage = e.getMessage();

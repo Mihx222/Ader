@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 import {CustomErrorStateMatcher} from "../../helpers/custom-error-state-matcher";
 import {AdvertisementFormatViewModel} from "../../model/advertisementformat/advertisement-format-view-model";
 import {AdvertisementFormatService} from "../../service/advertisementformat/advertisement-format.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-new-offer',
@@ -38,7 +39,8 @@ export class NewOfferComponent implements OnInit {
       advertisementFormatService: AdvertisementFormatService,
       public fileService: FileService,
       public offerService: OfferService,
-      public router: Router
+      public router: Router,
+      public location: Location
   ) {
     this.categories = categoryService.getCategories();
     this.advertisementFormats = advertisementFormatService.getAdvertisementFormats();
@@ -125,7 +127,11 @@ export class NewOfferComponent implements OnInit {
 
     this.offerService.createOffer(this.newOffer).subscribe(
         result => {
-          this.router.navigate(['offers']);
+          let updatedUser = JSON.parse(localStorage.getItem("current_user"));
+          updatedUser.createdOffers.push(result);
+          localStorage.setItem("current_user", JSON.stringify(updatedUser));
+
+          this.router.navigate(['offers/' + result.id]);
         },
         error => {
           console.log(error);
@@ -141,6 +147,6 @@ export class NewOfferComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 }

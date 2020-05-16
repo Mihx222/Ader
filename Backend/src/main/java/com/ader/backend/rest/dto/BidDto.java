@@ -1,7 +1,7 @@
 package com.ader.backend.rest.dto;
 
 import com.ader.backend.entity.Bid;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -9,18 +9,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class BidDto {
 
     private Long id;
     private Long offerId;
     private String userEmail;
+    private PersonaDto persona;
+    private Boolean acceptInitialRequirements;
+    private Boolean freeProductSample;
+    private String compensation;
 
     public static List<BidDto> toDto(@NotNull List<Bid> bids) {
         return bids.stream().map(BidDto::toDto).collect(Collectors.toList());
     }
 
     public static BidDto toDto(@NotNull Bid bid) {
-        return new BidDto(bid.getId(), bid.getOffer().getId(), bid.getUser().getEmail());
+        return BidDto.builder()
+                .id(bid.getId())
+                .offerId(bid.getOffer().getId())
+                .persona(PersonaDto.toDto(bid.getPersona()))
+                .userEmail(bid.getUser().getEmail())
+                .acceptInitialRequirements(bid.getAcceptInitialRequirements())
+                .freeProductSample(bid.getFreeProductSample())
+                .compensation(bid.getCompensation())
+                .build();
     }
 }

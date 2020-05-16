@@ -338,6 +338,8 @@
     <changeSet id="testdata-7" author="mcurchi">
         <insert tableName="bids">
             <column name="user_id" value="1"/>
+            <column name="persona_id" value="1"/>
+            <column name="compensation" value="$1000000 dollars"/>
             <column name="offer_id" valueSequenceCurrent="offer_seq"/>
         </insert>
     </changeSet>

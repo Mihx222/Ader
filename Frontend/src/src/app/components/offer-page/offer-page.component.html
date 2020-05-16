@@ -66,8 +66,76 @@
             ></p-galleria>
           </mat-tab>
 
-          <mat-tab label="Bid">
-            <div class="box">
+          <mat-tab *ngIf="isUser() || isAuthor()" [label]="isAuthor() ? 'View bids' : isUser() ? 'Bid' : 'Bid'">
+            <div *ngIf="isAuthor()" class="mat-elevation-z8">
+              <table [dataSource]="dataSource" mat-table matSort multiTemplateDataRows style="width: 100%;">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th *matHeaderCellDef mat-header-cell>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [aria-label]="checkboxLabel()"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                  </th>
+                  <td *matCellDef="let row" mat-cell>
+                    <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                                  (click)="$event.stopPropagation()"
+                                  [aria-label]="checkboxLabel(row)"
+                                  [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                  <td *matCellDef="let element" [attr.colspan]="columnsToDisplay.length" mat-cell>
+                    <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+                         class="element-detail">
+                      <div style="display: flex; flex-direction: row;">
+                        <div style="display: flex; flex-direction: column;">
+                          <h2><strong>Bid:</strong></h2>
+                          <span><strong>Author: </strong>{{element.userEmail}}</span>
+                          <span><strong>Compensation: </strong>{{element.compensation}}</span>
+                          <span><strong>Free product sample: </strong>{{element.freeProductSample ? 'Yes' : 'No'}}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; margin-left: 50px;">
+                          <h2><strong>Persona:</strong></h2>
+                          <span><strong>Ocupation: </strong>{{element.persona.activity}}</span>
+                          <span><strong>Audience: </strong>{{element.persona.audience}}</span>
+                          <span><strong>Selling: </strong>{{element.persona.sellingOrientation}}</span>
+                          <span><strong>Values: </strong>{{element.persona.values}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="author">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
+                  <td *matCellDef="let bid" mat-cell>{{bid.userEmail}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="compensation">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header>Compensation</th>
+                  <td *matCellDef="let bid" mat-cell>{{bid.compensation}}</td>
+                </ng-container>
+
+                <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+                <tr (click)="expandedElement = expandedElement === bid ? null : bid"
+                    *matRowDef="let bid; columns: columnsToDisplay"
+                    [class.expanded-row]="expandedElement === bid" class="element-row" mat-row>
+                </tr>
+                <tr *matRowDef="let bid; columns: ['expandedDetail']" class="detail-row" mat-row></tr>
+              </table>
+
+              <!-- Paginator -->
+              <mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                             showFirstLastButtons></mat-paginator>
+            </div>
+
+            <div *ngIf="(existingBid | async) === null && !isAuthor()"
+                 class="box">
               <form style="width: 100%">
                 <table style="width: 100%">
                   <td>
@@ -98,43 +166,53 @@
                   </td>
                   <td>
                     <mat-form-field appearance="outline" style="width: 100%;">
-                      <mat-label>What is the personality of your brand?</mat-label>
-                      <input [errorStateMatcher]="matcher" [formControl]="personalityOfYourBrand" matInput required>
+                      <mat-label>What are your core values?</mat-label>
+                      <input [errorStateMatcher]="matcher" [formControl]="coreValues" matInput required>
                       <mat-hint></mat-hint>
-                      <mat-error *ngIf="personalityOfYourBrand.hasError('required')"><strong>Required!</strong>
+                      <mat-error *ngIf="coreValues.hasError('required')"><strong>Required!</strong>
                       </mat-error>
                     </mat-form-field>
                   </td>
                 </table>
                 <mat-form-field appearance="outline" style="width: 100%;">
-                  <mat-label>What are you core values?</mat-label>
-                  <input [errorStateMatcher]="matcher" [formControl]="coreValues" matInput required>
-                  <mat-hint></mat-hint>
-                  <mat-error *ngIf="coreValues.hasError('required')"><strong>Required!</strong>
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline" style="width: 100%;">
                   <mat-label>Compensation</mat-label>
-                  <input [attr.disabled]="requirementsAccepted" [errorStateMatcher]="matcher"
+                  <input [errorStateMatcher]="matcher"
                          [formControl]="compensation"
-                         matInput required>
+                         matInput>
                   <mat-hint></mat-hint>
-                  <mat-error *ngIf="compensation.hasError('required')"><strong>Required!</strong>
-                  </mat-error>
                 </mat-form-field>
               </form>
 
               <!-- Actions -->
               <div class="flex-row">
-                <mat-slide-toggle [(ngModel)]="requirementsAccepted">Accept initial requirements</mat-slide-toggle>
-                <mat-slide-toggle [disabled]="requirementsAccepted" class="slider">Free product sample
+                <mat-slide-toggle (click)="disableFields()" [(ngModel)]="requirementsAccepted">Accept initial
+                  requirements
+                </mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="freeProductSample" [disabled]="requirementsAccepted" class="slider">Free
+                  product sample
                 </mat-slide-toggle>
                 <div fxFlex></div>
                 <button
+                        (click)="placeBid()"
+                        [class.create-button-disabled]="checkForErrors()"
+                        [disabled]="checkForErrors()"
                         class="create-button-active"
                         mat-button
                 >Place bid
                 </button>
+              </div>
+            </div>
+
+            <div *ngIf="(existingBid | async) as newBid">
+              <div *ngIf="newBid !== null" class="box">
+                <h2><strong>Your bid:</strong></h2>
+                <p><strong>Compensation: </strong>{{newBid.compensation}}</p>
+                <p><strong>Free product sample: </strong>{{newBid.freeProductSample ? 'Yes' : 'No'}}</p>
+                <h2><strong>Your persona:</strong></h2>
+                <p><strong>What do you do: </strong>{{newBid.persona.activity}}</p>
+                <p><strong>Who is your audience: </strong>{{newBid.persona.audience}}</p>
+                <p><strong>What are you selling: </strong>{{newBid.persona.sellingOrientation}}</p>
+                <p><strong>What are you core values: </strong>{{newBid.persona.values}}</p>
               </div>
             </div>
           </mat-tab>

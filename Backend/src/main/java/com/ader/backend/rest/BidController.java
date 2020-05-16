@@ -34,6 +34,20 @@ public class BidController {
         return ResponseEntity.ok(BidDto.toDto(bidService.getBidsByUser(userEmail)));
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @GetMapping("get")
+    public ResponseEntity<BidDto> getBidByUserAndOffer(
+            @RequestParam("userEmail") String userEmail, @RequestParam("offerId") Long offerId
+    ) {
+        log.info("Requested bid for user with email: [{}] and offer with id: [{}]", userEmail, offerId);
+        Bid bid = bidService.getBidByUserEmailAndOfferId(userEmail, offerId);
+        if (bid == null) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.ok(BidDto.toDto(bid));
+        }
+    }
+
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @GetMapping("offer/{offerId}")
     public ResponseEntity<List<BidDto>> getAllBidsByOffer(@PathVariable Long offerId) {
@@ -43,9 +57,9 @@ public class BidController {
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")
     @PostMapping("add")
-    public ResponseEntity<BidDto> createBid(@RequestBody Bid bid) {
-        log.info("Requested creating new bid with payload: [{}]", bid);
-        return ResponseEntity.ok(BidDto.toDto(bidService.createBid(bid)));
+    public ResponseEntity<BidDto> createBid(@RequestBody BidDto bidDto) {
+        log.info("Requested creating new bid with payload: [{}]", bidDto);
+        return ResponseEntity.ok(BidDto.toDto(bidService.createBid(bidDto)));
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('USER')")

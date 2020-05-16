@@ -1,6 +1,7 @@
 package com.ader.backend.service.bid;
 
 import com.ader.backend.entity.Bid;
+import com.ader.backend.rest.dto.BidDto;
 
 import java.util.List;
 
@@ -12,7 +13,9 @@ public interface BidService {
 
     List<Bid> getBidsByOffer(Long offerId);
 
-    Bid createBid(Bid bid);
+    Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId);
+
+    Bid createBid(BidDto bid);
 
     Bid updateBid(Long id, Bid bid);
 

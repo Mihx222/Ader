@@ -39,6 +39,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {GalleriaModule} from "primeng";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import {MatDividerModule} from "@angular/material/divider";
     MatTabsModule,
     GalleriaModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCheckboxModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
