@@ -42,6 +42,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public List<Offer> getAllForUser(String userEmail) {
+        return offerRepository.findAllByAuthor_Email(userEmail);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Offer getOffer(Long id) {
         Offer fetchedOffer = offerRepository.findById(id).orElse(null);
@@ -54,6 +59,21 @@ public class OfferServiceImpl implements OfferService {
             fetchedOffer.setFiles(fileService.decompressFile(fetchedOffer.getFiles()));
             return fetchedOffer;
         }
+    }
+
+    @Override
+    public List<Offer> getByUserEmailAndBidsExist(String userEmail) {
+        return offerRepository.findAllByUser_EmailAndBidsExist(userEmail);
+    }
+
+    @Override
+    public List<Offer> getAllByAssignedUserEmail(String userEmail) {
+        return offerRepository.findAllByAssignedUser(userEmail);
+    }
+
+    @Override
+    public List<Offer> getAllCompletedForUser(String userEmail) {
+        return offerRepository.findAllCompletedForUser(userEmail);
     }
 
     @Override

@@ -1,39 +1,218 @@
 <app-navbar></app-navbar>
 
-<h1>Profile:</h1>
+<div class="container">
+  <div class="flex-row">
+    <div class="flex-column" style="width: 30%">
+      <mat-card class="shadow" style="position:fixed;">
+        <mat-card-header style="background-color: #444444;">
+          <mat-card-title style="color: white;">
+            <h2 style="margin-left: 16px;">Profile:</h2>
+            <div class="line"></div>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="padding: 10px;">
+          <div *ngIf="authenticatedUser.brandName != null">
+            <h3>Brand name:</h3>
+            <span>{{authenticatedUser.brandName}}</span>
+          </div>
 
-<div *ngIf="authenticatedUser.brandName != null">
-  <h3>Brand name:</h3>
-  <span>{{authenticatedUser.brandName}}</span>
+          <div *ngIf="authenticatedUser.brandWebsite != null">
+            <h3>Brand website:</h3>
+            <span>{{authenticatedUser.brandWebsite}}</span>
+          </div>
+
+          <span>
+            <strong>Email: </strong>{{authenticatedUser.email}}
+          </span>
+
+          <div *ngIf="authenticatedUser.createdOffers.length != 0">
+            <h3>Created offers:</h3>
+            <ul>
+              <li *ngFor="let offer of authenticatedUser.createdOffers">{{offer.name}}</li>
+            </ul>
+          </div>
+
+          <div *ngIf="authenticatedUser.acceptedOffers.length != 0">
+            <h3>Accepted offers:</h3>
+            <ul>
+              <li *ngFor="let offer of authenticatedUser.acceptedOffers">{{offer.name}}</li>
+            </ul>
+          </div>
+
+          <div *ngIf="authenticatedUser.bids.length != 0">
+            <h3>Bids:</h3>
+            <ul>
+              <li *ngFor="let bid of authenticatedUser.bids">Offer id: {{bid.offerId}}</li>
+            </ul>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="flex-column" style="flex-grow: 5; margin-left: 30px;">
+      <mat-tab-group dynamicHeight style="background-color: #444444;">
+        <mat-tab *ngIf="isUser()" label="Offers you placed your bid on">
+          <div class="mat-elevation-z8">
+            <table #userBidSort="matSort" [dataSource]="userBidDataSource" mat-table matSort multiTemplateDataRows
+                   style="width: 100%;">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="author">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
+                <td *matCellDef="let offer" mat-cell>
+                  <span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="viewDetails">
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let offer" mat-cell>
+                  <div>
+                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
+                            routerLinkActive="active">
+                      View details
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              </tr>
+            </table>
+
+            <!-- Paginator -->
+            <mat-paginator #userBidPaginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                           showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="isUser()" label="Offers you are assigned to">
+          <div class="mat-elevation-z8">
+            <table #assignedOffersSort="matSort" [dataSource]="assignedOffersDataSource" mat-table matSort
+                   multiTemplateDataRows
+                   style="width: 100%;">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="author">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
+                <td *matCellDef="let offer" mat-cell>
+                  <span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="viewDetails">
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let offer" mat-cell>
+                  <div>
+                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
+                            routerLinkActive="active">
+                      View details
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              </tr>
+            </table>
+
+            <!-- Paginator -->
+            <mat-paginator #assignedOffersPaginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                           showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="isUser()" label="Completed offers">
+          <div class="mat-elevation-z8">
+            <table #completedOffersSort="matSort" [dataSource]="completedOffersDataSource" mat-table matSort
+                   multiTemplateDataRows
+                   style="width: 100%;">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="author">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
+                <td *matCellDef="let offer" mat-cell>
+                  <span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="viewDetails">
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let offer" mat-cell>
+                  <div>
+                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
+                            routerLinkActive="active">
+                      View details
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              </tr>
+            </table>
+
+            <!-- Paginator -->
+            <mat-paginator #completedOffersPaginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                           showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="isAdvertiser()" label="Your offers">
+          <div class="mat-elevation-z8">
+            <table #userCreatedOffersSort="matSort" [dataSource]="userCreatedOffersDataSource" mat-table matSort
+                   multiTemplateDataRows
+                   style="width: 100%;">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="author">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
+                <td *matCellDef="let offer" mat-cell>
+                  <span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="viewDetails">
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let offer" mat-cell>
+                  <div>
+                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
+                            routerLinkActive="active">
+                      View details
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              </tr>
+            </table>
+
+            <!-- Paginator -->
+            <mat-paginator #userCreatedOffersPaginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]"
+                           [pageSize]="10"
+                           showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="authenticatedUser.brandWebsite != null">
-  <h3>Brand website:</h3>
-  <span>{{authenticatedUser.brandWebsite}}</span>
-</div>
-
-<div>
-  <h3>Email:</h3>
-  <p>{{authenticatedUser.email}}</p>
-</div>
-
-<div *ngIf="authenticatedUser.createdOffers.length != 0">
-  <h3>Created offers:</h3>
-  <ul>
-    <li *ngFor="let offer of authenticatedUser.createdOffers">{{offer.name}}</li>
-  </ul>
-</div>
-
-<div *ngIf="authenticatedUser.acceptedOffers.length != 0">
-  <h3>Accepted offers:</h3>
-  <ul>
-    <li *ngFor="let offer of authenticatedUser.acceptedOffers">{{offer.name}}</li>
-  </ul>
-</div>
-
-<div *ngIf="authenticatedUser.bids.length != 0">
-  <h3>Bids:</h3>
-  <ul>
-    <li *ngFor="let bid of authenticatedUser.bids">Offer id: {{bid.offerId}}</li>
-  </ul>
-</div>
+<app-scroll-up-button></app-scroll-up-button>

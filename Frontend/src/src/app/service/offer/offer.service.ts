@@ -19,6 +19,22 @@ export class OfferService {
         JSON.parse(localStorage.getItem('token')).access_token);
   }
 
+  getOfferByUserEmail(
+      userEmail: string,
+      hasBids?: boolean,
+      assigned?: boolean,
+      completed?: boolean
+  ): Observable<Offer[]> {
+    return this.http.get<Offer[]>(
+        this.userURL + 'offer/user/' + userEmail + '?' +
+        (hasBids === false ? '' : ('hasBids=' + hasBids + '&')) +
+        (assigned === false ? '' : ('assigned=' + assigned + '&')) +
+        (completed === false ? '' : ('completed=' + completed + '&')) +
+        'access_token=' +
+        JSON.parse(localStorage.getItem('token')).access_token
+    );
+  }
+
   getOffers() {
     return this.http.get<Offer[]>(this.userURL + 'offer?access_token=' +
         JSON.parse(localStorage.getItem('token')).access_token);

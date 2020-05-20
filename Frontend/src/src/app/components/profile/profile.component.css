@@ -1,0 +1,65 @@
+.shadow {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+}
+
+.container {
+  margin: 30px auto;
+  max-width: 69rem;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.details-button {
+  margin-top: 5px;
+  line-height: 28px;
+  padding: 0 36px;
+  background-color: #fd4b59;
+  color: white;
+}
+
+.author-name {
+  color: #888888;
+}
+
+.mat-column-viewDetails {
+  text-align: right;
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #fd4b59;
+}
+
+::ng-deep .mat-tab-label, .mat-tab-link {
+  width: 100%;
+  color: white;
+}
+
+:host ::ng-deep .mat-card {
+  padding: 0;
+}
+
+:host ::ng-deep .mat-card-header-text {
+  margin: 0;
+}
+
+.line {
+  width: 331px;
+  border-bottom: 3px solid #fd4b59;
+}
+
+.box {
+  padding: 16px;
+  background-color: #e4e4e4;
+}
+
+.mat-card-header .mat-card-title {
+  margin: 0;
+}

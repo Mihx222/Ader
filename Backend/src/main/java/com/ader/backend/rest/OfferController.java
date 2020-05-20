@@ -32,6 +32,25 @@ public class OfferController {
         return ResponseEntity.ok(OfferDto.toDto(offerService.getOffer(id)));
     }
 
+    @GetMapping("/user/{userEmail}")
+    public ResponseEntity<List<OfferDto>> getOffersByUser(
+            @PathVariable String userEmail,
+            @RequestParam(required = false) boolean hasBids,
+            @RequestParam(required = false) boolean assigned,
+            @RequestParam(required = false) boolean completed
+    ) {
+        log.info("Requested offers for user: [{}].", userEmail);
+        if (hasBids) {
+            return ResponseEntity.ok(OfferDto.toDto(offerService.getByUserEmailAndBidsExist(userEmail)));
+        } else if (assigned) {
+            return ResponseEntity.ok(OfferDto.toDto(offerService.getAllByAssignedUserEmail(userEmail)));
+        } else if (completed) {
+            return ResponseEntity.ok(OfferDto.toDto(offerService.getAllCompletedForUser(userEmail)));
+        } else {
+            return ResponseEntity.ok(OfferDto.toDto(offerService.getAllForUser(userEmail)));
+        }
+    }
+
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @PostMapping("add")
     public ResponseEntity<OfferDto> createOffer(@RequestBody Offer offer) {

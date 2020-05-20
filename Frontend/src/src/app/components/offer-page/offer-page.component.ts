@@ -29,7 +29,6 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class OfferPageComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<BidViewModel>;
   bids: BidViewModel[] = [];
-  searchValue: string;
   columnsToDisplay = ['select', 'author', 'compensation'];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
@@ -166,6 +165,9 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     this.bidService.placeBid(newBid).subscribe(
         result => {
           this.newBid = result;
+          let updatedUser = JSON.parse(localStorage.getItem("current_user"));
+          updatedUser.bids.push(result);
+          localStorage.setItem("current_user", JSON.stringify(updatedUser));
 
           // TODO: Find a way to replace this
           location.reload();

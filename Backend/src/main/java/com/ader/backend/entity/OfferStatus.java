@@ -3,6 +3,7 @@ package com.ader.backend.entity;
 public enum OfferStatus {
     OPEN("OPEN"),
     EXPIRED("EXPIRED"),
+    COMPLETED("COMPLETED"),
     CLOSED("CLOSED");
 
     private final String name;

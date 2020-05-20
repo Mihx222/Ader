@@ -8,7 +8,15 @@ public interface OfferService {
 
     List<Offer> getAllOffers();
 
+    List<Offer> getAllForUser(String userEmail);
+
     Offer getOffer(Long id);
+
+    List<Offer> getByUserEmailAndBidsExist(String userEmail);
+
+    List<Offer> getAllByAssignedUserEmail(String userEmail);
+
+    List<Offer> getAllCompletedForUser(String userEmail);
 
     Offer createOffer(Offer offer);
 
