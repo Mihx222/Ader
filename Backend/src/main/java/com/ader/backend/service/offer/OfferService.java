@@ -1,6 +1,7 @@
 package com.ader.backend.service.offer;
 
 import com.ader.backend.entity.Offer;
+import com.ader.backend.entity.OfferStatus;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public interface OfferService {
     Offer createOffer(Offer offer);
 
     Offer updateOffer(Long id, Offer offer);
+
+    void updateOfferStatus(Long offerId, OfferStatus offerStatus);
 
     String deleteOffer(Long id);
 

@@ -11,38 +11,38 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content style="padding: 10px;">
-          <div *ngIf="authenticatedUser.brandName != null">
+          <div *ngIf="user.brandName != null">
             <h3>Brand name:</h3>
-            <span>{{authenticatedUser.brandName}}</span>
+            <span>{{user.brandName}}</span>
           </div>
 
-          <div *ngIf="authenticatedUser.brandWebsite != null">
+          <div *ngIf="user.brandWebsite != null">
             <h3>Brand website:</h3>
-            <span>{{authenticatedUser.brandWebsite}}</span>
+            <span>{{user.brandWebsite}}</span>
           </div>
 
           <span>
-            <strong>Email: </strong>{{authenticatedUser.email}}
+            <strong>Email: </strong>{{user.email}}
           </span>
 
-          <div *ngIf="authenticatedUser.createdOffers.length != 0">
+          <div *ngIf="user.createdOffers.length != 0">
             <h3>Created offers:</h3>
             <ul>
-              <li *ngFor="let offer of authenticatedUser.createdOffers">{{offer.name}}</li>
+              <li *ngFor="let offer of user.createdOffers">{{offer.name}}</li>
             </ul>
           </div>
 
-          <div *ngIf="authenticatedUser.acceptedOffers.length != 0">
+          <div *ngIf="user.acceptedOffers.length != 0">
             <h3>Accepted offers:</h3>
             <ul>
-              <li *ngFor="let offer of authenticatedUser.acceptedOffers">{{offer.name}}</li>
+              <li *ngFor="let offer of user.acceptedOffers">{{offer.name}}</li>
             </ul>
           </div>
 
-          <div *ngIf="authenticatedUser.bids.length != 0">
+          <div *ngIf="user.bids.length != 0">
             <h3>Bids:</h3>
             <ul>
-              <li *ngFor="let bid of authenticatedUser.bids">Offer id: {{bid.offerId}}</li>
+              <li *ngFor="let bid of user.bids">Offer id: {{bid.offerId}}</li>
             </ul>
           </div>
         </mat-card-content>

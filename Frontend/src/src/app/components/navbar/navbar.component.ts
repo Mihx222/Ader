@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {UserSharedDataService} from "../../service/user/user-shared-data.service";
-import {UserViewModel} from "../../model/user/user-view-model";
 import {AuthService} from "../../service/auth/auth.service";
 import {Role} from "../../model/role/role.enum";
 import {User} from "../../model/user/user";
+import {StorageUser} from "../../model/user/storage-user";
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +11,7 @@ import {User} from "../../model/user/user";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  authenticatedUser: UserViewModel;
+  authenticatedUser: StorageUser;
 
   constructor(
       userSharedDataService: UserSharedDataService,
@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
           this.authenticatedUser = result;
         },
         error => {
-          alert(error.error.error_description);
+          console.log(error);
         }
     );
   }

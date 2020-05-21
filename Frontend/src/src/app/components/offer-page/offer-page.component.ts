@@ -13,6 +13,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {SelectionModel} from "@angular/cdk/collections";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 
 @Component({
   selector: 'app-offer-page',
@@ -47,7 +48,7 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   currentDate;
   timeToDisplay;
   offerExpired: boolean = false;
-  newBid: Bid;
+  assigned: boolean = false;
   existingBid: Observable<Bid>;
   selection = new SelectionModel<BidViewModel>(true, []);
   expandedElement: BidViewModel | null;
@@ -59,13 +60,32 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     this.offer = this.activatedRoute.snapshot.data['offer'];
     this.bids = this.offer.bids;
 
+    if (this.offer.offerStatus.toString() === OfferStatus[OfferStatus.ASSIGNED]) this.assigned = true;
     this.calculateDate();
 
     if (!this.isAuthor()) {
-      this.existingBid = this.bidService.getBidByUserEmailAndOfferId(
-          JSON.parse(localStorage.getItem("current_user")).email,
-          this.offer.id);
+      if (localStorage.getItem("current_user") !== null) {
+        this.existingBid = this.bidService.getBidByUserEmailAndOfferId(
+            JSON.parse(localStorage.getItem("current_user")).email,
+            this.offer.id);
+      }
     }
+  }
+
+  checkSelected() {
+    return this.selection.isEmpty();
+  }
+
+  acceptBid() {
+    this.bidService.acceptBids(this.selection.selected).subscribe(
+        result => {
+          // TODO: find a way to refresh the data without reloading the page
+          location.reload();
+        },
+        error => {
+          console.log(error);
+        }
+    );
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -133,6 +153,8 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
 
   isUser(): boolean {
     let result = false;
+    if (localStorage.getItem("current_user") === null) return false;
+
     JSON.parse(localStorage.getItem("current_user")).roles.forEach(role => {
       if (role.name === Role[Role.ROLE_USER]) result = true;
     });
@@ -140,11 +162,8 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   }
 
   isAuthor(): boolean {
-    let result = false;
-    JSON.parse(localStorage.getItem("current_user")).createdOffers.forEach(offer => {
-      if (offer.id === this.offer.id) result = true;
-    })
-    return result;
+    if (localStorage.getItem("current_user") === null) return false;
+    return this.offer.authorName === JSON.parse(localStorage.getItem("current_user")).brandName;
   }
 
   placeBid() {
@@ -164,11 +183,6 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
 
     this.bidService.placeBid(newBid).subscribe(
         result => {
-          this.newBid = result;
-          let updatedUser = JSON.parse(localStorage.getItem("current_user"));
-          updatedUser.bids.push(result);
-          localStorage.setItem("current_user", JSON.stringify(updatedUser));
-
           // TODO: Find a way to replace this
           location.reload();
         }, error => {

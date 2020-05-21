@@ -36,7 +36,8 @@
         {{authenticatedUser.email}}
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/profile" routerLinkActive="active">Profile</button>
+        <button [routerLink]="'/profile/' + authenticatedUser.email" mat-menu-item
+                routerLinkActive="active">Profile</button>
         <button (click)="authService.logout()" mat-menu-item routerLink="/" routerLinkActive="active">Log out</button>
       </mat-menu>
     </span>

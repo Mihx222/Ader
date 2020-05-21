@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {User} from '../../model/user/user';
+import {StorageUser} from "../../model/user/storage-user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSharedDataService {
 
-  userData: BehaviorSubject<User>;
-  userObservable: Observable<User>;
+  userData: BehaviorSubject<StorageUser>;
+  userObservable: Observable<StorageUser>;
 
   constructor() {
-    this.userData = new BehaviorSubject<User>(JSON.parse(localStorage.getItem("current_user")));
+    this.userData = new BehaviorSubject<StorageUser>(JSON.parse(localStorage.getItem("current_user")));
     this.userObservable = this.userData.asObservable();
   }
 
-  setAuthenticatedUser(user: User) {
+  setAuthenticatedUser(user: StorageUser) {
     this.userData.next(user);
   }
 
-  getAuthenticatedUser(): Observable<User> {
+  getAuthenticatedUser(): Observable<StorageUser> {
     return this.userObservable;
   }
 }

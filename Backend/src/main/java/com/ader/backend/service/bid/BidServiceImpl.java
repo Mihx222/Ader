@@ -1,9 +1,6 @@
 package com.ader.backend.service.bid;
 
-import com.ader.backend.entity.Bid;
-import com.ader.backend.entity.Offer;
-import com.ader.backend.entity.Persona;
-import com.ader.backend.entity.User;
+import com.ader.backend.entity.*;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.BidRepository;
 import com.ader.backend.rest.dto.BidDto;
@@ -19,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Transactional
@@ -94,6 +92,38 @@ public class BidServiceImpl implements BidService {
 
         log.info("Successfully created bid: [{}]", bid);
         return bid;
+    }
+
+    @Override
+    public void acceptBids(List<Bid> bids) {
+        final AtomicReference<Long> offerId = new AtomicReference<>();
+
+        bids.forEach(bid -> {
+            Bid managedBid = bidRepository.findById(bid.getId()).orElse(null);
+            Offer bidOffer;
+            User bidUser;
+
+            if (managedBid == null) {
+                String errorMessage = "No bid found for id: [" + bid.getId() + "]";
+                log.error(errorMessage);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+            } else {
+                bidOffer = offerService.getOffer(managedBid.getOffer().getId());
+                bidUser = userService.getUser(managedBid.getUser().getId());
+                bidOffer.setAssignee(bidUser);
+
+                if (offerId.get() == null) offerId.set(bidOffer.getId());
+
+                if (!managedBid.getAcceptInitialRequirements()) {
+                    bidOffer.setCompensation(managedBid.getCompensation());
+                    bidOffer.setFreeProductSample(managedBid.getFreeProductSample());
+                }
+            }
+
+            bidRepository.delete(managedBid);
+        });
+
+        offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED);
     }
 
     @Override

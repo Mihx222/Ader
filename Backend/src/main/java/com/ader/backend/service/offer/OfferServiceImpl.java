@@ -34,7 +34,7 @@ public class OfferServiceImpl implements OfferService {
     @Override
     @Transactional(readOnly = true)
     public List<Offer> getAllOffers() {
-        List<Offer> offers = offerRepository.findAll();
+        List<Offer> offers = offerRepository.findAllByOfferStatus(OfferStatus.OPEN.name());
 
         offers.forEach(offer -> offer.setFiles(fileService.decompressFile(offer.getFiles())));
 
@@ -137,6 +137,20 @@ public class OfferServiceImpl implements OfferService {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, errorMessage);
             }
         }
+    }
+
+    @Override
+    public void updateOfferStatus(Long offerId, OfferStatus offerStatus) {
+        String errorMessage;
+        Offer offer = offerRepository.findById(offerId).orElse(null);
+
+        if (offer == null) {
+            errorMessage = "Offer with id [" + offerId + "] not found!";
+            log.error(errorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+        }
+
+        offer.setOfferStatus(offerStatus);
     }
 
     @Override

@@ -47,6 +47,17 @@ table {
   border-width: thin;
 }
 
+.blue-chip {
+  padding: 7px 30px;
+  box-sizing: inherit;
+  color: #0074D9;
+  font-size: 18px;
+  background-color: whitesmoke;
+  transform: inherit;
+  border-style: solid;
+  border-width: thin;
+}
+
 .status-chip::after {
   background: inherit;
 }

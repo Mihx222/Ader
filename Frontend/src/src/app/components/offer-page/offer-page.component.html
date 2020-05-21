@@ -132,6 +132,17 @@
               <!-- Paginator -->
               <mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
                              showFirstLastButtons></mat-paginator>
+
+              <div class="box" style="text-align: end;">
+                <button
+                        (click)="acceptBid()"
+                        [class.create-button-disabled]="checkSelected()"
+                        [disabled]="checkSelected()"
+                        class="create-button-active"
+                        mat-button
+                >Accept
+                </button>
+              </div>
             </div>
 
             <div *ngIf="(existingBid | async) === null && !isAuthor()"
@@ -225,7 +236,7 @@
         <mat-card-header>
           <mat-card-title>Status</mat-card-title>
           <mat-card-subtitle>
-            <mat-chip [class.red-chip]="offerExpired" class="status-chip" disableRipple>
+            <mat-chip [class.blue-chip]="assigned" [class.red-chip]="offerExpired" class="status-chip" disableRipple>
               {{offer.offerStatus}}
             </mat-chip>
           </mat-card-subtitle>

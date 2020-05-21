@@ -6,6 +6,7 @@ import {HttpParams} from '@angular/common/http';
 import {UserService} from '../../service/user/user.service';
 import {UserSharedDataService} from '../../service/user/user-shared-data.service';
 import {AuthService} from "../../service/auth/auth.service";
+import {StorageUser} from "../../model/user/storage-user";
 
 @Component({
   selector: 'app-login',
@@ -49,16 +50,31 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(body).subscribe(
         data => {
+          if (localStorage.getItem('token') !== null) {
+            localStorage.removeItem('token');
+          }
           localStorage.setItem('token', JSON.stringify(data));
 
           this.userService.getUser(this.emailFormControl.value).subscribe(
               user => {
-                user.token = JSON.parse(localStorage.getItem('token')).access_token;
-                user.refresh_token = JSON.parse(localStorage.getItem('token')).refresh_token;
-                user.token_expiration = JSON.parse(localStorage.getItem('token')).expires_in;
+                let storageUser: StorageUser = {
+                  id: user.id,
+                  brandName: user.brandName,
+                  brandWebsite: user.brandWebsite,
+                  email: user.email,
+                  roles: user.roles,
+                  status: user.status,
+                  token: JSON.parse(localStorage.getItem('token')).access_token,
+                  refresh_token: JSON.parse(localStorage.getItem('token')).refresh_token,
+                  token_expiration: JSON.parse(localStorage.getItem('token')).expires_in
+                };
 
-                this.userSharedDataService.setAuthenticatedUser(user);
-                localStorage.setItem('current_user', JSON.stringify(user));
+                this.userSharedDataService.setAuthenticatedUser(storageUser);
+
+                if (localStorage.getItem('current_user') !== null) {
+                  localStorage.removeItem('current_user');
+                }
+                localStorage.setItem('current_user', JSON.stringify(storageUser));
               },
               error => {
                 alert(error.error.error_description);

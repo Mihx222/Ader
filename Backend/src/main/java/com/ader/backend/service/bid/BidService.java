@@ -15,6 +15,8 @@ public interface BidService {
 
     Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId);
 
+    void acceptBids(List<Bid> bids);
+
     Bid createBid(BidDto bid);
 
     Bid updateBid(Long id, Bid bid);

@@ -4,6 +4,7 @@ import {OfferViewModel} from "../../model/offer/offer-view-model";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {ActivatedRoute} from "@angular/router";
+import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 
 @Component({
   selector: 'app-browse-offers',
@@ -60,5 +61,9 @@ export class BrowseOffersComponent implements OnInit {
       expired = true;
     }
     return expired;
+  }
+
+  isAssigned(offer: any): boolean {
+    return offer.offerStatus.toString() === OfferStatus[OfferStatus.ASSIGNED];
   }
 }

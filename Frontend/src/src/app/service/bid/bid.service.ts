@@ -3,6 +3,7 @@ import {AuthService} from "../auth/auth.service";
 import {Observable} from "rxjs";
 import {Bid} from "../../model/bid/bid";
 import {HttpClient} from "@angular/common/http";
+import {BidViewModel} from "../../model/bid/bid-view-model";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,11 @@ export class BidService {
   getBid(id: number): Observable<Bid> {
     return this.http.get<Bid>(this.bidURL + 'bid/' + id + '?access_token=' +
         JSON.parse(localStorage.getItem('token')).access_token);
+  }
+
+  acceptBids(bids: BidViewModel[]) {
+    return this.http.post(this.bidURL + 'bid/accept' + '?access_token=' +
+        JSON.parse(localStorage.getItem('token')).access_token, bids);
   }
 
   getBidByUserEmailAndOfferId(userEmail: string, offerId: number): Observable<Bid> {

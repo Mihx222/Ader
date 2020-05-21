@@ -19,7 +19,10 @@ export class UserService {
   }
 
   getUser(email: string) {
-    return this.http.get<User>(this.userURL + 'user/' + email + '?access_token=' +
-        JSON.parse(localStorage.getItem('token')).access_token);
+    let token;
+    if (localStorage.getItem('token') === null) token = ''
+    else token = '?access_token=' + JSON.parse(localStorage.getItem('token')).access_token;
+
+    return this.http.get<User>(this.userURL + 'user/' + email + token);
   }
 }

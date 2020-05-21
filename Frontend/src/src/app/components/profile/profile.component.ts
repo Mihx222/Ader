@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserSharedDataService} from "../../service/user/user-shared-data.service";
-import {UserViewModel} from "../../model/user/user-view-model";
 import {Offer} from "../../model/offer/offer";
 import {OfferService} from "../../service/offer/offer.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {Role} from "../../model/role/role.enum";
+import {UserViewModel} from "../../model/user/user-view-model";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,7 @@ import {Role} from "../../model/role/role.enum";
 })
 export class ProfileComponent implements OnInit {
 
-  authenticatedUser: UserViewModel;
+  user: UserViewModel;
   offersUserBidOn: Offer[] = [];
   assignedOffers: Offer[] = [];
   completedOffers: Offer[] = [];
@@ -36,17 +36,10 @@ export class ProfileComponent implements OnInit {
   @ViewChild('userCreatedOffersPaginator', {static: false}) userCreatedOffersPaginator: MatPaginator;
 
   constructor(
-      userSharedDataService: UserSharedDataService,
+      public activatedRoute: ActivatedRoute,
       public offerService: OfferService
   ) {
-    userSharedDataService.getAuthenticatedUser().subscribe(
-        result => {
-          this.authenticatedUser = result;
-        },
-        error => {
-          alert(error.error.error_description);
-        }
-    );
+    this.user = this.activatedRoute.snapshot.data['user'];
 
     if (this.isAdmin()) {
       this.getAdminData();
@@ -136,6 +129,8 @@ export class ProfileComponent implements OnInit {
 
   hasRole(role: Role): boolean {
     let result = false;
+    if (localStorage.getItem("current_user") === null) return false;
+
     JSON.parse(localStorage.getItem("current_user")).roles.forEach(_role => {
       if (_role.name === Role[role]) result = true;
     });

@@ -10,13 +10,15 @@ import {Observable} from "rxjs";
 export class OfferService {
 
   userURL = this.authService.BASE_URL + '/';
+  token;
 
   constructor(private authService: AuthService, private http: HttpClient) {
+    localStorage.getItem('token') === null ? this.token = '' :
+        this.token = '?access_token=' + JSON.parse(localStorage.getItem('token')).access_token;
   }
 
   getOffer(id: number): Observable<Offer> {
-    return this.http.get<Offer>(this.userURL + 'offer/' + id + '?access_token=' +
-        JSON.parse(localStorage.getItem('token')).access_token);
+    return this.http.get<Offer>(this.userURL + 'offer/' + id + this.token);
   }
 
   getOfferByUserEmail(
@@ -36,8 +38,7 @@ export class OfferService {
   }
 
   getOffers() {
-    return this.http.get<Offer[]>(this.userURL + 'offer?access_token=' +
-        JSON.parse(localStorage.getItem('token')).access_token);
+    return this.http.get<Offer[]>(this.userURL + 'offer' + this.token);
   }
 
   createOffer(offer: Offer) {

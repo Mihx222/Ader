@@ -127,10 +127,6 @@ export class NewOfferComponent implements OnInit {
 
     this.offerService.createOffer(this.newOffer).subscribe(
         result => {
-          let updatedUser = JSON.parse(localStorage.getItem("current_user"));
-          updatedUser.createdOffers.push(result);
-          localStorage.setItem("current_user", JSON.stringify(updatedUser));
-
           this.router.navigate(['offers/' + result.id]);
         },
         error => {

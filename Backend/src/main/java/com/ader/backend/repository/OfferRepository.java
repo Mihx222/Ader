@@ -42,4 +42,9 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
                     "and not offer_status = ?1"
     )
     List<Offer> findAllByExpireDateAndOfferStatus(String offerStatus);
+
+    @Query(nativeQuery = true,
+            value = "select * from offers " +
+                    "where offer_status = ?1")
+    List<Offer> findAllByOfferStatus(String offerStatus);
 }

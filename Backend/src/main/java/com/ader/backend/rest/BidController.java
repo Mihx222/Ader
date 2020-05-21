@@ -2,6 +2,7 @@ package com.ader.backend.rest;
 
 import com.ader.backend.entity.Bid;
 import com.ader.backend.rest.dto.BidDto;
+import com.ader.backend.rest.dto.OfferDto;
 import com.ader.backend.service.bid.BidService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,14 @@ public class BidController {
         } else {
             return ResponseEntity.ok(BidDto.toDto(bid));
         }
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
+    @PostMapping("accept")
+    public ResponseEntity<OfferDto> acceptBids(@RequestBody List<Bid> bids) {
+        log.info("Accepting [{}] bids.", bids.size());
+        bidService.acceptBids(bids);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")

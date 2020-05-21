@@ -13,6 +13,7 @@ import {Role} from "./model/role/role.enum";
 import {OfferPageComponent} from "./components/offer-page/offer-page.component";
 import {OfferResolver} from "./resolvers/offer-resolver.service";
 import {OffersResolver} from "./resolvers/offers-resolver.service";
+import {ProfileResolver} from "./resolvers/profile-resolver.service";
 
 const routes: Routes = [
   {
@@ -28,9 +29,11 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'profile',
+    path: 'profile/:email',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    resolve: {
+      user: ProfileResolver
+    }
   },
   {
     path: 'offers',

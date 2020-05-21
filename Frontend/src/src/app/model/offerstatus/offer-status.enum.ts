@@ -1,3 +1,3 @@
 export enum OfferStatus {
-  OPEN, CLOSED
+  OPEN, CLOSED, COMPLETED, EXPIRED, ASSIGNED = "ASSIGNED"
 }
