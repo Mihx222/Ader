@@ -54,7 +54,7 @@ public class Offer extends BaseEntity {
     private List<Category> categories = new ArrayList<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.MERGE)
     private List<File> files = new ArrayList<>();
 
     @ToString.Exclude

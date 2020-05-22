@@ -24,27 +24,6 @@
           <span>
             <strong>Email: </strong>{{user.email}}
           </span>
-
-          <div *ngIf="user.createdOffers.length != 0">
-            <h3>Created offers:</h3>
-            <ul>
-              <li *ngFor="let offer of user.createdOffers">{{offer.name}}</li>
-            </ul>
-          </div>
-
-          <div *ngIf="user.acceptedOffers.length != 0">
-            <h3>Accepted offers:</h3>
-            <ul>
-              <li *ngFor="let offer of user.acceptedOffers">{{offer.name}}</li>
-            </ul>
-          </div>
-
-          <div *ngIf="user.bids.length != 0">
-            <h3>Bids:</h3>
-            <ul>
-              <li *ngFor="let bid of user.bids">Offer id: {{bid.offerId}}</li>
-            </ul>
-          </div>
         </mat-card-content>
       </mat-card>
     </div>
