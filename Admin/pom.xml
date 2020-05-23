@@ -64,6 +64,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jtom</groupId>
+            <artifactId>Admin-Custom-UI</artifactId>
+            <version>${project.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../Admin-Custom-UI/target/Admin-Custom-UI-${project.version}.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
