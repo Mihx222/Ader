@@ -40,6 +40,11 @@ import {GalleriaModule} from "primeng";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {CategoriesComponent} from './components/admin/categories/categories.component';
+import { AdvertisementFormatsComponent } from './components/admin/advertisement-formats/advertisement-formats.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,10 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     NewOfferComponent,
     ScrollUpButtonComponent,
     MaterialFileUploadComponent,
-    OfferPageComponent
+    OfferPageComponent,
+    DashboardComponent,
+    CategoriesComponent,
+    AdvertisementFormatsComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +93,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     GalleriaModule,
     MatSlideToggleModule,
     MatDividerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

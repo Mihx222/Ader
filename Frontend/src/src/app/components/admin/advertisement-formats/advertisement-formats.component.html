@@ -1,0 +1,63 @@
+<app-navbar></app-navbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over">
+    <mat-nav-list>
+      <a [routerLink]="'/admin'" mat-list-item>Dashboard</a>
+      <a [routerLink]="'/admin/categories'" mat-list-item>Categories</a>
+      <a [routerLink]="'/admin/advertisement-formats'" mat-list-item>Advertisement Formats</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <span>
+      <button mat-icon-button>
+        <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+      </button>
+      Navigation
+    </span>
+
+    <div class="container shadow">
+      <span>
+        <span style="margin-left: 15px;">Add a new advertisement format: </span>
+        <mat-form-field appearance="standard" style="margin-left: 15px; width: 72%;">
+          <mat-label>Enter advertisement format name</mat-label>
+          <input #input matInput maxlength="64" placeholder="Ex. Video">
+          <mat-hint align="end">{{input.value?.length || 0}}/64</mat-hint>
+        </mat-form-field>
+        <button (click)="AddAdvertisementFormat(input.value)" class="styled-button" mat-flat-button
+                style="margin-left: 15px;">Add</button>
+      </span>
+
+      <table [dataSource]="dataSource" mat-table matSort style="margin-top: 20px;">
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+          <td *matCellDef="let advertisementFormat" mat-cell>
+            {{advertisementFormat.name}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell>Actions</th>
+          <td *matCellDef="let advertisementFormat" mat-cell>
+            <button (click)="deleteAdvertisementFormat(advertisementFormat.name)" color="warn" mat-flat-button>Delete
+            </button>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let advertisementFormat; columns: columnsToDisplay" mat-row></tr>
+      </table>
+
+      <!-- Paginator -->
+      <mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10"
+                     showFirstLastButtons></mat-paginator>
+
+      <!-- Scroll up button -->
+      <app-scroll-up-button></app-scroll-up-button>
+    </div>
+
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

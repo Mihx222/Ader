@@ -21,6 +21,15 @@
     </span>
   </div>
 
+  <div *ngIf="isAdmin()">
+    <span class="nav-tool-items">
+      <a class="register-button" mat-button mat-raised-button routerLink="/admin" routerLinkActive="active"
+         style="margin-right: 10px;">
+        Admin
+      </a>
+    </span>
+  </div>
+
   <div *ngIf="!authenticatedUser">
     <span class="nav-tool-items">
       <a class="login-button" mat-button routerLink="/login" routerLinkActive="active">Log in</a>

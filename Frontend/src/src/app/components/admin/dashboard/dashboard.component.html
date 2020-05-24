@@ -1,0 +1,23 @@
+<app-navbar></app-navbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over">
+    <mat-nav-list>
+      <a [routerLink]="'/admin'" mat-list-item>Dashboard</a>
+      <a [routerLink]="'/admin/categories'" mat-list-item>Categories</a>
+      <a [routerLink]="'/admin/advertisement-formats'" mat-list-item>Advertisement Formats</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <span>
+      <button mat-icon-button>
+        <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+      </button>
+      Navigation
+    </span>
+    <div style="text-align: center; font-size: 36px;"><strong>Ader Admin</strong></div>
+    <div style="height: 88vh;">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

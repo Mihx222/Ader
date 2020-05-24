@@ -14,6 +14,11 @@ import {OfferPageComponent} from "./components/offer-page/offer-page.component";
 import {OfferResolver} from "./resolvers/offer-resolver.service";
 import {OffersResolver} from "./resolvers/offers-resolver.service";
 import {ProfileResolver} from "./resolvers/profile-resolver.service";
+import {DashboardComponent} from "./components/admin/dashboard/dashboard.component";
+import {CategoriesComponent} from "./components/admin/categories/categories.component";
+import {CategoryResolver} from "./resolvers/category-resolver.service";
+import {AdvertisementFormatsComponent} from "./components/admin/advertisement-formats/advertisement-formats.component";
+import {AdvertisementFormatsResolver} from "./resolvers/advertisement-formats-resolver.service";
 
 const routes: Routes = [
   {
@@ -59,6 +64,36 @@ const routes: Routes = [
     component: OfferPageComponent,
     resolve: {
       offer: OfferResolver
+    }
+  },
+  {
+    path: 'admin',
+    component: DashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      requiredRoles: [Role.ROLE_ADMIN]
+    }
+  },
+  {
+    path: 'admin/categories',
+    component: CategoriesComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      requiredRoles: [Role.ROLE_ADMIN]
+    },
+    resolve: {
+      categories: CategoryResolver
+    }
+  },
+  {
+    path: 'admin/advertisement-formats',
+    component: AdvertisementFormatsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: {
+      requiredRoles: [Role.ROLE_ADMIN]
+    },
+    resolve: {
+      formats: AdvertisementFormatsResolver
     }
   }
 ];

@@ -42,4 +42,17 @@ export class NavbarComponent implements OnInit {
     }
     return result;
   }
+
+  isAdmin(): boolean {
+    let result: boolean = false;
+    let current_user: User = JSON.parse(localStorage.getItem("current_user"));
+
+    if (current_user !== null) {
+      current_user.roles.forEach(role => {
+        // @ts-ignore
+        if (role.name === Role[Role.ROLE_ADMIN]) result = true;
+      });
+    }
+    return result;
+  }
 }
