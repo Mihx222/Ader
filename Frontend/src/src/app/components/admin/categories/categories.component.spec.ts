@@ -1,6 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CategoriesComponent } from './categories.component';
+import {CategoriesComponent} from './categories.component';
+import {HttpClient, HttpHandler} from "@angular/common/http";
+import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
+import {MatTableModule} from "@angular/material/table";
+import {ActivatedRoute} from "@angular/router";
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
@@ -8,9 +13,30 @@ describe('CategoriesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoriesComponent ]
+      declarations: [CategoriesComponent],
+      providers: [
+        HttpClient,
+        HttpHandler,
+        JwtHelperService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get(): string {
+                  return 'mock';
+                },
+              },
+              data: {categories: 'mock'},
+            },
+          },
+        },
+        {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}
+      ],
+      imports: [MatTableModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {

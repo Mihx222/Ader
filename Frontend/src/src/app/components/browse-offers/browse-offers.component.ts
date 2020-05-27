@@ -12,8 +12,22 @@ import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
   styleUrls: ['./browse-offers.component.css']
 })
 export class BrowseOffersComponent implements OnInit {
-  dataSource: MatTableDataSource<OfferViewModel>;
-  offers: OfferViewModel[] = [];
+  defaultOffer: OfferViewModel[] = [{
+    advertisementFormats: [],
+    advertisementReview: false,
+    assigneeName: "default",
+    bids: [],
+    categories: [],
+    compensation: "default",
+    description: "default",
+    expireDate: undefined,
+    freeProductSample: false,
+    id: 0,
+    name: 'default',
+    files: []
+  }];
+  dataSource: MatTableDataSource<OfferViewModel> = new MatTableDataSource<OfferViewModel>(this.defaultOffer);
+  offers: OfferViewModel[] = this.defaultOffer;
   searchValue: string;
 
   columnsToDisplay = ['image', 'name', 'description', 'categories', 'status'];
