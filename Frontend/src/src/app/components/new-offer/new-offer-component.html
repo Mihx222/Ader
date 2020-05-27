@@ -126,13 +126,13 @@
       </mat-slide-toggle>
       <div fxFlex></div>
       <button (click)="cancel()" id="cancel-button" mat-button>Cancel</button>
-      <button
-              (click)="createOffer()"
+      <button (click)="createOffer()"
               [class.create-button-disabled]="checkForErrors()"
               [disabled]="checkForErrors()"
               class="create-button-active"
-              mat-button
-      >Create
+              id="createButton"
+              mat-button>
+        Create
       </button>
     </mat-card-actions>
   </mat-card>

@@ -33,7 +33,7 @@ describe('BidService', () => {
         .and.callFake(mockLocalStorage.removeItem);
     spyOn(localStorage, 'clear')
         .and.callFake(mockLocalStorage.clear);
-  })
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -84,20 +84,20 @@ describe('BidService', () => {
   it('expects service to fetch data', inject([HttpTestingController, BidService],
       (httpMock: HttpTestingController, bidService: BidService) => {
         localStorage.setItem('token', JSON.stringify({
-          access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIxOTUyMjA4NzgsInVzZXJfbmFtZSI6ImRldkBkZXYuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRFZFUlRJU0VSIiwiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiJiZTMxMTBkMC1hZmYyLTRmODQtODhiMS00ZmUwMjE1YzRiMTIiLCJjbGllbnRfaWQiOiJhZGVyX2FwaSIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.UVHefCfMR8U09oK7t_T1wcSPAQbf4NUFmAHqwiLQZeM',
-          expires_in: 604799999,
-          jti: 'be3110d0-aff2-4f84-88b1-4fe0215c4b12',
-          refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJkZXZAZGV2LmNvbSIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il0sImF0aSI6ImJlMzExMGQwLWFmZjItNGY4NC04OGIxLTRmZTAyMTVjNGIxMiIsImV4cCI6MjE5NTIyMDg3OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRFZFUlRJU0VSIiwiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI0NzQ0YTYzMC01NjI2LTQ2MjQtYmQ0NS01MTUyNjkzZWM4ZWMiLCJjbGllbnRfaWQiOiJhZGVyX2FwaSJ9.7mhSB5w-WMSjWjT1GT2DYd98GHl4R0ocwHP0jMh5aag',
-          scope: "read write trust",
-          token_type: "bearer"
+          access_token: 'mock',
+          expires_in: 9999,
+          jti: 'mock',
+          refresh_token: 'mock',
+          scope: "mock mock mock",
+          token_type: "mock"
         }));
 
-        bidService.getBidByUserEmailAndOfferId('user@user.com', 6).subscribe(
+        bidService.getBidByUserEmailAndOfferId('test@test.com', 6).subscribe(
             result => {
               expect(result.offerId).toBe(6);
-              expect(result.userEmail).toBe('user@user.com');
+              expect(result.userEmail).toBe('test@test.com');
 
-              const req = httpMock.expectOne('http:localhost:8080/rest/bid/4');
+              const req = httpMock.expectOne('http:mockland:8080/test/bid/4');
               expect(req.request.method).toEqual('GET');
 
               req.flush({data: result});

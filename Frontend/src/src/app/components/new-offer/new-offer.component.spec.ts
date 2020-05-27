@@ -1,15 +1,20 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {NewOfferComponent} from './new-offer.component';
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
-import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
+import {CUSTOM_ELEMENTS_SCHEMA, DebugElement, NO_ERRORS_SCHEMA} from "@angular/core";
 import {Router} from "@angular/router";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RouterTestingModule} from "@angular/router/testing";
+import {By} from "@angular/platform-browser";
+import {Offer} from "../../model/offer/offer";
+import {Observable} from "rxjs";
 
 describe('NewOfferComponent', () => {
   let component: NewOfferComponent;
   let fixture: ComponentFixture<NewOfferComponent>;
+  let debugElement: DebugElement;
+  let httpClientSpy: { post: jasmine.Spy };
 
   beforeAll(() => {
     let store = {};
@@ -38,12 +43,12 @@ describe('NewOfferComponent', () => {
         .and.callFake(mockLocalStorage.clear);
 
     localStorage.setItem('token', JSON.stringify({
-      access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIxOTUyMjA4NzgsInVzZXJfbmFtZSI6ImRldkBkZXYuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRFZFUlRJU0VSIiwiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiJiZTMxMTBkMC1hZmYyLTRmODQtODhiMS00ZmUwMjE1YzRiMTIiLCJjbGllbnRfaWQiOiJhZGVyX2FwaSIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19.UVHefCfMR8U09oK7t_T1wcSPAQbf4NUFmAHqwiLQZeM',
-      expires_in: 604799999,
-      jti: 'be3110d0-aff2-4f84-88b1-4fe0215c4b12',
-      refresh_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJkZXZAZGV2LmNvbSIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il0sImF0aSI6ImJlMzExMGQwLWFmZjItNGY4NC04OGIxLTRmZTAyMTVjNGIxMiIsImV4cCI6MjE5NTIyMDg3OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRFZFUlRJU0VSIiwiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI0NzQ0YTYzMC01NjI2LTQ2MjQtYmQ0NS01MTUyNjkzZWM4ZWMiLCJjbGllbnRfaWQiOiJhZGVyX2FwaSJ9.7mhSB5w-WMSjWjT1GT2DYd98GHl4R0ocwHP0jMh5aag',
-      scope: "read write trust",
-      token_type: "bearer"
+      access_token: 'mock',
+      expires_in: 999,
+      jti: 'mock',
+      refresh_token: 'mock',
+      scope: "mock mock mock",
+      token_type: "mock"
     }));
 
     localStorage.setItem('current_user', JSON.stringify({
@@ -56,9 +61,11 @@ describe('NewOfferComponent', () => {
       token: "mock",
       token_expiration: 999
     }));
-  })
+  });
 
   beforeEach(async(() => {
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+
     TestBed.configureTestingModule({
       declarations: [NewOfferComponent],
       providers: [
@@ -85,4 +92,50 @@ describe('NewOfferComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('Create button should be disabled when required fields are not set', async(() => {
+    debugElement = fixture.debugElement.query(By.css('#createButton'));
+    expect(debugElement.nativeElement.disabled).toBe(true);
+  }));
+
+  it('should return the newly created offer', fakeAsync(() => {
+    const expectedResponse: Offer = {
+      advertisementFormats: [],
+      advertisementReview: false,
+      assigneeName: "mock",
+      bids: [],
+      categories: [],
+      compensation: component.compensation.value,
+      description: component.offerDescription.value,
+      expireDate: component.offerExpiryDate.value,
+      files: [],
+      freeProductSample: false,
+      id: 0,
+      name: component.offerName.value
+    }
+
+    component.offerName.setValue("mockName");
+    component.offerDescription.setValue("offerDescription");
+    component.offerExpiryDate.setValue(Date.now());
+    component.compensation.setValue("mockCompoensation");
+
+    executeCreateOfferRequest(expectedResponse);
+  }));
+
+  const executeCreateOfferRequest = (expectedResponse: Offer) => {
+    fixture.detectChanges();
+
+    expect(component.offerName.hasError('required') &&
+        component.offerExpiryDate.hasError('required') &&
+        component.offerDescription.hasError('required') &&
+        component.compensation.hasError('required')).toBe(false);
+
+    httpClientSpy.post.and.returnValue(new Observable<Offer>(observer => {
+      observer.next(expectedResponse);
+      observer.complete();
+    }));
+
+    component.createOffer();
+    tick(1000);
+  };
 });
