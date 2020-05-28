@@ -30,7 +30,7 @@ export class BrowseOffersComponent implements OnInit {
   offers: OfferViewModel[] = this.defaultOffer;
   searchValue: string;
 
-  columnsToDisplay = ['image', 'name', 'description', 'categories', 'status'];
+  columnsToDisplay = ['image', 'name', 'categories', 'status'];
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;

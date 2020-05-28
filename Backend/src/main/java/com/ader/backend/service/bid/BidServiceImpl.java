@@ -119,8 +119,6 @@ public class BidServiceImpl implements BidService {
                     bidOffer.setFreeProductSample(managedBid.getFreeProductSample());
                 }
             }
-
-            bidRepository.delete(managedBid);
         });
 
         offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED);

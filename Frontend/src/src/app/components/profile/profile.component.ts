@@ -7,6 +7,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {Role} from "../../model/role/role.enum";
 import {UserViewModel} from "../../model/user/user-view-model";
 import {ActivatedRoute} from "@angular/router";
+import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,8 @@ export class ProfileComponent implements OnInit {
   completedOffers: Offer[] = [];
   userCreatedOffers: Offer[] = [];
 
-  columnsToDisplay = ['name', 'author', 'viewDetails'];
+  userColumnsToDisplay = ['name', 'author', 'offerStatus'];
+  advertiserColumnsToDisplay = ['name', 'status'];
   userBidDataSource: MatTableDataSource<Offer>;
   assignedOffersDataSource: MatTableDataSource<Offer>;
   completedOffersDataSource: MatTableDataSource<Offer>;
@@ -147,6 +149,21 @@ export class ProfileComponent implements OnInit {
 
   isAdmin(): boolean {
     return this.hasRole(Role.ROLE_ADMIN)
+  }
+
+  isExpired(offer: any): boolean {
+    let currentDate = new Date(Date.now());
+    let offerExpirationDate = new Date(offer.expireDate);
+    let expired: boolean = false;
+
+    if (currentDate > offerExpirationDate) {
+      expired = true;
+    }
+    return expired;
+  }
+
+  isAssigned(offer: any): boolean {
+    return offer.offerStatus.toString() === OfferStatus[OfferStatus.ASSIGNED];
   }
 
   ngOnInit() {

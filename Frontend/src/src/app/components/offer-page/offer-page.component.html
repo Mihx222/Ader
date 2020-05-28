@@ -92,7 +92,7 @@
                   <td *matCellDef="let element" [attr.colspan]="columnsToDisplay.length" mat-cell>
                     <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
                          class="element-detail">
-                      <div style="display: flex; flex-direction: row;">
+                      <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
                         <div style="display: flex; flex-direction: column;">
                           <h2><strong>Bid:</strong></h2>
                           <span><strong>Author: </strong>{{element.userEmail}}</span>
@@ -216,14 +216,20 @@
 
             <div *ngIf="(existingBid | async) as newBid">
               <div *ngIf="newBid !== null" class="box">
-                <h2><strong>Your bid:</strong></h2>
-                <p><strong>Compensation: </strong>{{newBid.compensation}}</p>
-                <p><strong>Free product sample: </strong>{{newBid.freeProductSample ? 'Yes' : 'No'}}</p>
-                <h2><strong>Your persona:</strong></h2>
-                <p><strong>What do you do: </strong>{{newBid.persona.activity}}</p>
-                <p><strong>Who is your audience: </strong>{{newBid.persona.audience}}</p>
-                <p><strong>What are you selling: </strong>{{newBid.persona.sellingOrientation}}</p>
-                <p><strong>What are you core values: </strong>{{newBid.persona.values}}</p>
+                <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
+                  <div style="display: flex; flex-direction: column;">
+                    <h2><strong>Your bid:</strong></h2>
+                    <span><strong>Compensation: </strong>{{newBid.compensation}}</span>
+                    <span><strong>Free product sample: </strong>{{newBid.freeProductSample ? 'Yes' : 'No'}}</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; margin-left: 30px;">
+                    <h2><strong>Your persona:</strong></h2>
+                    <span><strong>What do you do: </strong>{{newBid.persona.activity}}</span>
+                    <span><strong>Who is your audience: </strong>{{newBid.persona.audience}}</span>
+                    <span><strong>What are you selling: </strong>{{newBid.persona.sellingOrientation}}</span>
+                    <span><strong>What are you core values: </strong>{{newBid.persona.values}}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </mat-tab>

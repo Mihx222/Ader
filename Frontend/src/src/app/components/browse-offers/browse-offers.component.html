@@ -30,14 +30,9 @@
     <ng-container matColumnDef="name">
       <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
       <td *matCellDef="let offer" mat-cell>
-        <p style="font-size: 18px;">{{offer.name}}<br><br></p>
+        <p style="font-size: 18px;"><a [routerLink]="offer.id">{{offer.name}}</a><br><br></p>
         <p><span>By: </span><span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span></p>
       </td>
-    </ng-container>
-
-    <ng-container matColumnDef="description">
-      <th *matHeaderCellDef mat-header-cell mat-sort-header>Description</th>
-      <td *matCellDef="let offer" mat-cell> {{offer.description}} </td>
     </ng-container>
 
     <ng-container matColumnDef="categories">
@@ -74,17 +69,11 @@
 
     <ng-container matColumnDef="status">
       <th *matHeaderCellDef mat-header-cell>Status</th>
-      <td *matCellDef="let offer" mat-cell>
+      <td *matCellDef="let offer" mat-cell style="text-align: center;">
         <mat-chip [class.blue-chip]="isAssigned(offer)" [class.red-chip]="isExpired(offer)" class="status-chip"
                   disableRipple>
           {{offer.offerStatus}}
         </mat-chip>
-
-        <div>
-          <button [routerLink]="offer.id" class="details-button" mat-flat-button routerLinkActive="active">
-            View details
-          </button>
-        </div>
       </td>
     </ng-container>
 

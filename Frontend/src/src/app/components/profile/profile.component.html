@@ -29,14 +29,14 @@
     </div>
 
     <div class="flex-column" style="flex-grow: 5; margin-left: 30px;">
-      <mat-tab-group dynamicHeight style="background-color: #444444;">
+      <mat-tab-group style="background-color: #444444;">
         <mat-tab *ngIf="isUser()" label="Offers you placed your bid on">
           <div class="mat-elevation-z8">
             <table #userBidSort="matSort" [dataSource]="userBidDataSource" mat-table matSort multiTemplateDataRows
                    style="width: 100%;">
               <ng-container matColumnDef="name">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
-                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+                <td *matCellDef="let offer" mat-cell><a [routerLink]="'/offers/' + offer.id">{{offer.name}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="author">
@@ -46,20 +46,18 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="viewDetails">
-                <th *matHeaderCellDef mat-header-cell></th>
+              <ng-container matColumnDef="offerStatus">
+                <th *matHeaderCellDef mat-header-cell>Offer status</th>
                 <td *matCellDef="let offer" mat-cell>
-                  <div>
-                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
-                            routerLinkActive="active">
-                      View details
-                    </button>
-                  </div>
+                  <mat-chip [class.blue-chip]="isAssigned(offer)" [class.red-chip]="isExpired(offer)" class="status-chip"
+                            disableRipple>
+                    {{offer.offerStatus}}
+                  </mat-chip>
                 </td>
               </ng-container>
 
-              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
-              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              <tr *matHeaderRowDef="userColumnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: userColumnsToDisplay" mat-row>
               </tr>
             </table>
 
@@ -76,7 +74,7 @@
                    style="width: 100%;">
               <ng-container matColumnDef="name">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
-                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+                <td *matCellDef="let offer" mat-cell><a [routerLink]="'/offers/' + offer.id">{{offer.name}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="author">
@@ -86,20 +84,8 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="viewDetails">
-                <th *matHeaderCellDef mat-header-cell></th>
-                <td *matCellDef="let offer" mat-cell>
-                  <div>
-                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
-                            routerLinkActive="active">
-                      View details
-                    </button>
-                  </div>
-                </td>
-              </ng-container>
-
-              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
-              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              <tr *matHeaderRowDef="['name', 'author']; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: ['name', 'author']" mat-row>
               </tr>
             </table>
 
@@ -116,7 +102,7 @@
                    style="width: 100%;">
               <ng-container matColumnDef="name">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
-                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+                <td *matCellDef="let offer" mat-cell><a [routerLink]="'/offers/' + offer.id">{{offer.name}}</a></td>
               </ng-container>
 
               <ng-container matColumnDef="author">
@@ -126,20 +112,18 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="viewDetails">
-                <th *matHeaderCellDef mat-header-cell></th>
+              <ng-container matColumnDef="offerStatus">
+                <th *matHeaderCellDef mat-header-cell>Offer status</th>
                 <td *matCellDef="let offer" mat-cell>
-                  <div>
-                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
-                            routerLinkActive="active">
-                      View details
-                    </button>
-                  </div>
+                  <mat-chip [class.blue-chip]="isAssigned(offer)" [class.red-chip]="isExpired(offer)" class="status-chip"
+                            disableRipple>
+                    {{offer.offerStatus}}
+                  </mat-chip>
                 </td>
               </ng-container>
 
-              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
-              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              <tr *matHeaderRowDef="userColumnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: userColumnsToDisplay" mat-row>
               </tr>
             </table>
 
@@ -156,30 +140,23 @@
                    style="width: 100%;">
               <ng-container matColumnDef="name">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
-                <td *matCellDef="let offer" mat-cell>{{offer.name}}</td>
+                <td *matCellDef="let offer" mat-cell><a [routerLink]="'/offers/' + offer.id">{{offer.name}}</a></td>
               </ng-container>
 
-              <ng-container matColumnDef="author">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>Author</th>
-                <td *matCellDef="let offer" mat-cell>
-                  <span class="author-name"><a routerLink=".">{{offer.authorName}}</a></span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="viewDetails">
+              <ng-container matColumnDef="status">
                 <th *matHeaderCellDef mat-header-cell></th>
                 <td *matCellDef="let offer" mat-cell>
                   <div>
-                    <button [routerLink]="'/offers/' + offer.id" class="details-button" mat-flat-button
-                            routerLinkActive="active">
-                      View details
-                    </button>
+                    <mat-chip [class.blue-chip]="isAssigned(offer)" [class.red-chip]="isExpired(offer)" class="status-chip"
+                              disableRipple>
+                      {{offer.offerStatus}}
+                    </mat-chip>
                   </div>
                 </td>
               </ng-container>
 
-              <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
-              <tr *matRowDef="let offer; columns: columnsToDisplay" mat-row>
+              <tr *matHeaderRowDef="advertiserColumnsToDisplay; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let offer; columns: advertiserColumnsToDisplay" mat-row>
               </tr>
             </table>
 
