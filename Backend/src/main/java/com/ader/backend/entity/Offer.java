@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -32,10 +33,18 @@ public class Offer extends BaseEntity {
     @ToString.Exclude
     private User author;
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToMany
+    @JoinTable(
+            name = "offer_user",
+            joinColumns = {
+                    @JoinColumn(name = "offer_id", referencedColumnName = "id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+            }
+    )
     @ToString.Exclude
-    private User assignee;
+    private Set<User> assignees;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
     @ToString.Exclude

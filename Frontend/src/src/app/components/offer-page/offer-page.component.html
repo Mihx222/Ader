@@ -82,7 +82,9 @@
                     <mat-checkbox (change)="$event ? selection.toggle(row) : null"
                                   (click)="$event.stopPropagation()"
                                   [aria-label]="checkboxLabel(row)"
-                                  [checked]="selection.isSelected(row)">
+                                  [checked]="selection.isSelected(row)"
+                                  [disabled]="!bisIsNew(row)"
+                    >
                     </mat-checkbox>
                   </td>
                 </ng-container>
@@ -119,6 +121,16 @@
                 <ng-container matColumnDef="compensation">
                   <th *matHeaderCellDef mat-header-cell mat-sort-header>Compensation</th>
                   <td *matCellDef="let bid" mat-cell>{{bid.compensation}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="bidStatus">
+                  <th *matHeaderCellDef mat-header-cell style="text-align: center;">Status</th>
+                  <td *matCellDef="let bid" mat-cell style="text-align: center;">
+                    <mat-chip [class.blue-chip]="bisIsNew(bid)" class="status-chip"
+                              disableRipple>
+                      {{bid.bidStatus}}
+                    </mat-chip>
+                  </td>
                 </ng-container>
 
                 <tr *matHeaderRowDef="columnsToDisplay; sticky: true" mat-header-row></tr>
@@ -221,6 +233,13 @@
                     <h2><strong>Your bid:</strong></h2>
                     <span><strong>Compensation: </strong>{{newBid.compensation}}</span>
                     <span><strong>Free product sample: </strong>{{newBid.freeProductSample ? 'Yes' : 'No'}}</span>
+                    <span>
+                      <strong>Bid status: </strong>
+                      <mat-chip [class.blue-chip]="bisIsNew(newBid)" class="status-chip"
+                                disableRipple>
+                      {{newBid.bidStatus}}
+                    </mat-chip>
+                    </span>
                   </div>
                   <div style="display: flex; flex-direction: column; margin-left: 30px;">
                     <h2><strong>Your persona:</strong></h2>
@@ -262,6 +281,16 @@
             <mat-chip class="hours-chip" disableRipple style="margin-top: 10px;">
               {{timeToDisplay}} hours
             </mat-chip>
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-card class="shadow" style="margin-top: 20px;" *ngIf="isAuthor()">
+        <mat-card-header>
+          <mat-card-title>
+            Assigned users
+          </mat-card-title>
+          <mat-card-subtitle>
+
           </mat-card-subtitle>
         </mat-card-header>
       </mat-card>

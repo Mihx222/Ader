@@ -109,7 +109,7 @@ export class NewOfferComponent implements OnInit {
     this.newOffer = {
       id: null,
       name: this.offerName.value,
-      assigneeName: null,
+      assigneeNames: null,
       bids: [],
       categories: this.selectedCategories.value === null ? [] : this.selectedCategories.value.map(category => {
         return {name: category}

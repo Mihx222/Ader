@@ -31,6 +31,8 @@
 
             <column name="compensation" type="VARCHAR(64)"/>
 
+            <column name="bid_status" type="VARCHAR(16)" defaultValue="NEW"/>
+
             <column name="created" type="timestamp with time zone" defaultValueComputed="current_timestamp">
                 <constraints nullable="false"/>
             </column>

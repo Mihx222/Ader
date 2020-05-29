@@ -1,6 +1,7 @@
 package com.ader.backend.rest.dto;
 
 import com.ader.backend.entity.Bid;
+import com.ader.backend.entity.BidStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class BidDto {
     private Boolean acceptInitialRequirements;
     private Boolean freeProductSample;
     private String compensation;
+    private BidStatus bidStatus;
 
     public static List<BidDto> toDto(@NotNull List<Bid> bids) {
         return bids.stream().map(BidDto::toDto).collect(Collectors.toList());
@@ -33,6 +35,7 @@ public class BidDto {
                 .acceptInitialRequirements(bid.getAcceptInitialRequirements())
                 .freeProductSample(bid.getFreeProductSample())
                 .compensation(bid.getCompensation())
+                .bidStatus(bid.getBidStatus())
                 .build();
     }
 }

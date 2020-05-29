@@ -3,6 +3,7 @@ package com.ader.backend.rest.dto;
 import com.ader.backend.entity.Offer;
 import com.ader.backend.entity.OfferStatus;
 import com.ader.backend.entity.Status;
+import com.ader.backend.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class OfferDto {
     private String description;
     private String expireDate;
     private String authorName;
-    private String assigneeName;
+    private List<String> assigneeNames;
     private List<CategoryDto> categories;
     private List<FileDto> files;
     private List<BidDto> bids;
@@ -43,7 +44,7 @@ public class OfferDto {
                         offer.getExpireDate().getTime())
                 )
                 .authorName(offer.getAuthor().getBrandName())
-                .assigneeName(offer.getAssignee() != null ? offer.getAssignee().getEmail() : null)
+                .assigneeNames(offer.getAssignees() == null ? null : offer.getAssignees().stream().map(User::getEmail).collect(Collectors.toList()))
                 .categories(CategoryDto.toDto(offer.getCategories()))
                 .files(FileDto.toDto(offer.getFiles()))
                 .bids(BidDto.toDto(offer.getBids()))

@@ -17,7 +17,7 @@ describe('OfferPageComponent', () => {
     let mockData: Offer = {
       advertisementFormats: [],
       advertisementReview: false,
-      assigneeName: "mock",
+      assigneeNames: [],
       bids: [],
       categories: [],
       compensation: "mock",

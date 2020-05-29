@@ -15,7 +15,7 @@ export class BrowseOffersComponent implements OnInit {
   defaultOffer: OfferViewModel[] = [{
     advertisementFormats: [],
     advertisementReview: false,
-    assigneeName: "default",
+    assigneeNames: [],
     bids: [],
     categories: [],
     compensation: "default",

@@ -14,6 +14,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {SelectionModel} from "@angular/cdk/collections";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
+import {BidStatus} from "../../model/bidstatus/bid-status";
 
 @Component({
   selector: 'app-offer-page',
@@ -30,7 +31,7 @@ import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 export class OfferPageComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<BidViewModel>;
   bids: BidViewModel[] = [];
-  columnsToDisplay = ['select', 'author', 'compensation'];
+  columnsToDisplay = ['select', 'author', 'compensation', 'bidStatus'];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   matcher = new CustomErrorStateMatcher();
@@ -178,7 +179,8 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
         audience: this.whoIsYourAudience.value,
         sellingOrientation: this.whatAreYouSelling.value,
         values: this.coreValues.value
-      }
+      },
+      bidStatus: null
     }
 
     this.bidService.placeBid(newBid).subscribe(
@@ -194,5 +196,9 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  bisIsNew(bid: Bid) {
+    return bid.bidStatus === BidStatus[BidStatus.NEW];
   }
 }

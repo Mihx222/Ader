@@ -4,7 +4,7 @@ import {UserService} from './user.service';
 import {HttpClient, HttpHandler} from "@angular/common/http";
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
-import {HttpTestingController} from "@angular/common/http/testing";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('UserService', () => {
   beforeAll(() => {
@@ -50,7 +50,8 @@ describe('UserService', () => {
       JwtHelperService,
       {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    imports: [HttpClientTestingModule]
   }));
 
   it('should be created', () => {

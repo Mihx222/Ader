@@ -1,4 +1,5 @@
 import {PersonaViewModel} from "../persona/persona-view-model";
+import {BidStatus} from "../bidstatus/bid-status";
 
 export interface Bid {
   id?: number;
@@ -8,4 +9,5 @@ export interface Bid {
   freeProductSample: boolean;
   acceptInitialRequirements: boolean;
   compensation?: string;
+  bidStatus: BidStatus;
 }

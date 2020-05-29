@@ -110,14 +110,10 @@ public class BidServiceImpl implements BidService {
             } else {
                 bidOffer = offerService.getOffer(managedBid.getOffer().getId());
                 bidUser = userService.getUser(managedBid.getUser().getId());
-                bidOffer.setAssignee(bidUser);
+                bidOffer.getAssignees().add(bidUser);
+                managedBid.setBidStatus(BidStatus.ACCEPTED);
 
                 if (offerId.get() == null) offerId.set(bidOffer.getId());
-
-                if (!managedBid.getAcceptInitialRequirements()) {
-                    bidOffer.setCompensation(managedBid.getCompensation());
-                    bidOffer.setFreeProductSample(managedBid.getFreeProductSample());
-                }
             }
         });
 

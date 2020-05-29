@@ -11,7 +11,7 @@ export interface Offer {
   name: string;
   description: string;
   authorName?: string;
-  assigneeName: string;
+  assigneeNames: string[];
   bids: BidViewModel[];
   categories: CategoryViewModel[];
   files: FileViewModel[];

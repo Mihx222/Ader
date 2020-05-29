@@ -33,4 +33,7 @@ public class Bid extends BaseEntity {
 
     @Column
     private String compensation;
+
+    @Enumerated(EnumType.STRING)
+    private BidStatus bidStatus = BidStatus.NEW;
 }

@@ -189,8 +189,12 @@
             <column name="description" value="Very interesting description of a very well defined product"/>
             <column name="expire_date" valueComputed="current_timestamp"/>
             <column name="author_id" valueSequenceCurrent="user_seq"/>
-            <column name="assignee_id" value="1"/>
             <column name="compensation" value="$30 per post"/>
+        </insert>
+
+        <insert tableName="offer_user">
+            <column name="offer_id" valueSequenceCurrent="offer_seq"/>
+            <column name="user_id" value="1"/>
         </insert>
 
         <insert tableName="offer_category">

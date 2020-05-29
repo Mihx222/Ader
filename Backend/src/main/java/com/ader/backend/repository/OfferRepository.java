@@ -24,14 +24,16 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     @Query(nativeQuery = true,
             value = "select o.* from offers o " +
-                    "join users u on u.id = o.assignee_id " +
+                    "join offer_user ou on ou.offer_id = o.id " +
+                    "join users u on u.id = ou.user_id " +
                     "where u.email = ?1 " +
                     "and not o.offer_status = 'EXPIRED'")
     List<Offer> findAllByAssignedUser(String userEmail);
 
     @Query(nativeQuery = true,
             value = "select o.* from offers o " +
-                    "join users u on o.assignee_id = u.id " +
+                    "join offer_user ou on ou.offer_id = o.id " +
+                    "join users u on u.id = ou.user_id " +
                     "where u.email = ?1 and " +
                     "o.offer_status = 'COMPLETED'")
     List<Offer> findAllCompletedForUser(String userEmail);

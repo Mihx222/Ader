@@ -102,7 +102,7 @@ describe('NewOfferComponent', () => {
     const expectedResponse: Offer = {
       advertisementFormats: [],
       advertisementReview: false,
-      assigneeName: "mock",
+      assigneeNames: [],
       bids: [],
       categories: [],
       compensation: component.compensation.value,
