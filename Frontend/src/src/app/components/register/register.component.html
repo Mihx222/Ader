@@ -4,100 +4,177 @@
       <mat-card-title>Register</mat-card-title>
     </mat-card-header>
 
-    <form class="simple-form">
+    <mat-tab-group (selectedIndexChange)="selected.setValue($event)" [selectedIndex]="selected.value" color="accent"
+                   dynamicHeight>
+      <mat-tab label="Account type">
+        <mat-button-toggle-group [(ngModel)]="accountType" id="registrationToggle" style="margin-top: 15px;">
+          <mat-button-toggle value="influencer">
+            <mat-icon>account_circle</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="advertiser">
+            <mat-icon>supervised_user_circle</mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        <span style="margin-left: 45px;"><strong>Influencer</strong></span>
+        <span style="margin-left: 85px;"><strong>Advertiser</strong></span>
 
-      <mat-card-content>
-        <mat-form-field class="full-width" style="margin-top: 5px;">
-          <input
-                  [errorStateMatcher]="matcher"
-                  [formControl]="usernameFormControl"
-                  matInput
-                  placeholder="Username"
-                  required
-          >
-          <mat-hint></mat-hint>
-          <mat-error *ngIf="usernameFormControl.hasError('required')">
-            Username is <strong>required!</strong>
-          </mat-error>
-        </mat-form-field>
+        <button (click)="nextTab()"
+                [class.next-tab-button-disabled]="accountType === undefined"
+                [disabled]="accountType === undefined"
+                class="next-tab-button-active btn-block"
+                id="nextTabButton"
+                mat-button
+                style="margin-top: 20px;">
+          Next
+        </button>
+      </mat-tab>
 
-        <mat-form-field class="full-width">
-          <input
-                  [errorStateMatcher]="matcher"
-                  [formControl]="firstNameFormControl"
-                  matInput
-                  placeholder="First name"
-                  required
-          >
-          <mat-hint></mat-hint>
-          <mat-error *ngIf="firstNameFormControl.hasError('required')">
-            First name is <strong>required!</strong>
-          </mat-error>
-        </mat-form-field>
+      <mat-tab [disabled]="accountType === undefined" label="Credentials">
+        <form class="simple-form">
+          <mat-card-content *ngIf="asInfluencer()" style="margin-top: 15px;">
+            <mat-form-field class="full-width">
+              <input [formControl]="influencerEmailFormControl"
+                     matInput
+                     placeholder="Email"
+                     required>
+              <mat-error
+                      *ngIf="influencerEmailFormControl.hasError('email') && !influencerEmailFormControl.hasError('required')">
+                Please enter a valid email address!
+              </mat-error>
+              <mat-error *ngIf="influencerEmailFormControl.hasError('required')">
+                Email is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <input
-                  [errorStateMatcher]="matcher"
-                  [formControl]="lastNameFormControl"
-                  matInput
-                  placeholder="Last name"
-                  required
-          >
-          <mat-hint></mat-hint>
-          <mat-error *ngIf="lastNameFormControl.hasError('required')">
-            Last name is <strong>required!</strong>
-          </mat-error>
-        </mat-form-field>
+            <mat-form-field class="full-width" style="margin-top: 5px;">
+              <input [errorStateMatcher]="matcher"
+                     [formControl]="influencerPasswordFormControl"
+                     autocomplete="off"
+                     matInput
+                     placeholder="Password"
+                     required
+                     type="password">
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="influencerPasswordFormControl.hasError('required')">
+                Password is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <input
-                  [formControl]="emailFormControl"
-                  matInput
-                  placeholder="Email"
-                  required
-          >
-          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address!
-          </mat-error>
-          <mat-error *ngIf="emailFormControl.hasError('required')">
-            Email is <strong>required!</strong>
-          </mat-error>
-        </mat-form-field>
+            <mat-form-field class="full-width" style="margin-top: 5px;">
+              <input [errorStateMatcher]="matcher"
+                     [formControl]="influencerConfirmPasswordFormControl"
+                     [pattern]="influencerPasswordFormControl.value"
+                     autocomplete="off"
+                     matInput
+                     placeholder="Confirm password"
+                     required
+                     type="password">
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="influencerConfirmPasswordFormControl.hasError('required')">
+                Please confirm your password!
+              </mat-error>
+              <mat-error *ngIf="influencerConfirmPasswordFormControl.hasError('pattern')">
+                Passwords do not match!
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field class="full-width" style="margin-top: 5px;">
-          <input
-                  [errorStateMatcher]="matcher"
-                  [formControl]="passwordFormControl"
-                  autocomplete="off"
-                  matInput
-                  placeholder="Password"
-                  required
-                  type="password"
-          >
-          <mat-hint></mat-hint>
-          <mat-error *ngIf="passwordFormControl.hasError('required')">
-            Password is <strong>required!</strong>
-          </mat-error>
-        </mat-form-field>
+            <a (click)="register()"
+               [disabled]="
+        influencerPasswordFormControl.hasError('required') ||
+        influencerEmailFormControl.hasError('required') ||
+        influencerEmailFormControl.hasError('email') ||
+        influencerConfirmPasswordFormControl.hasError('required') ||
+        influencerConfirmPasswordFormControl.hasError('pattern')"
+               class="btn-block"
+               color="accent"
+               mat-stroked-button
+               style="margin-top: 15px;">
+              Register
+            </a>
+          </mat-card-content>
 
-      </mat-card-content>
+          <mat-card-content *ngIf="asAdvertiser()" style="margin-top: 15px;">
+            <mat-form-field class="full-width">
+              <input [formControl]="advertiserEmailFormControl"
+                     matInput
+                     placeholder="Email"
+                     required>
+              <mat-error
+                      *ngIf="advertiserEmailFormControl.hasError('email') && !advertiserEmailFormControl.hasError('required')">
+                Please enter a valid email address!
+              </mat-error>
+              <mat-error *ngIf="advertiserEmailFormControl.hasError('required')">
+                Email is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
 
-      <a
-              [disabled]="
-        usernameFormControl.hasError('required') ||
-        passwordFormControl.hasError('required') ||
-        firstNameFormControl.hasError('required') ||
-        lastNameFormControl.hasError('required') ||
-        emailFormControl.hasError('required') ||
-        emailFormControl.hasError('email')"
-              class="btn-block"
-              color="accent"
-              mat-stroked-button
-      >
-        Register
-      </a>
-      <a class="btn-block" mat-stroked-button routerLink="" style="margin-top: 10px;">Cancel</a>
+            <mat-form-field class="full-width">
+              <input [formControl]="brandNameFormControl"
+                     matInput
+                     placeholder="Brand name"
+                     required>
+              <mat-error *ngIf="brandNameFormControl.hasError('required')">
+                Brand name is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
 
-    </form>
+            <mat-form-field class="full-width">
+              <input [formControl]="brandWebsiteFormControl"
+                     matInput
+                     placeholder="Brand Website">
+            </mat-form-field>
+
+            <mat-form-field class="full-width" style="margin-top: 5px;">
+              <input [errorStateMatcher]="matcher"
+                     [formControl]="advertiserPasswordFormControl"
+                     autocomplete="off"
+                     matInput
+                     placeholder="Password"
+                     required
+                     type="password">
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="advertiserPasswordFormControl.hasError('required')">
+                Password is <strong>required!</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="full-width" style="margin-top: 5px;">
+              <input [errorStateMatcher]="matcher"
+                     [formControl]="advertiserConfirmPasswordFormControl"
+                     [pattern]="advertiserPasswordFormControl.value"
+                     autocomplete="off"
+                     matInput
+                     placeholder="Confirm password"
+                     required
+                     type="password">
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="advertiserConfirmPasswordFormControl.hasError('required')">
+                Please confirm your password!
+              </mat-error>
+              <mat-error *ngIf="advertiserConfirmPasswordFormControl.hasError('pattern')">
+                Passwords do not match!
+              </mat-error>
+            </mat-form-field>
+
+            <a (click)="register()"
+               [disabled]="
+        advertiserPasswordFormControl.hasError('required') ||
+        advertiserEmailFormControl.hasError('required') ||
+        advertiserEmailFormControl.hasError('email') ||
+        brandNameFormControl.hasError('required') ||
+        advertiserConfirmPasswordFormControl.hasError('required') ||
+        advertiserConfirmPasswordFormControl.hasError('pattern')"
+               class="btn-block"
+               color="accent"
+               mat-stroked-button
+               style="margin-top: 15px;">
+              Register
+            </a>
+          </mat-card-content>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+
+    <a class="btn-block" mat-stroked-button routerLink="" style="margin-top: 10px;">Cancel</a>
   </mat-card>
 </div>

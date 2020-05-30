@@ -5,7 +5,6 @@ html, body {
 }
 
 body {
-  /*background-image: url(https://lh4.googleusercontent.com/-XplyTa1Za-I/VMSgIyAYkHI/AAAAAAAADxM/oL-rD6VP4ts/w1184-h666/Android-Lollipop-wallpapers-Google-Now-Wallpaper-2.png);*/
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -23,7 +22,22 @@ body {
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
 }
 
+#registrationToggle ::ng-deep .mat-icon {
+  height: 135px !important;
+  width: 135px !important;
+  font-size: 135px !important;
+}
+
+::ng-deep .mat-tab-label, .mat-tab-link {
+  width: 100%;
+  color: black;
+}
+
 .login-wrapper {
+  background-image: url(src/assets/img/login-background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   height: 100%;
 }
 
@@ -40,7 +54,7 @@ body {
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   z-index: 5;
-  max-width: 330px;
+  max-width: 460px;
 }
 
 .box.back {
@@ -101,4 +115,19 @@ body {
 
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
   padding: 0.8375em 0;
+}
+
+#next-tab-button {
+  background-color: #fd4b59;
+  color: white;
+}
+
+.next-tab-button-active {
+  background-color: #fd4b59;
+  color: white;
+}
+
+.next-tab-button-disabled {
+  background-color: #999999;
+  color: black;
 }

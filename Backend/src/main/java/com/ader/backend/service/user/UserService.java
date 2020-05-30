@@ -7,21 +7,21 @@ import java.util.List;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+  List<User> getAllUsers();
 
-    User getUser(String email);
+  User getUser(String email);
 
-    User getUser(Long id);
+  User getUser(Long id);
 
-    User register(User user);
+  User register(User user, String role);
 
-    User updateUser(String email, User user);
+  User updateUser(String email, User user);
 
-    String deleteUser(String email);
+  String deleteUser(String email);
 
-    boolean isAuthenticated(String email, Authentication authentication);
+  boolean isAuthenticated(String email, Authentication authentication);
 
-    Authentication getAuthentication();
+  Authentication getAuthentication();
 
-    User getAuthenticatedUser();
+  User getAuthenticatedUser();
 }

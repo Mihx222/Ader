@@ -44,7 +44,8 @@ import {DashboardComponent} from './components/admin/dashboard/dashboard.compone
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {CategoriesComponent} from './components/admin/categories/categories.component';
-import { AdvertisementFormatsComponent } from './components/admin/advertisement-formats/advertisement-formats.component';
+import {AdvertisementFormatsComponent} from './components/admin/advertisement-formats/advertisement-formats.component';
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { AdvertisementFormatsComponent } from './components/admin/advertisement-
     MatDividerModule,
     MatCheckboxModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatButtonToggleModule
   ],
   providers: [
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},

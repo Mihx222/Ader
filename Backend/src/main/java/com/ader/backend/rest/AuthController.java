@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @PostMapping("register")
-    public ResponseEntity<UserDto> register(@RequestBody User user) {
-        log.info("New registration request with email: [{}]", user.getEmail());
-        return ResponseEntity.ok(UserDto.toDto(userService.register(user)));
-    }
+  @PostMapping("register")
+  public ResponseEntity<UserDto> register(@RequestBody User user, @RequestParam String role) {
+    log.info("New registration request with email: [{}]", user.getEmail());
+    return ResponseEntity.ok(UserDto.toDto(userService.register(user, role)));
+  }
 }

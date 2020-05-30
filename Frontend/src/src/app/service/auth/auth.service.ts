@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserSharedDataService} from "../user/user-shared-data.service";
+import {Observable} from "rxjs";
+import {User} from "../../model/user/user";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,10 @@ export class AuthService {
       'Content-type': 'application/x-www-form-urlencoded'
     };
     return this.http.post<any>(this.TOKEN_URL, loginPayload.toString(), {headers});
+  }
+
+  register(user: User, role: string): Observable<User> {
+    return this.http.post<User>(this.BASE_URL + '/auth/register?role=' + role, user);
   }
 
   logout() {
