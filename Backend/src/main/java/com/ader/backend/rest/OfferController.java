@@ -66,6 +66,14 @@ public class OfferController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
+    @PostMapping("deassign")
+    public ResponseEntity updateOffer(@RequestParam String assigneeName, @RequestParam String offerId) {
+        log.info("Requested deassigning user with email: [{}], from offer with id: [{}]", assigneeName, offerId);
+        offerService.deassignFromOffer(assigneeName, offerId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteOffer(@PathVariable Long id) {
         log.info("Requested deleting offer with id: [{}]", id);

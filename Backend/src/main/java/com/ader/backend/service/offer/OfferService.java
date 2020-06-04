@@ -23,6 +23,8 @@ public interface OfferService {
 
     Offer updateOffer(Long id, Offer offer);
 
+    void deassignFromOffer(String assigneeName, String offerId);
+
     void updateOfferStatus(Long offerId, OfferStatus offerStatus);
 
     String deleteOffer(Long id);

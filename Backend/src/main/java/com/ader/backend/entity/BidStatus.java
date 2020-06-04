@@ -3,7 +3,8 @@ package com.ader.backend.entity;
 public enum BidStatus {
 
   NEW("NEW"),
-  ACCEPTED("ACCEPTED");
+  ACCEPTED("ACCEPTED"),
+  DECLINED("DECLINED");
 
   private final String name;
 

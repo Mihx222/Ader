@@ -115,9 +115,9 @@ describe('NewOfferComponent', () => {
     }
 
     component.offerName.setValue("mockName");
-    component.offerDescription.setValue("offerDescription");
+    component.offerDescription.setValue("mockDescription");
     component.offerExpiryDate.setValue(Date.now());
-    component.compensation.setValue("mockCompoensation");
+    component.compensation.setValue("mockCompensation");
 
     executeCreateOfferRequest(expectedResponse);
   }));

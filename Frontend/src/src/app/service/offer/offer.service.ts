@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class OfferService {
 
-  userURL = this.authService.BASE_URL + '/';
+  offerUrl = this.authService.BASE_URL + '/';
   token;
 
   constructor(private authService: AuthService, private http: HttpClient) {
@@ -18,7 +18,12 @@ export class OfferService {
   }
 
   getOffer(id: number): Observable<Offer> {
-    return this.http.get<Offer>(this.userURL + 'offer/' + id + this.token);
+    return this.http.get<Offer>(this.offerUrl + 'offer/' + id + this.token);
+  }
+
+  deassignFromOffer(assigneeName: string, offerId: string): Observable<any> {
+    return this.http.post(this.offerUrl + 'offer/deassign?assigneeName=' + assigneeName +
+    '&offerId=' + offerId + '&access_token=' + JSON.parse(localStorage.getItem('token')).access_token, null);
   }
 
   getOfferByUserEmail(
@@ -28,7 +33,7 @@ export class OfferService {
       completed?: boolean
   ): Observable<Offer[]> {
     return this.http.get<Offer[]>(
-        this.userURL + 'offer/user/' + userEmail + '?' +
+        this.offerUrl + 'offer/user/' + userEmail + '?' +
         (hasBids === false ? '' : ('hasBids=' + hasBids + '&')) +
         (assigned === false ? '' : ('assigned=' + assigned + '&')) +
         (completed === false ? '' : ('completed=' + completed + '&')) +
@@ -38,11 +43,11 @@ export class OfferService {
   }
 
   getOffers() {
-    return this.http.get<Offer[]>(this.userURL + 'offer' + this.token);
+    return this.http.get<Offer[]>(this.offerUrl + 'offer' + this.token);
   }
 
   createOffer(offer: Offer) {
-    return this.http.post<Offer>(this.userURL + 'offer/add?access_token=' +
+    return this.http.post<Offer>(this.offerUrl + 'offer/add?access_token=' +
         JSON.parse(localStorage.getItem('token')).access_token, offer);
   }
 }

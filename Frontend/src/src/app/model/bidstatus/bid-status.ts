@@ -1,3 +1,3 @@
 export enum BidStatus {
-  NEW = "NEW", ACCEPTED = "ACCEPTED"
+  NEW = "NEW", ACCEPTED = "ACCEPTED", DECLINED = "DECLINED"
 }

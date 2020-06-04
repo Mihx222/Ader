@@ -15,6 +15,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 import {BidStatus} from "../../model/bidstatus/bid-status";
+import {OfferService} from "../../service/offer/offer.service";
 
 @Component({
   selector: 'app-offer-page',
@@ -56,7 +57,8 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
 
   constructor(
       public activatedRoute: ActivatedRoute,
-      public bidService: BidService
+      public bidService: BidService,
+      public offerService: OfferService
   ) {
     this.offer = this.activatedRoute.snapshot.data['offer'];
     this.bids = this.offer.bids;
@@ -200,5 +202,24 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
 
   bisIsNew(bid: Bid) {
     return bid.bidStatus === BidStatus[BidStatus.NEW];
+  }
+
+  bidIsDeclined(bid: Bid) {
+    return bid.bidStatus === BidStatus[BidStatus.DECLINED];
+  }
+
+  deassignFromOffer(assigneeName: string): void {
+    this.offerService.deassignFromOffer(assigneeName, this.offer.id.toString()).subscribe(
+        result => {
+          this.offer.assigneeNames.splice(
+              this.offer.assigneeNames.findIndex(assignee => assignee === assigneeName),
+              1
+          );
+          this.offer.bids.find(bid => {return bid.userEmail === assigneeName;}).bidStatus = BidStatus.DECLINED;
+        },
+        error => {
+          console.log(error);
+        }
+    );
   }
 }

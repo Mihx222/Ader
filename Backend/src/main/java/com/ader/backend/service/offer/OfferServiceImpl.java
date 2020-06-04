@@ -4,12 +4,14 @@ import com.ader.backend.entity.*;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferRepository;
 import com.ader.backend.service.advertisementformat.AdvertisementFormatService;
+import com.ader.backend.service.bid.BidService;
 import com.ader.backend.service.category.CategoryService;
 import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,12 @@ public class OfferServiceImpl implements OfferService {
     private final CategoryService categoryService;
     private final FileService fileService;
     private final AdvertisementFormatService advertisementFormatService;
+    private BidService bidService;
+
+    @Autowired
+    public void setBidService(BidService bidService) {
+        this.bidService = bidService;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -139,7 +147,24 @@ public class OfferServiceImpl implements OfferService {
         }
     }
 
-    @Override
+  @Override
+  public void deassignFromOffer(String assigneeName, String offerId) {
+    String errorMessage;
+    User assignee = userService.getUser(assigneeName);
+    Offer offer = offerRepository.findById(Long.parseLong(offerId)).orElse(null);
+    Bid bid = bidService.getBidByUserEmailAndOfferId(assigneeName, Long.parseLong(offerId));
+
+    if (offer == null) {
+        errorMessage = "Offer with id [" + offerId + "] not found!";
+        log.error(errorMessage);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+    }
+
+    offer.getAssignees().remove(assignee);
+    bid.setBidStatus(BidStatus.DECLINED);
+  }
+
+  @Override
     public void updateOfferStatus(Long offerId, OfferStatus offerStatus) {
         String errorMessage;
         Offer offer = offerRepository.findById(offerId).orElse(null);
