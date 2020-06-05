@@ -65,11 +65,19 @@ public class OfferController {
         return ResponseEntity.ok(OfferDto.toDto(offerService.updateOffer(id, offer)));
     }
 
-    @PreAuthorize("isAuthenticated() and hasRole('ADVERTISER')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("deassign")
-    public ResponseEntity updateOffer(@RequestParam String assigneeName, @RequestParam String offerId) {
+    public ResponseEntity updateOffer(@RequestParam String assigneeName, @RequestParam String offerId, @RequestParam String bidStatus) {
         log.info("Requested deassigning user with email: [{}], from offer with id: [{}]", assigneeName, offerId);
-        offerService.deassignFromOffer(assigneeName, offerId);
+        offerService.deassignFromOffer(assigneeName, offerId, bidStatus);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("{id}/status")
+    public ResponseEntity updateStatus(@PathVariable Long id, @RequestParam String newStatus) {
+        log.info("Requested updating status of offer with [{}] to: [{}]", id, newStatus);
+        offerService.updateOfferStatus(id, newStatus);
         return ResponseEntity.ok().build();
     }
 

@@ -148,7 +148,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
   @Override
-  public void deassignFromOffer(String assigneeName, String offerId) {
+  public void deassignFromOffer(String assigneeName, String offerId, String bidStatus) {
     String errorMessage;
     User assignee = userService.getUser(assigneeName);
     Offer offer = offerRepository.findById(Long.parseLong(offerId)).orElse(null);
@@ -161,11 +161,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     offer.getAssignees().remove(assignee);
-    bid.setBidStatus(BidStatus.DECLINED);
+    bid.setBidStatus(BidStatus.valueOf(bidStatus));
   }
 
   @Override
-    public void updateOfferStatus(Long offerId, OfferStatus offerStatus) {
+    public void updateOfferStatus(Long offerId, String offerStatus) {
         String errorMessage;
         Offer offer = offerRepository.findById(offerId).orElse(null);
 
@@ -175,7 +175,9 @@ public class OfferServiceImpl implements OfferService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
         }
 
-        offer.setOfferStatus(offerStatus);
+        for (OfferStatus status : OfferStatus.getValues()) {
+            if (status.getName().equals(offerStatus)) offer.setOfferStatus(status);
+        }
     }
 
     @Override

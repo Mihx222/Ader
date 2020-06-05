@@ -90,10 +90,7 @@
 }
 
 ::ng-deep .mat-card-header .mat-card-subtitle:not(:first-child) {
-  margin: 0;
-}
-
-::ng-deep .mat-card-header .mat-card-subtitle:not(:first-child) {
+  text-align: center;
   margin: 0;
 }
 
@@ -124,6 +121,11 @@
 
 .create-button-active {
   background-color: #fd4b59;
+  color: white;
+}
+
+.create-button-green {
+  background-color: #2cd248;
   color: white;
 }
 

@@ -126,7 +126,7 @@
                 <ng-container matColumnDef="bidStatus">
                   <th *matHeaderCellDef mat-header-cell style="text-align: center;">Status</th>
                   <td *matCellDef="let bid" mat-cell style="text-align: center;">
-                    <mat-chip [class.red-chip]="bidIsDeclined(bid)" [class.blue-chip]="bisIsNew(bid)" class="status-chip"
+                    <mat-chip [class.red-chip]="bidIsDeclined(bid) || bidIsCanceled(bid)" [class.blue-chip]="bisIsNew(bid)" class="status-chip"
                               disableRipple>
                       {{bid.bidStatus}}
                     </mat-chip>
@@ -151,8 +151,8 @@
                         [class.create-button-disabled]="checkSelected()"
                         [disabled]="checkSelected()"
                         class="create-button-active"
-                        mat-button
-                >Accept
+                        mat-button>
+                  Accept
                 </button>
               </div>
             </div>
@@ -235,7 +235,7 @@
                     <span><strong>Free product sample: </strong>{{newBid.freeProductSample ? 'Yes' : 'No'}}</span>
                     <span>
                       <strong>Bid status: </strong>
-                      <mat-chip [class.red-chip]="bidIsDeclined(newBid)" [class.blue-chip]="bisIsNew(newBid)" class="status-chip"
+                      <mat-chip [class.red-chip]="bidIsDeclined(newBid) || bidIsCanceled(newBid)" [class.blue-chip]="bisIsNew(newBid)" class="status-chip"
                                 disableRipple>
                       {{newBid.bidStatus}}
                     </mat-chip>
@@ -264,6 +264,14 @@
             <mat-chip [class.blue-chip]="assigned" [class.red-chip]="offerExpired" class="status-chip" disableRipple>
               {{offer.offerStatus}}
             </mat-chip>
+            <div *ngIf="isAssignee()">
+              <button (click)="startOffer()" style="margin-top: 10px;" mat-button class="create-button-green">
+                Start offer
+              </button>
+              <button (click)="deassignFromOffer(getCurrentAssigned(), deassignStatusCanceled)" style="margin: 10px 0 0 5px;" mat-button class="create-button-active">
+                Deassign
+              </button>
+            </div>
           </mat-card-subtitle>
         </mat-card-header>
       </mat-card>
@@ -284,7 +292,7 @@
           </mat-card-subtitle>
         </mat-card-header>
       </mat-card>
-      <mat-card class="shadow" style="margin-top: 20px;" *ngIf="isAuthor()">
+      <mat-card class="shadow" style="margin-top: 20px;" *ngIf="isAuthor() && offer.assigneeNames.length > 0">
         <mat-card-header>
           <mat-card-title>
             Assigned users
@@ -294,7 +302,7 @@
               <div fxLayout="row">
                 <p>{{assignee}}</p>
                 <span fxFlex class="fill-remaining-space"></span>
-                <button (click)="deassignFromOffer(assignee)" fxFlex fxFlexAlign="end" class="create-button-active" mat-button>Delete</button>
+                <button (click)="deassignFromOffer(assignee, deassignStatusDeclined)" fxFlex fxFlexAlign="end" class="create-button-active" mat-button>Delete</button>
               </div>
             </div>
           </mat-card-subtitle>

@@ -4,7 +4,8 @@ public enum BidStatus {
 
   NEW("NEW"),
   ACCEPTED("ACCEPTED"),
-  DECLINED("DECLINED");
+  DECLINED("DECLINED"),
+  CANCELED("CANCELED");
 
   private final String name;
 

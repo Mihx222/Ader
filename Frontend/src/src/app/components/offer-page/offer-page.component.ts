@@ -54,6 +54,8 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   existingBid: Observable<Bid>;
   selection = new SelectionModel<BidViewModel>(true, []);
   expandedElement: BidViewModel | null;
+  deassignStatusDeclined: string = BidStatus[BidStatus.DECLINED];
+  deassignStatusCanceled: string = BidStatus[BidStatus.CANCELED];
 
   constructor(
       public activatedRoute: ActivatedRoute,
@@ -208,14 +210,58 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     return bid.bidStatus === BidStatus[BidStatus.DECLINED];
   }
 
-  deassignFromOffer(assigneeName: string): void {
-    this.offerService.deassignFromOffer(assigneeName, this.offer.id.toString()).subscribe(
+  bidIsCanceled(bid: Bid) {
+    return bid.bidStatus === BidStatus[BidStatus.CANCELED];
+  }
+
+  deassignFromOffer(assigneeName: string, bidStatus: string): void {
+    this.offerService.deassignFromOffer(assigneeName, this.offer.id.toString(), bidStatus).subscribe(
         result => {
           this.offer.assigneeNames.splice(
               this.offer.assigneeNames.findIndex(assignee => assignee === assigneeName),
               1
           );
+          this.offer.bids.forEach(bid => {
+            if (bid.userEmail === assigneeName) {
+              bid.bidStatus = BidStatus[bidStatus];
+            }
+          });
           this.offer.bids.find(bid => {return bid.userEmail === assigneeName;}).bidStatus = BidStatus.DECLINED;
+        },
+        error => {
+          console.log(error);
+        }
+    );
+  }
+
+  isAssignee(): boolean {
+    let currentUser = JSON.parse(localStorage.getItem("current_user"));
+    let result: boolean = false;
+
+    this.offer.assigneeNames.forEach(assignee => {
+      if (assignee === currentUser.email) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  getCurrentAssigned(): string {
+    let currentUser = JSON.parse(localStorage.getItem("current_user"));
+    let result: string = null;
+
+    this.offer.assigneeNames.forEach(assignee => {
+      if (assignee === currentUser.email) {
+        result = assignee;
+      }
+    });
+    return result;
+  }
+
+  startOffer() {
+    this.offerService.updateStatus(this.offer.id, OfferStatus.IN_PROGRESS).subscribe(
+        result => {
+          this.offer.offerStatus = OfferStatus.IN_PROGRESS
         },
         error => {
           console.log(error);

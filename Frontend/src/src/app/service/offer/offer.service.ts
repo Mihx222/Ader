@@ -21,9 +21,15 @@ export class OfferService {
     return this.http.get<Offer>(this.offerUrl + 'offer/' + id + this.token);
   }
 
-  deassignFromOffer(assigneeName: string, offerId: string): Observable<any> {
+  deassignFromOffer(assigneeName: string, offerId: string, bidStatus: string): Observable<any> {
     return this.http.post(this.offerUrl + 'offer/deassign?assigneeName=' + assigneeName +
-    '&offerId=' + offerId + '&access_token=' + JSON.parse(localStorage.getItem('token')).access_token, null);
+        '&offerId=' + offerId + '&bidStatus=' + bidStatus + '&access_token=' +
+        JSON.parse(localStorage.getItem('token')).access_token, null);
+  }
+
+  updateStatus(offerId: number, status: string): Observable<any> {
+    return this.http.post(this.offerUrl + 'offer/' + offerId + '/status?newStatus=' + status +
+        '&access_token=' + JSON.parse(localStorage.getItem('token')).access_token, null);
   }
 
   getOfferByUserEmail(

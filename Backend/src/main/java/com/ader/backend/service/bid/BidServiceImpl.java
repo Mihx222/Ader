@@ -117,7 +117,7 @@ public class BidServiceImpl implements BidService {
             }
         });
 
-        offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED);
+        offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED.name());
     }
 
     @Override
