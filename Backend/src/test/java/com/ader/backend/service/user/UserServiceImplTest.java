@@ -2,6 +2,7 @@ package com.ader.backend.service.user;
 
 import com.ader.backend.entity.Role;
 import com.ader.backend.entity.Roles;
+import com.ader.backend.entity.Status;
 import com.ader.backend.entity.User;
 import com.ader.backend.repository.RoleRepository;
 import com.ader.backend.repository.UserRepository;
@@ -11,27 +12,39 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
-  @Mock private UserRepository userRepository;
-  @Mock private RoleRepository roleRepository;
-  @Mock private BCryptPasswordEncoder passwordEncoder;
+  @Mock
+  private Authentication authentication;
+  @Mock
+  private SecurityContext securityContext;
+  @Mock
+  private UserRepository userRepository;
+  @Mock
+  private RoleRepository roleRepository;
+  @Mock
+  private BCryptPasswordEncoder passwordEncoder;
 
   @InjectMocks
   private UserServiceImpl userService;
@@ -39,6 +52,8 @@ public class UserServiceImplTest {
   private User testInfluencer;
   private User testAdvertiser;
   private List<User> users;
+  private Role role;
+  private Authentication mockAuth;
 
   @BeforeEach
   void setUp() {
@@ -57,6 +72,26 @@ public class UserServiceImplTest {
     testAdvertiser.setBrandWebsite("somewebsite");
 
     users = new ArrayList<>();
+
+    role = new Role();
+    role.setName(Roles.ROLE_USER.name());
+
+    mockAuth = new OAuth2Authentication(
+            new OAuth2Request(
+                    Collections.emptyMap(),
+                    "mockClient",
+                    Collections.emptyList(),
+                    true,
+                    new HashSet<>(Arrays.asList("read", "write")),
+                    Collections.emptySet(),
+                    null,
+                    Collections.emptySet(),
+                    Collections.emptyMap()),
+            new UsernamePasswordAuthenticationToken(
+                    testInfluencer.getEmail(),
+                    "N/A",
+                    Collections.singletonList(new SimpleGrantedAuthority(role.getName())))
+    );
   }
 
   @Test
@@ -105,19 +140,34 @@ public class UserServiceImplTest {
   }
 
   @Test
-  void register_whenInvoked_addAndReturnUser() {
-    Role role = new Role();
-    role.setName(Roles.ROLE_USER.name());
-
-    when(userRepository.save(argThat(arg -> arg.equals(testInfluencer)))).thenAnswer(answer -> {
-      users.add(testInfluencer);
-      return users.stream().filter(user -> user.equals(testInfluencer)).findAny().orElse(null);
-    });
+  void register_whenInvoked_callSaveOnce() {
     when(roleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
 
-    User newUser = userService.register(testInfluencer, role.getName());
+    userService.register(testInfluencer, role.getName());
 
-    assertThat(newUser).isNotNull();
-    assertThat(newUser).isEqualTo(testInfluencer);
+    verify(userRepository, times(1)).save(testInfluencer);
+  }
+
+  @Test
+  void updateUser_whenInvoked_doesNotThrowAnyException() {
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    SecurityContextHolder.setContext(securityContext);
+    when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(mockAuth);
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.ofNullable(testInfluencer));
+    when(roleRepository.findByName(any(String.class))).thenReturn(Optional.ofNullable(role));
+
+    assertThatCode(() -> userService.updateUser(testInfluencer.getEmail(), testInfluencer)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void deleteUser_whenInvoked_updateStatusOfUserToDeleted() {
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    SecurityContextHolder.setContext(securityContext);
+    when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(mockAuth);
+    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.ofNullable(testAdvertiser));
+
+    userService.deleteUser(testInfluencer.getEmail());
+
+    verify(testInfluencer, times(1)).setStatus(Status.DELETED);
   }
 }
