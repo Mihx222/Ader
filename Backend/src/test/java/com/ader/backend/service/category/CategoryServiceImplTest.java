@@ -79,8 +79,9 @@ public class CategoryServiceImplTest {
 
   @Test
   void updateCategory_whenInvoked_doesNotThrowAnyException() {
-    when(categoryRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(category1));
-    when(categoryRepository.findByName(any(String.class))).thenReturn(java.util.Optional.ofNullable(category2));
+    when(categoryRepository.findById(category1.getId())).thenReturn(java.util.Optional.ofNullable(category1));
+    when(categoryRepository.findById(category2.getId())).thenReturn(java.util.Optional.ofNullable(category2));
+    when(categoryRepository.findByName(category2.getName())).thenReturn(java.util.Optional.ofNullable(category2));
 
     assertThatCode(() -> categoryService.updateCategory(category1.getId(), category2)).doesNotThrowAnyException();
     assertThatCode(() -> categoryService.updateCategory(category2.getName(), category1)).doesNotThrowAnyException();

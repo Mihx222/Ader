@@ -5,12 +5,14 @@ import com.ader.backend.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,22 +21,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class UserControllerTest {
 
-  @Mock
+  @MockBean
   private UserService userService;
-
-  @InjectMocks
-  private UserController userController;
-
+  @Autowired
   private MockMvc mockMvc;
+
   private User testInfluencer;
 
   @BeforeEach
   void setUp() {
-    mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-
     testInfluencer = new User();
     testInfluencer.setId(1L);
     testInfluencer.setEmail("user@user.com");
@@ -42,20 +42,23 @@ public class UserControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "test", roles = "ADMIN")
   void getUsers_whenInvoked_return200() throws Exception {
     mockMvc.perform(get("/rest/user")).andExpect(status().isOk());
   }
 
   @Test
+  @WithMockUser(username = "test")
   void getUser_whenInvoked_return200() throws Exception {
-    when(userService.getUser(any(String.class))).thenReturn(testInfluencer);
+    when(userService.getUser(testInfluencer.getEmail())).thenReturn(testInfluencer);
 
-    mockMvc.perform(get("/rest/user/{email}", "haha"))
+    mockMvc.perform(get("/rest/user/{email}", testInfluencer.getEmail()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
 
   @Test
+  @WithMockUser(username = "test")
   void updateUser_whenInvoked_return200() throws Exception {
     when(userService.updateUser(any(String.class), eq(testInfluencer))).thenReturn(testInfluencer);
 
@@ -64,6 +67,7 @@ public class UserControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "test", roles = "ADMIN")
   void deleteUser_whenInvoked_returns200() throws Exception {
     when(userService.deleteUser(any(String.class))).thenReturn("Success");
 

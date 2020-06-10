@@ -9,8 +9,10 @@ import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class OfferServiceImplTest {
 
   @Mock
@@ -199,17 +203,16 @@ public class OfferServiceImplTest {
   void updateOffer_whenInvoked_noThrownExceptions() {
     testInfluencer.setCreatedOffers(Collections.singletonList(offer1));
 
-    when(securityContext.getAuthentication()).thenReturn(authentication);
     SecurityContextHolder.setContext(securityContext);
-    when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(mockAuth);
+    when(userService.getAuthenticatedUser()).thenReturn(testInfluencer);
     when(offerRepository.findById(offer1.getId())).thenReturn(Optional.ofNullable(offer1));
+    when(offerRepository.findById(offer2.getId())).thenReturn(Optional.ofNullable(offer2));
 
     offerService.updateOffer(offer1.getId(), offer2);
 
     assertThatCode(() -> offerService.updateOffer(offer1.getId(), offer2)).doesNotThrowAnyException();
   }
 
-  // Hz
   @Test
   void deassignFromOffer_whenInvoked_removeAssigneeFromOffer() {
     Bid bid = new Bid();

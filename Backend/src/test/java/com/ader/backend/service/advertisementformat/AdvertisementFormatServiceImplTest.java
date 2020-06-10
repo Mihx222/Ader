@@ -79,8 +79,9 @@ public class AdvertisementFormatServiceImplTest {
 
   @Test
   void updateAdvertisementFormat_whenInvoked_doesNotThrowAnyException() {
-    when(advertisementFormatRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(format1));
-    when(advertisementFormatRepository.findByName(any(String.class))).thenReturn(java.util.Optional.ofNullable(format2));
+    when(advertisementFormatRepository.findById(format1.getId())).thenReturn(java.util.Optional.ofNullable(format1));
+    when(advertisementFormatRepository.findById(format2.getId())).thenReturn(java.util.Optional.ofNullable(format2));
+    when(advertisementFormatRepository.findByName(format2.getName())).thenReturn(java.util.Optional.ofNullable(format2));
 
     assertThatCode(() -> advertisementFormatService.updateAdvertisementFormat(format1.getId(), format2)).doesNotThrowAnyException();
     assertThatCode(() -> advertisementFormatService.updateAdvertisementFormat(format2.getName(), format1)).doesNotThrowAnyException();
