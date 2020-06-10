@@ -1,7 +1,7 @@
 package com.ader.backend.rest;
 
 import com.ader.backend.entity.User;
-import com.ader.backend.service.user.UserService;
+import com.ader.backend.service.user.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
   @MockBean
-  private UserService userService;
+  private UserServiceImpl userService;
   @Autowired
   private MockMvc mockMvc;
 
