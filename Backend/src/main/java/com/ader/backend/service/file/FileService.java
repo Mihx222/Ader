@@ -9,29 +9,29 @@ import java.util.UUID;
 
 public interface FileService {
 
-    byte[] compressBytes(byte[] data);
+  byte[] compressBytes(byte[] data);
 
-    byte[] decompressBytes(byte[] data);
+  byte[] decompressBytes(byte[] data);
 
-    File compressFile(File file);
+  File compressFile(File file);
 
-    List<File> compressFile(List<File> files);
+  List<File> compressFile(List<File> files);
 
-    File decompressFile(File file);
+  File decompressFile(File file);
 
-    List<File> decompressFile(List<File> files);
+  List<File> decompressFile(List<File> files);
 
-    List<File> getAllFiles();
+  List<File> getAllFiles();
 
-    File findByUuid(UUID uuid);
+  File findByUuid(UUID uuid);
 
-    List<File> getAllFilesForOffer(Long offerId);
+  List<File> getAllFilesForOffer(Long offerId);
 
-    List<File> getAllFilesForUser(String userEmail, String offerIsNull);
+  List<File> getAllFilesForUser(String userEmail, String offerIsNull);
 
-    File uploadFile(MultipartFile file) throws IOException;
+  File uploadFile(MultipartFile file, Long offerId) throws IOException;
 
-    String deleteFile(UUID uuid);
+  String deleteFile(UUID uuid);
 
-    File findByNameAndTypeAndUserId(String fileName, String fileType, Long userId);
+  File findByNameAndTypeAndUserId(String fileName, String fileType, Long userId);
 }

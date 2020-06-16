@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {HttpClient} from "@angular/common/http";
-import {File} from "../../model/offermedia/file";
+import {File} from "../../model/file/file";
 import {Observable} from "rxjs";
 
 @Injectable({

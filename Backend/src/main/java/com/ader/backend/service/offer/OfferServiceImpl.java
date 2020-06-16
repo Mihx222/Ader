@@ -27,125 +27,130 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
 
-    private final OfferRepository offerRepository;
-    private final UserService userService;
-    private final CategoryService categoryService;
-    private final FileService fileService;
-    private final AdvertisementFormatService advertisementFormatService;
-    private BidService bidService;
+  private final OfferRepository offerRepository;
+  private final UserService userService;
+  private final CategoryService categoryService;
+  private final AdvertisementFormatService advertisementFormatService;
+  private FileService fileService;
+  private BidService bidService;
 
-    @Autowired
-    public void setBidService(BidService bidService) {
-        this.bidService = bidService;
+  @Autowired
+  public void setBidService(BidService bidService) {
+    this.bidService = bidService;
+  }
+
+  @Autowired
+  public void setFileService(FileService fileService) {
+    this.fileService = fileService;
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<Offer> getAllOffers() {
+    List<Offer> offers = offerRepository.findAllByOfferStatus(OfferStatus.OPEN.name());
+
+    offers.forEach(offer -> offer.setFiles(fileService.decompressFile(offer.getFiles())));
+
+    return offers;
+  }
+
+  @Override
+  public List<Offer> getAllForUser(String userEmail) {
+    return offerRepository.findAllByAuthor_Email(userEmail);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Offer getOffer(Long id) {
+    Offer fetchedOffer = offerRepository.findById(id).orElse(null);
+
+    if (fetchedOffer == null) {
+      String errorMessage = "No offer found for id: [" + id + "]";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+    } else {
+      fetchedOffer.setFiles(fileService.decompressFile(fetchedOffer.getFiles()));
+      return fetchedOffer;
+    }
+  }
+
+  @Override
+  public List<Offer> getByUserEmailAndBidsExist(String userEmail) {
+    return offerRepository.findAllByUser_EmailAndBidsExist(userEmail);
+  }
+
+  @Override
+  public List<Offer> getAllByAssignedUserEmail(String userEmail) {
+    return offerRepository.findAllByAssignedUser(userEmail);
+  }
+
+  @Override
+  public List<Offer> getAllCompletedForUser(String userEmail) {
+    return offerRepository.findAllCompletedForUser(userEmail);
+  }
+
+  @Override
+  public Offer createOffer(Offer offer) {
+    String errorMessage;
+
+    List<Category> categories = new ArrayList<>();
+    offer.getCategories().forEach(category -> categories.add(categoryService.getCategory(category.getName())));
+    offer.setCategories(categories);
+
+    List<AdvertisementFormat> formats = new ArrayList<>();
+    offer.getAdvertisementFormats().forEach(format -> formats.add(advertisementFormatService.getAdvertisementFormat(format.getName())));
+    offer.setAdvertisementFormats(formats);
+
+    List<File> files = new ArrayList<>();
+    offer.getFiles().forEach(file -> files.add(Objects.requireNonNull(fileService.findByUuid(file.getUuid()))));
+    offer.setFiles(files);
+
+    offer.setAuthor(userService.getAuthenticatedUser());
+
+    try {
+      offerRepository.save(offer);
+      files.forEach(file -> file.setOffer(offer));
+    } catch (Exception ex) {
+      errorMessage = ex.getMessage();
+      log.error(errorMessage);
+      throw new ResponseStatusException(
+              HttpStatus.UNPROCESSABLE_ENTITY,
+              errorMessage
+      );
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Offer> getAllOffers() {
-        List<Offer> offers = offerRepository.findAllByOfferStatus(OfferStatus.OPEN.name());
+    log.info("Created new offer: {}", offer);
+    return offer;
+  }
 
-        offers.forEach(offer -> offer.setFiles(fileService.decompressFile(offer.getFiles())));
+  @Override
+  public Offer updateOffer(Long id, Offer offer) {
+    User authenticatedUser = userService.getAuthenticatedUser();
+    Offer offerToUpdate = offerRepository.findById(id).orElse(null);
+    String errorMessage;
 
-        return offers;
+    if (offerToUpdate == null) {
+      errorMessage = "Offer with id [" + id + "] not found!";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+    } else {
+      if (!authenticatedUser.getCreatedOffers().isEmpty() &&
+              authenticatedUser.getCreatedOffers().contains(offerToUpdate)) {
+        BeanUtils.copyProperties(
+                offer,
+                offerToUpdate,
+                BeanHelper.getNullPropertyNames(offer, true)
+        );
+
+        log.info("Updated offer with id: [{}]", id);
+        return offerToUpdate;
+      } else {
+        errorMessage = "You cannot update an offer that you didn't create. Id: [" + id + "]!";
+        log.error(errorMessage);
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, errorMessage);
+      }
     }
-
-    @Override
-    public List<Offer> getAllForUser(String userEmail) {
-        return offerRepository.findAllByAuthor_Email(userEmail);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Offer getOffer(Long id) {
-        Offer fetchedOffer = offerRepository.findById(id).orElse(null);
-
-        if (fetchedOffer == null) {
-            String errorMessage = "No offer found for id: [" + id + "]";
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        } else {
-            fetchedOffer.setFiles(fileService.decompressFile(fetchedOffer.getFiles()));
-            return fetchedOffer;
-        }
-    }
-
-    @Override
-    public List<Offer> getByUserEmailAndBidsExist(String userEmail) {
-        return offerRepository.findAllByUser_EmailAndBidsExist(userEmail);
-    }
-
-    @Override
-    public List<Offer> getAllByAssignedUserEmail(String userEmail) {
-        return offerRepository.findAllByAssignedUser(userEmail);
-    }
-
-    @Override
-    public List<Offer> getAllCompletedForUser(String userEmail) {
-        return offerRepository.findAllCompletedForUser(userEmail);
-    }
-
-    @Override
-    public Offer createOffer(Offer offer) {
-        String errorMessage;
-
-        List<Category> categories = new ArrayList<>();
-        offer.getCategories().forEach(category -> categories.add(categoryService.getCategory(category.getName())));
-        offer.setCategories(categories);
-
-        List<AdvertisementFormat> formats = new ArrayList<>();
-        offer.getAdvertisementFormats().forEach(format -> formats.add(advertisementFormatService.getAdvertisementFormat(format.getName())));
-        offer.setAdvertisementFormats(formats);
-
-        List<File> files = new ArrayList<>();
-        offer.getFiles().forEach(file -> files.add(Objects.requireNonNull(fileService.findByUuid(file.getUuid()))));
-        offer.setFiles(files);
-
-        offer.setAuthor(userService.getAuthenticatedUser());
-
-        try {
-            offerRepository.save(offer);
-            files.forEach(file -> file.setOffer(offer));
-        } catch (Exception ex) {
-            errorMessage = ex.getMessage();
-            log.error(errorMessage);
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
-                    errorMessage
-            );
-        }
-
-        log.info("Created new offer: {}", offer);
-        return offer;
-    }
-
-    @Override
-    public Offer updateOffer(Long id, Offer offer) {
-        User authenticatedUser = userService.getAuthenticatedUser();
-        Offer offerToUpdate = offerRepository.findById(id).orElse(null);
-        String errorMessage;
-
-        if (offerToUpdate == null) {
-            errorMessage = "Offer with id [" + id + "] not found!";
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        } else {
-            if (!authenticatedUser.getCreatedOffers().isEmpty() &&
-                    authenticatedUser.getCreatedOffers().contains(offerToUpdate)) {
-                BeanUtils.copyProperties(
-                        offer,
-                        offerToUpdate,
-                        BeanHelper.getNullPropertyNames(offer, true)
-                );
-
-                log.info("Updated offer with id: [{}]", id);
-                return offerToUpdate;
-            } else {
-                errorMessage = "You cannot update an offer that you didn't create. Id: [" + id + "]!";
-                log.error(errorMessage);
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, errorMessage);
-            }
-        }
-    }
+  }
 
   @Override
   public void deassignFromOffer(String assigneeName, String offerId, String bidStatus) {
@@ -155,9 +160,9 @@ public class OfferServiceImpl implements OfferService {
     Bid bid = bidService.getBidByUserEmailAndOfferId(assigneeName, Long.parseLong(offerId));
 
     if (offer == null) {
-        errorMessage = "Offer with id [" + offerId + "] not found!";
-        log.error(errorMessage);
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+      errorMessage = "Offer with id [" + offerId + "] not found!";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
     offer.getAssignees().remove(assignee);
@@ -165,47 +170,47 @@ public class OfferServiceImpl implements OfferService {
   }
 
   @Override
-    public void updateOfferStatus(Long offerId, String offerStatus) {
-        String errorMessage;
-        Offer offer = offerRepository.findById(offerId).orElse(null);
+  public void updateOfferStatus(Long offerId, String offerStatus) {
+    String errorMessage;
+    Offer offer = offerRepository.findById(offerId).orElse(null);
 
-        if (offer == null) {
-            errorMessage = "Offer with id [" + offerId + "] not found!";
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        }
-
-        for (OfferStatus status : OfferStatus.getValues()) {
-            if (status.getName().equals(offerStatus)) offer.setOfferStatus(status);
-        }
+    if (offer == null) {
+      errorMessage = "Offer with id [" + offerId + "] not found!";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
-    @Override
-    public String deleteOffer(Long id) {
-        Offer offerToDelete = offerRepository.findById(id).orElse(null);
+    for (OfferStatus status : OfferStatus.getValues()) {
+      if (status.getName().equals(offerStatus)) offer.setOfferStatus(status);
+    }
+  }
 
-        if (offerToDelete == null) {
-            String errorMessage = "Offer with id: [" + id + "] not found!";
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        }
+  @Override
+  public String deleteOffer(Long id) {
+    Offer offerToDelete = offerRepository.findById(id).orElse(null);
 
-        offerToDelete.setStatus(Status.DELETED);
-
-        String successMessage = "Deleted offer with id: [" + id + "]";
-        log.info(successMessage);
-        return successMessage;
+    if (offerToDelete == null) {
+      String errorMessage = "Offer with id: [" + id + "] not found!";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
-    @Override
-    public void checkAndUpdateExpiredOffers() {
-        List<Offer> expiredOffers = offerRepository.findAllByExpireDateAndOfferStatus(OfferStatus.EXPIRED.name());
+    offerToDelete.setStatus(Status.DELETED);
 
-        if (!expiredOffers.isEmpty()) {
-            log.info("Found " + expiredOffers.size() + " expired offers. Changing their status to EXPIRED...");
-            expiredOffers.forEach(offer -> offer.setOfferStatus(OfferStatus.EXPIRED));
-        } else {
-            log.debug("No expired offers found.");
-        }
+    String successMessage = "Deleted offer with id: [" + id + "]";
+    log.info(successMessage);
+    return successMessage;
+  }
+
+  @Override
+  public void checkAndUpdateExpiredOffers() {
+    List<Offer> expiredOffers = offerRepository.findAllByExpireDateAndOfferStatus(OfferStatus.EXPIRED.name());
+
+    if (!expiredOffers.isEmpty()) {
+      log.info("Found " + expiredOffers.size() + " expired offers. Changing their status to EXPIRED...");
+      expiredOffers.forEach(offer -> offer.setOfferStatus(OfferStatus.EXPIRED));
+    } else {
+      log.debug("No expired offers found.");
     }
+  }
 }

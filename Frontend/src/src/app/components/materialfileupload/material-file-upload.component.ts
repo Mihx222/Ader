@@ -23,7 +23,7 @@ export class MaterialFileUploadComponent implements OnInit {
   /** Names used in form which will be sent in HTTP request. */
   @Input() fileParam = 'file';
   /** Target URL for file uploading. */
-  @Input() target = 'http://localhost:8080/rest/file/upload';
+  @Input() target = 'http://localhost:8080/rest/file/upload?';
   /** File extension that accepted, same as 'accept' of <input type="file" />.
    By the default, it's set to 'image/*'. */
   @Input() accept = 'image/*';
@@ -85,7 +85,7 @@ export class MaterialFileUploadComponent implements OnInit {
 
     const req = new HttpRequest(
         'POST',
-        this.target + '?access_token=' + JSON.parse(localStorage.getItem('token')).access_token,
+        this.target + 'access_token=' + JSON.parse(localStorage.getItem('token')).access_token,
         formData,
         {
           reportProgress: true

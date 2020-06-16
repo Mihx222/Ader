@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,8 +61,9 @@ public class OfferServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    offerService = new OfferServiceImpl(offerRepository, userService, categoryService, fileService, advertisementFormatService);
+    offerService = new OfferServiceImpl(offerRepository, userService, categoryService, advertisementFormatService);
     offerService.setBidService(bidService);
+    offerService.setFileService(fileService);
 
     testInfluencer = new User();
     testInfluencer.setId(1L);

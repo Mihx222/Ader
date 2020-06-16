@@ -51,11 +51,13 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   timeToDisplay;
   offerExpired: boolean = false;
   assigned: boolean = false;
+  inProgress: boolean = false;
   existingBid: Observable<Bid>;
   selection = new SelectionModel<BidViewModel>(true, []);
   expandedElement: BidViewModel | null;
   deassignStatusDeclined: string = BidStatus[BidStatus.DECLINED];
   deassignStatusCanceled: string = BidStatus[BidStatus.CANCELED];
+  reviewFilesUploadTarget = "http://localhost:8080/rest/file/upload?offerId=";
 
   constructor(
       public activatedRoute: ActivatedRoute,
@@ -66,6 +68,7 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     this.bids = this.offer.bids;
 
     if (this.offer.offerStatus.toString() === OfferStatus[OfferStatus.ASSIGNED]) this.assigned = true;
+
     this.calculateDate();
 
     if (!this.isAuthor()) {
@@ -226,7 +229,9 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
               bid.bidStatus = BidStatus[bidStatus];
             }
           });
-          this.offer.bids.find(bid => {return bid.userEmail === assigneeName;}).bidStatus = BidStatus.DECLINED;
+          this.offer.bids.find(bid => {
+            return bid.userEmail === assigneeName;
+          }).bidStatus = BidStatus.DECLINED;
         },
         error => {
           console.log(error);
@@ -246,6 +251,11 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+  isInProgress(): boolean {
+    // TODO: CHANGE THIS!!!
+    return this.offer.offerStatus.toString() === "IN_PROGRESS";
+  }
+
   getCurrentAssigned(): string {
     let currentUser = JSON.parse(localStorage.getItem("current_user"));
     let result: string = null;
@@ -261,11 +271,20 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
   startOffer() {
     this.offerService.updateStatus(this.offer.id, OfferStatus.IN_PROGRESS).subscribe(
         result => {
-          this.offer.offerStatus = OfferStatus.IN_PROGRESS
+          // TODO: Find a way to replace this.
+          location.reload();
         },
         error => {
           console.log(error);
         }
     );
+  }
+
+  onFileUploadComplete(data: any) {
+    if (data.type.includes('image')) {
+      // this.convertResult(data);
+    } else {
+      console.log("It's not an image");
+    }
   }
 }

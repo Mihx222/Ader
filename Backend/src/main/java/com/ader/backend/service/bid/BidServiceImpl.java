@@ -24,146 +24,148 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class BidServiceImpl implements BidService {
 
-    private final BidRepository bidRepository;
-    private final OfferService offerService;
-    private final UserService userService;
-    private final PersonaService personaService;
+  private final BidRepository bidRepository;
+  private final OfferService offerService;
+  private final UserService userService;
+  private final PersonaService personaService;
 
-    @Override
-    public List<Bid> getBids() {
-        return bidRepository.findAll();
+  @Override
+  public List<Bid> getBids() {
+    return bidRepository.findAll();
+  }
+
+  @Override
+  public List<Bid> getBidsByUser(String userEmail) {
+    return bidRepository.findAllByUserEmail(userEmail);
+  }
+
+  @Override
+  public List<Bid> getBidsByOffer(Long offerId) {
+    return bidRepository.findAllByOfferId(offerId);
+  }
+
+  @Override
+  public Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId) {
+    return bidRepository.findByUser_EmailAndOffer_Id(userEmail, offerId);
+  }
+
+  @Override
+  public Bid createBid(BidDto bidDto) {
+    String errorMessage;
+
+    Bid bid = new Bid();
+    Offer bidOffer = offerService.getOffer(bidDto.getOfferId());
+    User bidUser = userService.getAuthenticatedUser();
+    Boolean initialRequirementsAccepted = bidDto.getAcceptInitialRequirements();
+
+    Persona bidPersona = new Persona();
+    bidPersona.setUser(bidUser);
+    bidPersona.setActivity(bidDto.getPersona().getActivity());
+    bidPersona.setAudience(bidDto.getPersona().getAudience());
+    bidPersona.setSellingOrientation(bidDto.getPersona().getSellingOrientation());
+    bidPersona.setValues(bidDto.getPersona().getValues());
+
+    if (initialRequirementsAccepted) {
+      bid.setCompensation(bidOffer.getCompensation());
+      bid.setFreeProductSample(bidOffer.getFreeProductSample());
+    } else {
+      bid.setFreeProductSample(bidDto.getFreeProductSample());
+      bid.setCompensation(bidDto.getCompensation());
     }
 
-    @Override
-    public List<Bid> getBidsByUser(String userEmail) {
-        return bidRepository.findAllByUserEmail(userEmail);
+    bid.setAcceptInitialRequirements(initialRequirementsAccepted);
+    bid.setOffer(bidOffer);
+    bid.setPersona(bidPersona);
+    bid.setUser(bidUser);
+
+    try {
+      personaService.createPersona(bidPersona);
+      // TODO: When a new bid is created, the offer files are duplicated. Fix this.
+      bidRepository.save(bid);
+    } catch (Exception e) {
+      errorMessage = e.getMessage();
+      log.error(errorMessage);
+      throw new ResponseStatusException(
+              HttpStatus.UNPROCESSABLE_ENTITY,
+              errorMessage
+      );
     }
 
-    @Override
-    public List<Bid> getBidsByOffer(Long offerId) {
-        return bidRepository.findAllByOfferId(offerId);
+    log.info("Successfully created bid: [{}]", bid);
+    return bid;
+  }
+
+  @Override
+  public void acceptBids(List<Bid> bids) {
+    final AtomicReference<Long> offerId = new AtomicReference<>();
+
+    bids.forEach(bid -> {
+      Bid managedBid = bidRepository.findById(bid.getId()).orElse(null);
+      Offer bidOffer;
+      User bidUser;
+
+      if (managedBid == null) {
+        String errorMessage = "No bid found for id: [" + bid.getId() + "]";
+        log.error(errorMessage);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+      } else {
+        bidOffer = offerService.getOffer(managedBid.getOffer().getId());
+        bidUser = userService.getUser(managedBid.getUser().getId());
+        bidOffer.getAssignees().add(bidUser);
+        managedBid.setBidStatus(BidStatus.ACCEPTED);
+
+        if (offerId.get() == null) offerId.set(bidOffer.getId());
+      }
+    });
+
+    offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED.name());
+  }
+
+  // TODO: When the bid is accepted, the offer files are duplicated. Fix this.
+  @Override
+  public Bid updateBid(Long id, Bid bid) {
+    String errorMessage;
+    Bid bidToUpdate = bidRepository.findById(id).orElse(null);
+
+    if (bidToUpdate == null) {
+      errorMessage = "Bid with id: [" + id + "] does not exist!";
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+    } else {
+      try {
+        BeanUtils.copyProperties(
+                bid,
+                bidToUpdate,
+                BeanHelper.getNullPropertyNames(bid, true)
+        );
+      } catch (Exception e) {
+        errorMessage = e.getMessage();
+        log.error(errorMessage);
+        throw new ResponseStatusException(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                errorMessage
+        );
+      }
     }
 
-    @Override
-    public Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId) {
-        return bidRepository.findByUser_EmailAndOffer_Id(userEmail, offerId);
+    log.info("Successfully updated bid. New bid: [{}]", bidToUpdate);
+    return bidToUpdate;
+  }
+
+  @Override
+  public String deleteBid(Long id) {
+    String errorMessage;
+
+    try {
+      bidRepository.deleteById(id);
+    } catch (Exception e) {
+      errorMessage = e.getMessage();
+      log.error(errorMessage);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
-    @Override
-    public Bid createBid(BidDto bidDto) {
-        String errorMessage;
-
-        Bid bid = new Bid();
-        Offer bidOffer = offerService.getOffer(bidDto.getOfferId());
-        User bidUser = userService.getAuthenticatedUser();
-        Boolean initialRequirementsAccepted = bidDto.getAcceptInitialRequirements();
-
-        Persona bidPersona = new Persona();
-        bidPersona.setUser(bidUser);
-        bidPersona.setActivity(bidDto.getPersona().getActivity());
-        bidPersona.setAudience(bidDto.getPersona().getAudience());
-        bidPersona.setSellingOrientation(bidDto.getPersona().getSellingOrientation());
-        bidPersona.setValues(bidDto.getPersona().getValues());
-
-        if (initialRequirementsAccepted) {
-            bid.setCompensation(bidOffer.getCompensation());
-            bid.setFreeProductSample(bidOffer.getFreeProductSample());
-        } else {
-            bid.setFreeProductSample(bidDto.getFreeProductSample());
-            bid.setCompensation(bidDto.getCompensation());
-        }
-
-        bid.setAcceptInitialRequirements(initialRequirementsAccepted);
-        bid.setOffer(bidOffer);
-        bid.setPersona(bidPersona);
-        bid.setUser(bidUser);
-
-        try {
-            personaService.createPersona(bidPersona);
-            bidRepository.save(bid);
-        } catch (Exception e) {
-            errorMessage = e.getMessage();
-            log.error(errorMessage);
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
-                    errorMessage
-            );
-        }
-
-        log.info("Successfully created bid: [{}]", bid);
-        return bid;
-    }
-
-    @Override
-    public void acceptBids(List<Bid> bids) {
-        final AtomicReference<Long> offerId = new AtomicReference<>();
-
-        bids.forEach(bid -> {
-            Bid managedBid = bidRepository.findById(bid.getId()).orElse(null);
-            Offer bidOffer;
-            User bidUser;
-
-            if (managedBid == null) {
-                String errorMessage = "No bid found for id: [" + bid.getId() + "]";
-                log.error(errorMessage);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-            } else {
-                bidOffer = offerService.getOffer(managedBid.getOffer().getId());
-                bidUser = userService.getUser(managedBid.getUser().getId());
-                bidOffer.getAssignees().add(bidUser);
-                managedBid.setBidStatus(BidStatus.ACCEPTED);
-
-                if (offerId.get() == null) offerId.set(bidOffer.getId());
-            }
-        });
-
-        offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED.name());
-    }
-
-    @Override
-    public Bid updateBid(Long id, Bid bid) {
-        String errorMessage;
-        Bid bidToUpdate = bidRepository.findById(id).orElse(null);
-
-        if (bidToUpdate == null) {
-            errorMessage = "Bid with id: [" + id + "] does not exist!";
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        } else {
-            try {
-                BeanUtils.copyProperties(
-                        bid,
-                        bidToUpdate,
-                        BeanHelper.getNullPropertyNames(bid, true)
-                );
-            } catch (Exception e) {
-                errorMessage = e.getMessage();
-                log.error(errorMessage);
-                throw new ResponseStatusException(
-                        HttpStatus.UNPROCESSABLE_ENTITY,
-                        errorMessage
-                );
-            }
-        }
-
-        log.info("Successfully updated bid. New bid: [{}]", bidToUpdate);
-        return bidToUpdate;
-    }
-
-    @Override
-    public String deleteBid(Long id) {
-        String errorMessage;
-
-        try {
-            bidRepository.deleteById(id);
-        } catch (Exception e) {
-            errorMessage = e.getMessage();
-            log.error(errorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
-        }
-
-        String successMessage = "Successfully deleted bid with id: [" + id + "]";
-        log.info(successMessage);
-        return successMessage;
-    }
+    String successMessage = "Successfully deleted bid with id: [" + id + "]";
+    log.info(successMessage);
+    return successMessage;
+  }
 }
