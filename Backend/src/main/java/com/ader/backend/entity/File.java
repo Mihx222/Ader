@@ -14,7 +14,7 @@ import java.util.UUID;
 @SequenceGenerator(name = "generic_gen", sequenceName = "files_seq", allocationSize = 1)
 public class File extends BaseEntity {
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn
   @ToString.Exclude
   private Offer offer;
@@ -35,12 +35,4 @@ public class File extends BaseEntity {
 
   @Column(name = "bytes", length = 1000)
   private byte[] bytes;
-
-  public File(UUID uuid, String name, String type, byte[] bytes, User user) {
-    this.uuid = uuid;
-    this.name = name;
-    this.type = type;
-    this.bytes = bytes;
-    this.user = user;
-  }
 }

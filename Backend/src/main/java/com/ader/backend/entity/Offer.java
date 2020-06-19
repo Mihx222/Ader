@@ -48,7 +48,7 @@ public class Offer extends BaseEntity {
 
   @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
   @ToString.Exclude
-  private List<Bid> bids = new ArrayList<>();
+  private List<Bid> bids;
 
   @ManyToMany
   @JoinTable(
@@ -63,8 +63,8 @@ public class Offer extends BaseEntity {
   private List<Category> categories = new ArrayList<>();
 
   @ToString.Exclude
-  @OneToMany(mappedBy = "offer", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<File> files = new ArrayList<>();
+  @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<File> files;
 
   @ToString.Exclude
   @ManyToMany

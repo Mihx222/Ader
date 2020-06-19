@@ -43,11 +43,12 @@ public class FileServiceImpl implements FileService {
   @Override
   public File decompressFile(File file) {
     return new File(
+            file.getOffer(),
+            file.getUser(),
             file.getUuid(),
             file.getName(),
             file.getType(),
-            decompressBytes(file.getBytes()),
-            file.getUser()
+            decompressBytes(file.getBytes())
     );
   }
 
@@ -62,11 +63,12 @@ public class FileServiceImpl implements FileService {
   @Override
   public File compressFile(File file) {
     return new File(
+            file.getOffer(),
+            file.getUser(),
             file.getUuid(),
             file.getName(),
             file.getType(),
-            compressBytes(file.getBytes()),
-            file.getUser()
+            compressBytes(file.getBytes())
     );
   }
 
@@ -159,17 +161,24 @@ public class FileServiceImpl implements FileService {
     UUID fileUuid = UUID.randomUUID();
 
     File newFile = new File(
+            null,
+            userService.getAuthenticatedUser(),
             fileUuid,
             encodedName,
             file.getContentType(),
-            file.getBytes(),
-            userService.getAuthenticatedUser()
+            file.getBytes()
     );
 
     try {
       fileRepository.save(compressFile(newFile));
       if (offerId != null) {
         Offer fileOffer = offerService.getOffer(offerId);
+
+        // Compress the files again to avoid their corruption on file update
+        List<File> files = new ArrayList<>(fileOffer.getFiles());
+        fileOffer.getFiles().clear();
+        fileOffer.getFiles().addAll(compressFile(files));
+
         fileOffer.getFiles().add(newFile);
         newFile.setOffer(fileOffer);
       }

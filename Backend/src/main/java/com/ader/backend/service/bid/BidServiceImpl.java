@@ -4,6 +4,7 @@ import com.ader.backend.entity.*;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.BidRepository;
 import com.ader.backend.rest.dto.BidDto;
+import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.offer.OfferService;
 import com.ader.backend.service.persona.PersonaService;
 import com.ader.backend.service.user.UserService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -28,6 +30,7 @@ public class BidServiceImpl implements BidService {
   private final OfferService offerService;
   private final UserService userService;
   private final PersonaService personaService;
+  private final FileService fileService;
 
   @Override
   public List<Bid> getBids() {
@@ -55,6 +58,12 @@ public class BidServiceImpl implements BidService {
 
     Bid bid = new Bid();
     Offer bidOffer = offerService.getOffer(bidDto.getOfferId());
+
+    // Compress the files again to avoid their corruption on bid save
+    List<File> files = new ArrayList<>(bidOffer.getFiles());
+    bidOffer.getFiles().clear();
+    bidOffer.getFiles().addAll(fileService.compressFile(files));
+
     User bidUser = userService.getAuthenticatedUser();
     Boolean initialRequirementsAccepted = bidDto.getAcceptInitialRequirements();
 
@@ -80,7 +89,6 @@ public class BidServiceImpl implements BidService {
 
     try {
       personaService.createPersona(bidPersona);
-      // TODO: When a new bid is created, the offer files are duplicated. Fix this.
       bidRepository.save(bid);
     } catch (Exception e) {
       errorMessage = e.getMessage();
@@ -110,6 +118,12 @@ public class BidServiceImpl implements BidService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
       } else {
         bidOffer = offerService.getOffer(managedBid.getOffer().getId());
+
+        // Compress the files again to avoid their corruption on bid update
+        List<File> files = new ArrayList<>(bidOffer.getFiles());
+        bidOffer.getFiles().clear();
+        bidOffer.getFiles().addAll(fileService.compressFile(files));
+
         bidUser = userService.getUser(managedBid.getUser().getId());
         bidOffer.getAssignees().add(bidUser);
         managedBid.setBidStatus(BidStatus.ACCEPTED);
@@ -121,7 +135,6 @@ public class BidServiceImpl implements BidService {
     offerService.updateOfferStatus(offerId.get(), OfferStatus.ASSIGNED.name());
   }
 
-  // TODO: When the bid is accepted, the offer files are duplicated. Fix this.
   @Override
   public Bid updateBid(Long id, Bid bid) {
     String errorMessage;

@@ -49,7 +49,11 @@ public class OfferServiceImpl implements OfferService {
   public List<Offer> getAllOffers() {
     List<Offer> offers = offerRepository.findAllByOfferStatus(OfferStatus.OPEN.name());
 
-    offers.forEach(offer -> offer.setFiles(fileService.decompressFile(offer.getFiles())));
+    offers.forEach(offer -> {
+      List<File> files = new ArrayList<>(offer.getFiles());
+      offer.getFiles().clear();
+      offer.getFiles().addAll(fileService.decompressFile(files));
+    });
 
     return offers;
   }
@@ -69,7 +73,9 @@ public class OfferServiceImpl implements OfferService {
       log.error(errorMessage);
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
     } else {
-      fetchedOffer.setFiles(fileService.decompressFile(fetchedOffer.getFiles()));
+      List<File> files = new ArrayList<>(fetchedOffer.getFiles());
+      fetchedOffer.getFiles().clear();
+      fetchedOffer.getFiles().addAll(fileService.decompressFile(files));
       return fetchedOffer;
     }
   }
@@ -95,15 +101,18 @@ public class OfferServiceImpl implements OfferService {
 
     List<Category> categories = new ArrayList<>();
     offer.getCategories().forEach(category -> categories.add(categoryService.getCategory(category.getName())));
-    offer.setCategories(categories);
+    offer.getCategories().clear();
+    offer.getCategories().addAll(categories);
 
     List<AdvertisementFormat> formats = new ArrayList<>();
     offer.getAdvertisementFormats().forEach(format -> formats.add(advertisementFormatService.getAdvertisementFormat(format.getName())));
-    offer.setAdvertisementFormats(formats);
+    offer.getAdvertisementFormats().clear();
+    offer.getAdvertisementFormats().addAll(formats);
 
     List<File> files = new ArrayList<>();
     offer.getFiles().forEach(file -> files.add(Objects.requireNonNull(fileService.findByUuid(file.getUuid()))));
-    offer.setFiles(files);
+    offer.getFiles().clear();
+    offer.getFiles().addAll(files);
 
     offer.setAuthor(userService.getAuthenticatedUser());
 
