@@ -14,23 +14,25 @@ import java.util.stream.Collectors;
 @Builder
 public class FileDto {
 
-    private UUID uuid;
-    private String name;
-    private String type;
-    private byte[] bytes;
+  private UUID uuid;
+  private String name;
+  private String userEmail;
+  private String type;
+  private byte[] bytes;
 
-    public static List<FileDto> toDto(List<File> files) {
-        return files.stream().map(FileDto::toDto).collect(Collectors.toList());
-    }
+  public static List<FileDto> toDto(List<File> files) {
+    return files.stream().map(FileDto::toDto).collect(Collectors.toList());
+  }
 
-    public static FileDto toDto(File file) {
-        return FileDto.builder()
-                .uuid(file.getUuid())
-                .name(new String(Base64.getDecoder().decode(
-                        Objects.requireNonNull(file.getName()))
-                ))
-                .type(file.getType())
-                .bytes(file.getBytes())
-                .build();
-    }
+  public static FileDto toDto(File file) {
+    return FileDto.builder()
+            .uuid(file.getUuid())
+            .name(new String(Base64.getDecoder().decode(
+                    Objects.requireNonNull(file.getName()))
+            ))
+            .userEmail(file.getUser().getEmail())
+            .type(file.getType())
+            .bytes(file.getBytes())
+            .build();
+  }
 }

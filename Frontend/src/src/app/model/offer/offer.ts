@@ -11,6 +11,7 @@ export interface Offer {
   name: string;
   description: string;
   authorName?: string;
+  authorEmail: string;
   assigneeNames: string[];
   bids: BidViewModel[];
   categories: CategoryViewModel[];

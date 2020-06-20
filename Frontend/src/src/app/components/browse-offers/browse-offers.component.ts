@@ -16,6 +16,7 @@ export class BrowseOffersComponent implements OnInit {
     advertisementFormats: [],
     advertisementReview: false,
     assigneeNames: [],
+    authorEmail: "",
     bids: [],
     categories: [],
     compensation: "default",

@@ -16,6 +16,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {OfferStatus} from "../../model/offerstatus/offer-status.enum";
 import {BidStatus} from "../../model/bidstatus/bid-status";
 import {OfferService} from "../../service/offer/offer.service";
+import {FileViewModel} from "../../model/file/file-view-model";
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-offer-page',
@@ -122,7 +124,7 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.bids);
 
     this.offer.files.forEach(file => {
-      if (file.type.includes('image')) {
+      if (file.type.includes('image') && file.userEmail === this.offer.authorEmail) {
         this.offerImages.push({
           source: 'data:' + file.type + ';base64,' + file.bytes,
           title: file.name
@@ -282,9 +284,19 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
 
   onFileUploadComplete(data: any) {
     if (data.type.includes('image')) {
-      // this.convertResult(data);
+      this.offer.files.push(data);
     } else {
       console.log("It's not an image");
     }
+  }
+
+  getFilesForAssignee(assigneeEmail: string): FileViewModel[] {
+    return this.offer.files.filter(file => file.userEmail === assigneeEmail);
+  }
+
+  downloadFile(file: FileViewModel) {
+    const fileToDownload = new Blob([file.bytes], {type: file.type});
+    console.log(fileToDownload);
+    FileSaver.saveAs(fileToDownload, file.name);
   }
 }

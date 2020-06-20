@@ -170,7 +170,6 @@ public class FileServiceImpl implements FileService {
     );
 
     try {
-      fileRepository.save(compressFile(newFile));
       if (offerId != null) {
         Offer fileOffer = offerService.getOffer(offerId);
 
@@ -179,8 +178,10 @@ public class FileServiceImpl implements FileService {
         fileOffer.getFiles().clear();
         fileOffer.getFiles().addAll(compressFile(files));
 
-        fileOffer.getFiles().add(newFile);
         newFile.setOffer(fileOffer);
+        fileOffer.getFiles().add(compressFile(newFile));
+      } else {
+        fileRepository.save(compressFile(newFile));
       }
     } catch (Exception e) {
       errorMessage = e.getMessage();

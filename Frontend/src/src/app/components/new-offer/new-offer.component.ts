@@ -107,6 +107,7 @@ export class NewOfferComponent implements OnInit {
     })
 
     this.newOffer = {
+      authorEmail: "",
       id: null,
       name: this.offerName.value,
       assigneeNames: null,

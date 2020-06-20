@@ -1,8 +1,6 @@
-import {UserViewModel} from "../user/user-view-model";
-
 export interface File {
   uuid: string,
-  user: UserViewModel,
+  userEmail: string,
   name: string,
   type: string,
   bytes: any
