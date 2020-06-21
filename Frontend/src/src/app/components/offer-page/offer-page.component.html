@@ -254,10 +254,10 @@
               </div>
             </div>
           </mat-tab>
-          <mat-tab *ngIf="isInProgress()" [label]="isAuthor() ? 'Review' : 'Upload'">
+          <mat-tab *ngIf="isInProgress() || isCompleted()" [label]="isAuthor() ? 'Review' : 'Upload'">
             <div class="box">
               <!-- Upload area -->
-              <span *ngIf="!isAuthor()">
+              <span *ngIf="!isAuthor() && !isCompleted()">
                 <span style="font-size: 18px;">Upload files (up to 5 files, 10MB max per file)</span>
                 <app-material-file-upload [target]="reviewFilesUploadTarget + offer.id + '&'"
                                           accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"
@@ -277,7 +277,11 @@
                       </div>
                     </mat-card-content>
                     <mat-card-actions>
-                      <button mat-button class="create-button-active">Approve</button>
+                      <button [disabled]="isCompleted() || getFilesForAssignee(assignee).length === 0"
+                              (click)="approveBid(getBidFromUserEmail(assignee))" mat-button
+                              class="create-button-active">
+                        Approve
+                      </button>
                     </mat-card-actions>
                   </mat-card>
                   <br>
@@ -306,8 +310,9 @@
                       class="status-chip" disableRipple>
               {{offer.offerStatus}}
             </mat-chip>
-            <div *ngIf="isAssignee()">
-              <button (click)="startOffer()" style="margin-top: 10px;" mat-button class="create-button-green">
+            <div *ngIf="isAssignee() && !isCompleted()">
+              <button [disabled]="isInProgress()" (click)="startOffer()" style="margin-top: 10px;" mat-button
+                      class="create-button-green">
                 Start offer
               </button>
               <button (click)="deassignFromOffer(getCurrentAssigned(), deassignStatusCanceled)"

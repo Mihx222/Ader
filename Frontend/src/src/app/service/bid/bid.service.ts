@@ -35,4 +35,9 @@ export class BidService {
     return this.http.post<Bid>(this.bidURL + 'bid/add?access_token=' +
         JSON.parse(localStorage.getItem('token')).access_token, bid);
   }
+
+  updateStatus(bidId: number, status: string): Observable<any> {
+    return this.http.post(this.bidURL + 'bid/' + bidId + '/status?newStatus=' + status +
+        '&access_token=' + JSON.parse(localStorage.getItem('token')).access_token, null);
+  }
 }

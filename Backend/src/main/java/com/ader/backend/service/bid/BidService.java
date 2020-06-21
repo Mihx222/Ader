@@ -7,19 +7,21 @@ import java.util.List;
 
 public interface BidService {
 
-    List<Bid> getBids();
+  List<Bid> getBids();
 
-    List<Bid> getBidsByUser(String userEmail);
+  List<Bid> getBidsByUser(String userEmail);
 
-    List<Bid> getBidsByOffer(Long offerId);
+  List<Bid> getBidsByOffer(Long offerId);
 
-    Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId);
+  Bid getBidByUserEmailAndOfferId(String userEmail, Long offerId);
 
-    void acceptBids(List<Bid> bids);
+  void acceptBids(List<Bid> bids);
 
-    Bid createBid(BidDto bid);
+  Bid createBid(BidDto bid);
 
-    Bid updateBid(Long id, Bid bid);
+  Bid updateBid(Long id, Bid bid);
 
-    String deleteBid(Long id);
+  void updateStatus(Long id, String newStatus);
+
+  String deleteBid(Long id);
 }

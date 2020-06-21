@@ -258,6 +258,10 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     return this.offer.offerStatus.toString() === "IN_PROGRESS";
   }
 
+  isCompleted(): boolean {
+    return this.offer.offerStatus === OfferStatus[OfferStatus.COMPLETED];
+  }
+
   getCurrentAssigned(): string {
     let currentUser = JSON.parse(localStorage.getItem("current_user"));
     let result: string = null;
@@ -298,5 +302,24 @@ export class OfferPageComponent implements OnInit, AfterViewInit {
     const fileToDownload = new Blob([file.bytes], {type: file.type});
     console.log(fileToDownload);
     FileSaver.saveAs(fileToDownload, file.name);
+  }
+
+  getBidFromFile(file: FileViewModel): BidViewModel {
+    return this.offer.bids.find(bid => bid.userEmail === file.userEmail);
+  }
+
+  getBidFromUserEmail(userEmail: string): BidViewModel {
+    return this.offer.bids.find(bid => bid.userEmail === userEmail);
+  }
+
+  approveBid(bid: BidViewModel) {
+    this.bidService.updateStatus(bid.id, BidStatus[BidStatus.APPROVED]).subscribe(
+        result => {
+          location.reload();
+        },
+        error => {
+          console.log(error);
+        }
+    );
   }
 }

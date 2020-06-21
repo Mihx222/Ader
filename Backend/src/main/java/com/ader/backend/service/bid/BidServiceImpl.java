@@ -166,6 +166,23 @@ public class BidServiceImpl implements BidService {
   }
 
   @Override
+  public void updateStatus(Long id, String newStatus) {
+    Bid bid = bidRepository.findById(id).orElseThrow();
+    Offer offer = bid.getOffer();
+
+    for (BidStatus status : BidStatus.getValues()) {
+      if (status.getName().equals(newStatus)) bid.setBidStatus(status);
+    }
+
+    if (OfferStatus.IN_PROGRESS.getName().equals(offer.getOfferStatus().getName())) {
+      List<Bid> offerBids = bidRepository.findAllByOfferId(offer.getId());
+      if (offerBids.stream().allMatch(bidToCheck -> bidToCheck.getBidStatus().equals(BidStatus.APPROVED))) {
+        offer.setOfferStatus(OfferStatus.COMPLETED);
+      }
+    }
+  }
+
+  @Override
   public String deleteBid(Long id) {
     String errorMessage;
 

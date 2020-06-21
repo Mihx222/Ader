@@ -68,7 +68,7 @@ public class OfferController {
 
   @PreAuthorize("isAuthenticated()")
   @PostMapping("deassign")
-  public ResponseEntity updateOffer(@RequestParam String assigneeName, @RequestParam String offerId, @RequestParam String bidStatus) {
+  public ResponseEntity deassignUser(@RequestParam String assigneeName, @RequestParam String offerId, @RequestParam String bidStatus) {
     log.info("Requested deassigning user with email: [{}], from offer with id: [{}]", assigneeName, offerId);
     offerService.deassignFromOffer(assigneeName, offerId, bidStatus);
     return ResponseEntity.ok().build();
