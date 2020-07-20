@@ -19,6 +19,7 @@ import {CategoriesComponent} from "./components/admin/categories/categories.comp
 import {CategoryResolver} from "./resolvers/category-resolver.service";
 import {AdvertisementFormatsComponent} from "./components/admin/advertisement-formats/advertisement-formats.component";
 import {AdvertisementFormatsResolver} from "./resolvers/advertisement-formats-resolver.service";
+import {UsersResolverService} from "./resolvers/users-resolver.service";
 
 const routes: Routes = [
   {
@@ -49,7 +50,10 @@ const routes: Routes = [
   },
   {
     path: 'influencers',
-    component: BrowseInfluencersComponent
+    component: BrowseInfluencersComponent,
+    resolve: {
+      users: UsersResolverService
+    }
   },
   {
     path: 'offers/new',
