@@ -1,6 +1,14 @@
 package com.ader.backend.service.offer;
 
-import com.ader.backend.entity.*;
+import com.ader.backend.entity.AdvertisementFormat;
+import com.ader.backend.entity.Bid;
+import com.ader.backend.entity.BidStatus;
+import com.ader.backend.entity.Category;
+import com.ader.backend.entity.File;
+import com.ader.backend.entity.Offer;
+import com.ader.backend.entity.OfferStatus;
+import com.ader.backend.entity.Status;
+import com.ader.backend.entity.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.OfferRepository;
 import com.ader.backend.service.advertisementformat.AdvertisementFormatService;
@@ -12,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -26,6 +36,9 @@ import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
+
+  private static final int ESP32_PORT = 8090;
+  private static final String ESP32_IP = "192.168.0.15";
 
   private final OfferRepository offerRepository;
   private final UserService userService;
@@ -119,6 +132,7 @@ public class OfferServiceImpl implements OfferService {
     try {
       offerRepository.save(offer);
       files.forEach(file -> file.setOffer(offer));
+      sendLedRequest();
     } catch (Exception ex) {
       errorMessage = ex.getMessage();
       log.error(errorMessage);
@@ -130,6 +144,12 @@ public class OfferServiceImpl implements OfferService {
 
     log.info("Created new offer: {}", offer);
     return offer;
+  }
+
+  private void sendLedRequest() {
+    WebClient client = WebClient.create("http://" + ESP32_IP + ":" + ESP32_PORT);
+    WebClient.RequestBodySpec request = client.method(HttpMethod.POST).uri("/");
+    request.exchange().block();
   }
 
   @Override
