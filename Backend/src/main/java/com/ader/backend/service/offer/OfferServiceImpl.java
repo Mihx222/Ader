@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 @Transactional
 @Service
@@ -132,7 +133,7 @@ public class OfferServiceImpl implements OfferService {
     try {
       offerRepository.save(offer);
       files.forEach(file -> file.setOffer(offer));
-      sendLedRequest();
+      Executors.newSingleThreadExecutor().execute(this::sendLedRequest);
     } catch (Exception ex) {
       errorMessage = ex.getMessage();
       log.error(errorMessage);
