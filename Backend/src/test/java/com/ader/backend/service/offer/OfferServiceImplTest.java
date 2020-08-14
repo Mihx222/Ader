@@ -150,19 +150,6 @@ public class OfferServiceImplTest {
   }
 
   @Test
-  void getByUserEmailAndBidsExist_whenInvoked_returnEmptyList() {
-    offers.addAll(Arrays.asList(offer1, offer2));
-    when(offerRepository.findAllByUser_EmailAndBidsExist(testInfluencer.getEmail())).thenReturn(
-            offers.stream().filter(offer -> offer.getAuthor().getEmail().equals(testInfluencer.getEmail()) &&
-                    !offer.getBids().isEmpty()).collect(Collectors.toList())
-    );
-
-    List<Offer> offers = offerService.getByUserEmailAndBidsExist(testInfluencer.getEmail());
-
-    assertThat(offers).isEmpty();
-  }
-
-  @Test
   void getAllByAssignedUserEmail_whenInvoked_returnOffer() {
     offer1.setAssignees(new HashSet<>(Arrays.asList(testInfluencer, testAdvertiser)));
     offers.addAll(Arrays.asList(offer1, offer2));

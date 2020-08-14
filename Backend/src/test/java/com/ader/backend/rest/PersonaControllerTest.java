@@ -2,14 +2,10 @@ package com.ader.backend.rest;
 
 import com.ader.backend.entity.Persona;
 import com.ader.backend.entity.User;
-import com.ader.backend.rest.dto.PersonaDto;
 import com.ader.backend.service.persona.PersonaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,16 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,28 +84,10 @@ public class PersonaControllerTest {
 
   @Test
   @WithMockUser(username = "test")
-  void createPersona_whenInvoked_return200() throws Exception {
-    when(personaService.createPersona(any(Persona.class))).thenReturn(persona1);
-
-    mockMvc.perform(post("/rest/persona/add").content(String.valueOf(persona1)))
-            .andExpect(status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "test")
-  void updatePersona_whenInvoked_return200() throws Exception {
-    when(personaService.updatePersona(any(Long.class), eq(persona1))).thenReturn(persona1);
-
-    mockMvc.perform(put("/rest/persona/{id}", persona1.getId()).content(String.valueOf(PersonaDto.toDto(persona1))))
-            .andExpect(status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "test")
   void deletePersona_whenInvoked_return200() throws Exception {
     when(personaService.deletePersona(any(Long.class))).thenReturn("Success");
 
-    mockMvc.perform(delete("/rest/persona/{id}", persona1.getId()))
+    mockMvc.perform(MockMvcRequestBuilders.delete("/rest/persona/{id}", persona1.getId()))
             .andExpect(status().isOk());
   }
 }

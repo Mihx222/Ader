@@ -13,11 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,20 +58,11 @@ public class UserControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "test")
-  void updateUser_whenInvoked_return200() throws Exception {
-    when(userService.updateUser(any(String.class), eq(testInfluencer))).thenReturn(testInfluencer);
-
-    mockMvc.perform(put("/rest/user/{email}", "haha").content(String.valueOf(testInfluencer)))
-            .andExpect(status().isOk());
-  }
-
-  @Test
   @WithMockUser(username = "test", roles = "ADMIN")
   void deleteUser_whenInvoked_returns200() throws Exception {
     when(userService.deleteUser(any(String.class))).thenReturn("Success");
 
-    mockMvc.perform(delete("/rest/user/{email}", testInfluencer.getEmail()))
+    mockMvc.perform(MockMvcRequestBuilders.delete("/rest/user/{email}", testInfluencer.getEmail()))
             .andExpect(status().isOk());
     verify(userService, times(1)).deleteUser(any(String.class));
   }

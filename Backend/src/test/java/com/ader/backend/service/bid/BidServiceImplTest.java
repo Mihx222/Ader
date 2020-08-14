@@ -5,7 +5,6 @@ import com.ader.backend.entity.Offer;
 import com.ader.backend.entity.Persona;
 import com.ader.backend.entity.User;
 import com.ader.backend.repository.BidRepository;
-import com.ader.backend.rest.dto.BidDto;
 import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.offer.OfferService;
 import com.ader.backend.service.persona.PersonaService;
@@ -152,16 +151,6 @@ public class BidServiceImplTest {
     assertThat(bid).isNotNull();
     assertThat(bid.getUser()).isEqualTo(testInfluencer);
     assertThat(bid.getOffer()).isEqualTo(offer1);
-  }
-
-  @Test
-  void createBid_whenInvoked_callSaveOnlyOnce() {
-    bid1.setPersona(persona);
-    bid1.setOffer(offer1);
-    bid1.setUser(testInfluencer);
-    bid1.setAcceptInitialRequirements(false);
-
-    assertThatCode(() -> bidService.createBid(BidDto.toDto(bid1))).doesNotThrowAnyException();
   }
 
   @Test

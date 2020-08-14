@@ -2,7 +2,6 @@ package com.ader.backend.service.user;
 
 import com.ader.backend.entity.Role;
 import com.ader.backend.entity.Roles;
-import com.ader.backend.entity.Status;
 import com.ader.backend.entity.User;
 import com.ader.backend.repository.RoleRepository;
 import com.ader.backend.repository.UserRepository;
@@ -157,17 +156,5 @@ public class UserServiceImplTest {
     when(roleRepository.findByName(any(String.class))).thenReturn(Optional.ofNullable(role));
 
     assertThatCode(() -> userService.updateUser(testInfluencer.getEmail(), testInfluencer)).doesNotThrowAnyException();
-  }
-
-  @Test
-  void deleteUser_whenInvoked_updateStatusOfUserToDeleted() {
-    when(securityContext.getAuthentication()).thenReturn(authentication);
-    SecurityContextHolder.setContext(securityContext);
-    when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(mockAuth);
-    when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.ofNullable(testAdvertiser));
-
-    userService.deleteUser(testInfluencer.getEmail());
-
-    verify(testInfluencer, times(1)).setStatus(Status.DELETED);
   }
 }
