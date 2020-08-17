@@ -18,11 +18,6 @@ pipeline {
             steps {
                 sh 'mvn clean install -DskipTests=true'
             }
-            post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml'
-                }
-            }
         }
     }
 }
