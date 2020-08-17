@@ -13,10 +13,11 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -55,28 +56,10 @@ public class CategoryControllerTest {
 
   @Test
   @WithMockUser(username = "test", roles = "ADMIN")
-  void createCategory_whenInvoked_return200() throws Exception {
-    when(categoryService.createCategory(any(Category.class))).thenReturn(category);
-
-    mockMvc.perform(post("/rest/category/add").content(category.toString()))
-            .andExpect(status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "test", roles = "ADMIN")
-  void editCategory_whenInvoked_return200() throws Exception {
-    when(categoryService.updateCategory(any(String.class), any(Category.class))).thenReturn(category);
-
-    mockMvc.perform(put("/rest/category/name/{name}", category.getName()).content(category.toString()))
-            .andExpect(status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "test", roles = "ADMIN")
   void deleteCategory_whenInvoked_return200() throws Exception {
     when(categoryService.deleteCategory(any(String.class))).thenReturn("Success");
 
-    mockMvc.perform(delete("/rest/category/name/{name}", category.getName()))
+    mockMvc.perform(MockMvcRequestBuilders.delete("/rest/category/name/{name}", category.getName()))
             .andExpect(status().isOk());
   }
 }
