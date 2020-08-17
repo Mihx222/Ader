@@ -46,7 +46,9 @@ public class FileController {
 
   @PreAuthorize("isAuthenticated()")
   @PostMapping("upload")
-  public ResponseEntity<FileDto> uploadFile(@RequestParam(required = false) Long offerId, @RequestParam("file") MultipartFile file) throws IOException {
+  public ResponseEntity<FileDto> uploadFile(
+          @RequestParam(required = false) Long offerId,
+          @RequestParam("file") MultipartFile file) throws IOException {
     log.info("Requested uploading new file with size: [{}]", file.getBytes().length);
     return ResponseEntity.ok(FileDto.toDto(fileService.uploadFile(file, offerId)));
   }
