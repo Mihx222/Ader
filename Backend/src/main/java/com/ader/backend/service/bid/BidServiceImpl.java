@@ -35,13 +35,23 @@ public class BidServiceImpl implements BidService {
 
   private final BidRepository bidRepository;
   private OfferService offerService;
-  private final UserService userService;
+  private UserService userService;
   private final PersonaService personaService;
-  private final FileService fileService;
+  private FileService fileService;
+
+  @Autowired
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
   @Autowired
   public void setOfferService(OfferService offerService) {
     this.offerService = offerService;
+  }
+
+  @Autowired
+  public void setFileService(FileService fileService) {
+    this.fileService = fileService;
   }
 
   @Override

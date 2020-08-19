@@ -42,11 +42,16 @@ public class OfferServiceImpl implements OfferService {
   private static final String ESP32_IP = "192.168.0.15";
 
   private final OfferRepository offerRepository;
-  private final UserService userService;
+  private UserService userService;
   private final CategoryService categoryService;
   private final AdvertisementFormatService advertisementFormatService;
   private FileService fileService;
   private BidService bidService;
+
+  @Autowired
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
   @Autowired
   public void setBidService(BidService bidService) {

@@ -8,6 +8,7 @@ import com.ader.backend.service.offer.OfferService;
 import com.ader.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -30,7 +35,12 @@ public class FileServiceImpl implements FileService {
 
   private final FileRepository fileRepository;
   private final UserService userService;
-  private final OfferService offerService;
+  private OfferService offerService;
+
+  @Autowired
+  public void setOfferService(OfferService offerService) {
+    this.offerService = offerService;
+  }
 
   @Override
   public List<File> decompressFile(List<File> files) {

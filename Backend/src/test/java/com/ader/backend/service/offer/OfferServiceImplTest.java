@@ -1,6 +1,12 @@
 package com.ader.backend.service.offer;
 
-import com.ader.backend.entity.*;
+import com.ader.backend.entity.Bid;
+import com.ader.backend.entity.BidStatus;
+import com.ader.backend.entity.Offer;
+import com.ader.backend.entity.OfferStatus;
+import com.ader.backend.entity.Role;
+import com.ader.backend.entity.Roles;
+import com.ader.backend.entity.User;
 import com.ader.backend.repository.OfferRepository;
 import com.ader.backend.service.advertisementformat.AdvertisementFormatService;
 import com.ader.backend.service.bid.BidService;
@@ -21,19 +27,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OfferServiceImplTest {
 
-  @Mock
-  private Authentication authentication;
   @Mock
   private SecurityContext securityContext;
   @Mock
@@ -61,7 +72,7 @@ public class OfferServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    offerService = new OfferServiceImpl(offerRepository, userService, categoryService, advertisementFormatService);
+    offerService = new OfferServiceImpl(offerRepository, categoryService, advertisementFormatService);
     offerService.setBidService(bidService);
     offerService.setFileService(fileService);
 

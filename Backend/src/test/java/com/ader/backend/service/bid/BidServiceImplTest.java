@@ -5,7 +5,6 @@ import com.ader.backend.entity.Offer;
 import com.ader.backend.entity.Persona;
 import com.ader.backend.entity.User;
 import com.ader.backend.repository.BidRepository;
-import com.ader.backend.service.file.FileService;
 import com.ader.backend.service.offer.OfferService;
 import com.ader.backend.service.persona.PersonaService;
 import com.ader.backend.service.user.UserService;
@@ -41,8 +40,6 @@ public class BidServiceImplTest {
   private PersonaService personaService;
   @Mock
   private OfferService offerService;
-  @Mock
-  private FileService fileService;
   @InjectMocks
   private BidServiceImpl bidService;
   private List<Bid> bids;
@@ -56,7 +53,7 @@ public class BidServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    bidService = new BidServiceImpl(bidRepository, userService, personaService, fileService);
+    bidService = new BidServiceImpl(bidRepository, personaService);
 
     bids = new ArrayList<>();
 
