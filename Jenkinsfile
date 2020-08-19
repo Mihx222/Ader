@@ -23,11 +23,10 @@ pipeline {
         stage ('Deploy') {
             steps{
                 sshagent(credentials : ['prod-vm-credentials']) {
-                    sh("""sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:~/ader/backend
-                          sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/target jenkins@ader-prod-vm:~/ader/frontend
+                    sh("""sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:/home/jenkins/ader/backend
+                          sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/dist/ader-frontend jenkins@ader-prod-vm:/usr/share/nginx/html
                           ssh -o StrictHostKeyChecking=no jenkins@ader-prod-vm << EOF
-                          java -jar ~/ader/backend/backend-1.0-SNAPSHOT.jar --spring.profiles.active=prod
-                          ng serve --prod ~/ader/frontend/
+                          java -jar /home/jenkins/ader/backend/backend-1.0-SNAPSHOT.jar --spring.profiles.active=prod
                           exit
                          EOF
                     """)
