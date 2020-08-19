@@ -3,6 +3,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {of, Subscription} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpEventType, HttpRequest} from "@angular/common/http";
 import {catchError, last, map, tap} from "rxjs/operators";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-material-file-upload',
@@ -23,7 +24,7 @@ export class MaterialFileUploadComponent implements OnInit {
   /** Names used in form which will be sent in HTTP request. */
   @Input() fileParam = 'file';
   /** Target URL for file uploading. */
-  @Input() target = 'http://localhost:8080/rest/file/upload?';
+  @Input() target = 'http://' + environment.backendHost + ':8080/rest/file/upload?';
   /** File extension that accepted, same as 'accept' of <input type="file" />.
    By the default, it's set to 'image/*'. */
   @Input() accept = 'image/*';
