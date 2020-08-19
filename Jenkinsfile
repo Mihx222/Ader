@@ -23,11 +23,11 @@ pipeline {
         stage ('Deploy') {
             steps{
                 sshagent(credentials : ['prod-vm-credentials']) {
-                    sh("""ssh -o StrictHostKeyChecking=no jenkins@ader-prod-vm << EOF
-                          sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:~/ader/backend
+                    sh("""sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:~/ader/backend
                           sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/target jenkins@ader-prod-vm:~/ader/frontend
-                          java -jar /home/curchi_mihail98/ader/backend/backend-1.0-SNAPSHOT.jar -Dspring.profiles.active=prod
-                          ng serve --prod /home/curchi_mihail98/ader/frontend/
+                          ssh -o StrictHostKeyChecking=no jenkins@ader-prod-vm << EOF
+                          java -jar ~/ader/backend/backend-1.0-SNAPSHOT.jar --spring.profiles.active=prod
+                          ng serve --prod ~/ader/frontend/
                           exit
                          EOF
                     """)
