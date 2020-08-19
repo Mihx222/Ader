@@ -24,10 +24,10 @@ pipeline {
             steps{
                 sshagent(credentials : ['prod-vm-credentials']) {
                     sh 'ssh -o StrictHostKeyChecking=no jenkins@ader-prod-vm uptime'
-                    sh 'scp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:/ader/backend'
-                    sh 'scp -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/target jenkins@ader-prod-vm:/ader/frontend'
-                    sh 'java -jar /ader/backend/backend-1.0-SNAPSHOT.jar -Dspring.profiles.active=prod'
-                    sh 'ng serve --prod /ader/frontend/'
+                    sh 'scp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:/home/curchi_mihail98/ader/backend'
+                    sh 'scp -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/target jenkins@ader-prod-vm:/home/curchi_mihail98/ader/frontend'
+                    sh 'java -jar /home/curchi_mihail98/ader/backend/backend-1.0-SNAPSHOT.jar -Dspring.profiles.active=prod'
+                    sh 'ng serve --prod /home/curchi_mihail98/ader/frontend/'
                 }
             }
         }
