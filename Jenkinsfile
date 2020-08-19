@@ -26,7 +26,9 @@ pipeline {
                     sh("""sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa /bitnami/jenkins/jenkins_home/workspace/Ader_master/Backend/target/backend-1.0-SNAPSHOT.jar jenkins@ader-prod-vm:/home/jenkins/ader/backend
                           sudo scp -i /opt/bitnami/jenkins/jenkins_home/.ssh/id_rsa -rp /bitnami/jenkins/jenkins_home/workspace/Ader_master/Frontend/src/dist/ader-frontend jenkins@ader-prod-vm:/var/www/html
                           ssh -o StrictHostKeyChecking=no jenkins@ader-prod-vm << EOF
+                          cd /home/jenkins/ader/backend
                           java -jar /home/jenkins/ader/backend/backend-1.0-SNAPSHOT.jar --spring.profiles.active=prod
+                          sudo systemctl restart nginx
                           exit
                          EOF
                     """)
