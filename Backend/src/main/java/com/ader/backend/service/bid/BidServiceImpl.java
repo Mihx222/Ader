@@ -1,6 +1,12 @@
 package com.ader.backend.service.bid;
 
-import com.ader.backend.entity.*;
+import com.ader.backend.entity.Bid;
+import com.ader.backend.entity.BidStatus;
+import com.ader.backend.entity.File;
+import com.ader.backend.entity.Offer;
+import com.ader.backend.entity.OfferStatus;
+import com.ader.backend.entity.Persona;
+import com.ader.backend.entity.User;
 import com.ader.backend.helpers.BeanHelper;
 import com.ader.backend.repository.BidRepository;
 import com.ader.backend.rest.dto.BidDto;
@@ -11,6 +17,7 @@ import com.ader.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +34,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class BidServiceImpl implements BidService {
 
   private final BidRepository bidRepository;
-  private final OfferService offerService;
+  private OfferService offerService;
   private final UserService userService;
   private final PersonaService personaService;
   private final FileService fileService;
+
+  @Autowired
+  public void setOfferService(OfferService offerService) {
+    this.offerService = offerService;
+  }
 
   @Override
   public List<Bid> getBids() {

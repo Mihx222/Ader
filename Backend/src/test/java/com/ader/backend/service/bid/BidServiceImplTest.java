@@ -16,13 +16,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BidServiceImplTest {
@@ -50,7 +56,7 @@ public class BidServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    bidService = new BidServiceImpl(bidRepository, offerService, userService, personaService, fileService);
+    bidService = new BidServiceImpl(bidRepository, userService, personaService, fileService);
 
     bids = new ArrayList<>();
 
