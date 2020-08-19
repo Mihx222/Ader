@@ -4,13 +4,14 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserSharedDataService} from "../user/user-shared-data.service";
 import {Observable} from "rxjs";
 import {User} from "../../model/user/user";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  BASE_URL = 'http://localhost:8080/rest';
-  TOKEN_URL = 'http://localhost:8080/oauth/token';
+  BASE_URL = 'http://' + environment.backendHost + ':8080/rest';
+  TOKEN_URL = 'http://' + environment.backendHost + ':8080/oauth/token';
   CLIENT_NAME = 'ader_api';
   CLIENT_SECRET = 'licenta2020';
 
